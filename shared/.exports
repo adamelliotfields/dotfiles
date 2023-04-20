@@ -7,10 +7,10 @@ if [ "$(uname -s)" = 'Darwin' ] ; then
   # brew
   export HOMEBREW_PREFIX='/usr/local'
 
-  # apple silicon
+  # https://docs.brew.sh/FAQ#why-is-the-default-installation-prefix-opthomebrew-on-apple-silicon
   case "$(uname -m)" in
     arm64|aarch64)
-      export HOMEBREW_PREFIX='/usr/opt' ;;
+      export HOMEBREW_PREFIX='/opt/homebrew' ;;
   esac
 
   export HOMEBREW_BUNDLE_NO_LOCK=1
