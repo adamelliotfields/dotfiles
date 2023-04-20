@@ -1,0 +1,75 @@
+# shellcheck shell=sh
+HOME="${HOME:?}"
+PATH="/usr/games/bin:/usr/games:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+
+# mac overrides
+if [ "$(uname -s)" = 'Darwin' ] ; then
+  # brew
+  export HOMEBREW_PREFIX='/usr/local'
+
+  # apple silicon
+  case "$(uname -m)" in
+    arm64|aarch64)
+      export HOMEBREW_PREFIX='/usr/opt' ;;
+  esac
+
+  export HOMEBREW_BUNDLE_NO_LOCK=1
+  export HOMEBREW_CELLAR="${HOMEBREW_PREFIX}/Cellar"
+  export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
+  export MANPATH="${HOMEBREW_PREFIX}/share/man:${MANPATH}"
+  export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH}"
+
+  # editor
+  export VISUAL="${HOMEBREW_PREFIX}/bin/code -w"
+  export EDITOR="${HOMEBREW_PREFIX}/bin/vim"
+
+  # gcloud
+  export CLOUDSDK_HOME="${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
+  export CLOUDSDK_PYTHON="${HOMEBREW_PREFIX}/bin/python3.10"
+
+  # path
+  PATH="${HOMEBREW_PREFIX}/bin:${HOMEBREW_PREFIX}/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+  PATH="${HOMEBREW_PREFIX}/opt/libpq/bin:${PATH}"
+  PATH="${CLOUDSDK_HOME}/bin:${PATH}"
+fi
+
+# XDG Base Directory Specification
+# https://wiki.archlinux.org/title/XDG_Base_Directory
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+# deno
+# https://deno.land/manual/getting_started/setup_your_environment#environment-variables
+# https://deno.land/manual/tools/script_installer
+export DENO_DIR="${XDG_CACHE_HOME}/deno"
+export DENO_INSTALL_ROOT="${HOME}/.deno"
+PATH="${DENO_INSTALL_ROOT}/bin:${PATH}"
+
+# go
+export GOPATH="${HOME}/.go"
+PATH="${GOPATH}/bin:${PATH}"
+
+# nvm
+export NVM_SYMLINK_CURRENT=true
+
+# rust
+export RUSTUP_HOME="${HOME}/.rustup"
+PATH="${HOME}/.cargo/bin:${PATH}"
+
+# misc
+export GIT_EDITOR="${EDITOR:-vim}"
+export PAGER='less -RFX --tabs=2'
+export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain --paging=always'"
+export BAT_PAGER="$PAGER"
+export BAT_THEME='Dracula Pro (Van Helsing)' # ln -sf ~/.dracula/themes/sublime ~/.config/bat/themes && bat cache --build
+
+# path
+# https://blog.ronin.cloud/linux-directories-paths
+export PATH="$PATH"
+
+# inc
+if [ -s "${HOME}/.exports.inc" ] ; then
+  . "${HOME}/.exports.inc"
+fi

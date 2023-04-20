@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(dirname "$0")/lib/apt.sh"
+source "$(dirname "$0")/lib/chsh.sh"
+source "$(dirname "$0")/lib/deb.sh"
+source "$(dirname "$0")/lib/brew.sh"
+source "$(dirname "$0")/lib/link.sh"
+source "$(dirname "$0")/lib/prompt.sh"
+source "$(dirname "$0")/lib/sudo.sh"
+
+source "$(dirname "$0")/lib/util/echo_bold.sh"
+source "$(dirname "$0")/lib/util/with_sudo.sh"
+
+_install() {
+  # set to 0 to only symlink dotfiles
+  local install_linux=${DF_INSTALL_LINUX:-1}
+  local install_mac=${DF_INSTALL_MAC:-0}
+
+  # linux config
+  local -a linux_prompts=( 'nojhan/liquidprompt' 'sindresorhus/pure' )
+  local -a linux_apt=( 'exa' 'fzf' 'git-extras' 'ripgrep' )
+  local -a linux_deb=( 'cli/cli' 'sharkdp/bat' 'sharkdp/fd' 'dandavison/delta' 'ajeetdsouza/zoxide' )
+
+  echo_bold 'Symlinking dotfiles...'
+  df_link
+
+  # linux
+  if [[ $install_linux -ne 0 && $(uname) == 'Linux' ]] ; then
+    echo_bold 'Installing apt packages...'
+    df_apt "${linux_apt[@]}"
+
+    echo_bold 'Installing deb packages...'
+    df_deb "${linux_deb[@]}"
+
+    echo_bold 'Installing prompts...'
+    df_prompt "${linux_prompts[@]}"
+  fi
+
+  # mac
+  if [[ $install_mac -ne 0 && $(uname) == 'Darwin' ]] ; then
+    # requires relogin to take effect
+    echo_bold 'Enabling passwordless sudo...'
+    df_sudo
+
+    # requires passwordless sudo
+    echo_bold 'Installing Homebrew...'
+    df_brew
+
+    # probably requires passwordless sudo
+    echo_bold 'Installing Homebrew packages...'
+    eval "$(brew shellenv)"
+    brew bundle --global --no-lock
+
+    # requires the previous 2
+    echo_bold 'Installing Fish plugins...'
+    fish -c 'fisher update'
+
+    # also requires relogin to take effect
+    echo_bold 'Changing default shell to Fish...'
+    df_chsh '/usr/local/bin/fish'
+  fi
+
+  echo_bold 'Done! 🎉'
+  return 0
+}
+
+_install "$@"
+exit $?

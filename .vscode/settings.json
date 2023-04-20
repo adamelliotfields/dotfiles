@@ -1,0 +1,15 @@
+{
+  "[makefile]": {
+    "editor.insertSpaces": false,
+    "editor.tabSize": 2
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.shellcheck": true
+  },
+  "editor.rulers": [80],
+  "shellcheck.customArgs": ["--external-sources"],
+  "shellcheck.exclude": ["1090", "1091", "2155"],
+  "shellcheck.ignorePatterns": {
+    "**/*.fish": true
+  }
+}

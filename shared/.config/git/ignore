@@ -1,0 +1,13 @@
+# common folders to exclude from git
+# run `fd -u` (shorthand for fd --hidden --no-ignore) to find everything
+.fleet/
+.idea/
+build/
+coverage/
+dist/
+node_modules/
+reports/
+
+# Added by Webstorm when using the GraphQL plugin
+/.graphqlconfig
+/schema.graphql

@@ -1,0 +1,232 @@
+# shellcheck shell=sh
+# shellcheck disable=SC2016,SC2120,SC2142
+alias update="sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y"
+alias octal='stat -f "%a"'
+alias uuid='uuidgen'
+alias python='python3'
+
+# mac overrides
+if [ "$(uname -s)" = 'Darwin' ] ; then
+  alias restart="sudo shutdown -r now"
+  alias shutdown="sudo shutdown -h now"
+  alias mute='osascript -e "set volume output muted true"'
+  alias unmute='osascript -e "set volume output muted false"'
+  alias update="brew update && brew upgrade && brew cleanup"
+  alias octal='stat -f "%A"'
+  alias uuid='uuidgen | tr "[:upper:]" "[:lower:]"'
+  alias python='/usr/local/bin/python3.10'
+fi
+
+if [ -n "$BASH_VERSION" ] ; then
+  alias refresh="source ~/.bashrc"
+fi
+
+if [ -n "$ZSH_VERSION" ] ; then
+  alias refresh="source ~/.zshrc"
+fi
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias c='clear'
+alias t='type -a'
+alias v='vim'
+alias r='rm -r'
+alias rf='rm -rf'
+# alias rnm='find . -type d -name node_modules -maxdepth 3 | xargs -I{} rm -r {}'
+alias rnm='fd -I -td -d3 -cnever --prune node_modules . -x rm -rf {}' # note: anything you type after `rmnm` will be passed to `rm` NOT `fd`
+alias todo='rg "TODO: |FIXME: "'
+
+# bat
+alias b='bat -n' # line numbers
+alias bp='bat -pp' # plain no paging
+alias bman='bat -pl man'
+
+# exa
+alias l='exa -labgh --no-permissions --octal-permissions --group-directories-first --color-scale --color=always'
+alias lg='exa -labgh --git --git-ignore --icons --no-permissions --octal-permissions --group-directories-first --color-scale --color=always' # with git
+alias lt='exa -aTL1 --icons --group-directories-first --color=always' # tree with icons
+
+# spotify
+# playback commands require you to be connected to the currently playing device
+# the device can be selected interactively in the UI by pressing `d`
+# you can also pass the device name to commands with the `-d` flag
+# the current device is cached
+alias s='spt'
+alias sl='spt list'
+alias sld='spt list --devices'
+alias slp='spt list --playlists'
+alias sp='spt playback'
+alias sps='spt playback --status'
+alias spn='spt playback --next'
+alias spp='spt playback --previous'
+alias spst='spt playback --share-track'
+alias spsa='spt playback --share-album'
+alias splay='spt playback --toggle'
+alias spause='spt playback --toggle'
+
+# fd
+# use globs all the time
+# Examples:
+#   f '*.sh'       # find all .sh files in pwd
+#   f '*.bash' lib # find all .bash files in lib/
+alias f='fd --glob' # pass --regex to go back to default RegEx mode
+alias fr='fd --regex'
+alias fH='fd --glob -H' # show hidden files
+alias fI='fd --glob -I' # show ignored files
+alias fu='fd --glob --unrestricted' # equivalent of `fd -H -I`
+alias ff='fd --glob --type=file' # find files
+alias fl='fd --glob --type=symlink' # find symlinks
+alias fx='fd --glob --type=executable' # find executables
+alias fdd='fd --glob --type=directory' # find directories
+alias fddp='fd --glob --type=directory --prune' # don't traverse into matching directories
+alias fddpI='fd --glob --type=directory --prune -I' # usage: fddpI $glob [$dir=pwd]
+
+# fzf
+alias fz='fzf --exact --reverse'
+alias fzcd='cd (fd -td -calways | fzf --ansi --exact --reverse)'
+alias fzopen='fd -tf -calways | fzf --ansi --exact --reverse | xargs -I{} open {}'
+alias fzcode='fd -tf -calways | fzf --ansi --exact --reverse | xargs -I{} code {}'
+alias fzbranch='git for-each-ref --format="%(refname:short)" refs/heads refs/remotes | sed "s/^origin\///" | fzf --exact --reverse | xargs git switch'
+alias fzclone='gh repo list | awk "{print \$1}" | fzf --exact --reverse | xargs gh repo clone'
+alias fzterm='ps -e | fzf --exact --reverse --header-lines=1 | awk "{print \$1}" | xargs kill -15'
+alias fzkill='ps -e | fzf --exact --reverse --header-lines=1 | awk "{print \$1}" | xargs kill -9'
+alias fzkilltcp='lsof -P -iTCP -sTCP:LISTEN | fzf --exact --reverse --header-lines=1 | awk "{print \$2}" | xargs kill -9'
+
+# git
+alias g='git'
+alias ga='git add'
+alias gaa='git add --update' # add ALL tracked files (ignores new files) (99% of the time you want this)
+alias gb='git branch'
+alias gba='git branch --all' # list ALL local and remote branches
+alias gbd='git branch --delete' # delete a branch
+alias gbD='git branch -D' # force delete a branch
+alias gc='git commit' # opens your $EDITOR for message
+alias gcm='git commit --message' # enter message after command, e.g., gcm 'initial commit'
+alias gca='git commit --all' # stage and commit all tracked files (ignores new files)
+alias gcam='git commit --all --message'
+alias gce='git commit --allow-empty' # for kicking off a new ci job
+alias gcem='git commit --allow-empty --message'
+alias gco='git checkout'
+alias gd='git diff'
+alias gdt='git difftool'
+alias gf='git fetch'
+alias gfo='git fetch origin'
+alias gi='git init'
+alias gl='git log'
+alias glp='git log -p' # paginated log, shows diffs colored by git-delta (the program `delta`)
+alias glg='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset"'
+alias glo='git log --oneline'
+alias gm='git merge'
+alias gmt='git mergetool'
+alias gp='git push'
+alias gpo='git push -u origin'
+alias gpl='git pull'
+alias gplo='git pull origin'
+alias gr='git reset --' # use this one to reset staged files
+alias grs='git restore --' # use this one to restore a changed file
+alias grao='git remote add origin'
+alias gs='git stash'
+alias gsd='git stash drop'
+alias gsp='git stash pop'
+alias gsl='git stash list'
+alias gslp='git stash list -p'
+alias gss='git stash show'
+alias gssp='git stash show -p'
+alias gstat='git status'
+alias gsw='git switch' # use this one to switch to a different branch
+alias gswc='git switch -c' # use this one to create a new branch and switch to it
+
+# git extras
+alias gu='git undo' # git reset --soft HEAD~1 (undoes the last commit but leaves files staged)
+alias gus='git undo -s' # git undo; git reset (undoes the last commit and unstages all files)
+alias gsum='git summary' # see `man git-summary`
+
+# github cli
+alias ghr='gh repo'
+alias ghrc='gh repo create' # interactive create, will prompt for inputs
+alias ghrcl='gh repo clone' # prefer this over git clone because you can use org/repo format
+alias ghrv='gh repo view --web' # same as git browse from git-extras
+
+# npm
+alias n='npm'
+alias nC='npm -C'
+alias ni='npm install --save-prod'
+alias nie='npm install --save-prod --save-exact'
+alias nid='npm install --save-dev'
+alias nide='npm install --save-dev --save-exact'
+alias nio='npm install --save-optional'
+alias nioe='npm install --save-optional --save-exact'
+alias nig='npm install --global'
+alias nige='npm install --global --save-exact'
+alias nr='npm run'
+alias nrb='npm run build'
+alias nrd='npm run dev'
+alias nrl='npm run lint'
+alias nrs='npm run start'
+alias nrt='npm run test'
+alias ndeps='cat package.json | jq .dependencies'
+alias nddeps='cat package.json | jq .devDependencies'
+alias nodeps='cat package.json | jq .optionalDependencies'
+alias nscripts='cat package.json | jq .scripts'
+alias nengines='cat package.json | jq .engines'
+
+# docker
+alias d='docker'
+alias dr='docker run'
+alias drd='docker run -d'
+alias dri='docker run -it'
+alias drr='docker run --rm'
+alias drir='docker run -it --rm'
+alias dc='docker container'
+alias dcl='docker container logs'
+alias dclf='docker container logs -f'
+alias dcls='docker container ls -a'
+alias dclsq='docker container ls -aq'
+alias dcs='docker container start'
+alias dcst='docker container stop'
+alias dcr='docker container rm'
+alias dcrf='docker container rm -f'
+alias dcrs='docker container restart'
+alias dce='docker container exec'
+alias dcei='docker container exec -it'
+alias dcu='docker compose up'
+alias dcud='docker compose up -d'
+alias dcd='docker compose down'
+alias dcdv='docker compose down -v'
+alias di='docker image'
+alias dil='docker image ls'
+alias dilq='docker image ls -q'
+alias dip='docker image pull'
+alias dir='docker image rm'
+alias dirf='docker image rm -f'
+alias dvl='docker volume ls'
+alias dvlq='docker volume ls -q'
+alias dv='docker volume'
+alias dvc='docker volume create'
+alias dvr='docker volume rm'
+alias dvrf='docker volume rm -f'
+alias dn='docker network'
+alias dnl='docker network ls'
+alias dnlq='docker network ls -q'
+alias dnr='docker network rm'
+alias dnrf='docker network rm -f'
+
+# kubectl
+alias k='kubectl'
+alias kc='kubectl config'
+alias kccc='kubectl config current-context'
+alias kcgc='kubectl config get-contexts'
+alias kcuc='kubectl config use-context'
+alias kcun='kubectl config set-context --current --namespace' # set the namespace for the current context (there is no `kubectl config use-namespace`)
+alias kci='kubectl cluster-info'
+alias kg='kubectl get'
+alias kga='kubectl get --all-namespaces'
+alias kgj='kubectl get --output=json'
+alias kgy='kubectl get --output=yaml'
+alias kl='kubectl logs'
+alias klf='kubectl logs -f'
+
+# put any additional aliases here
+if [ -s "${HOME}/.aliases.inc" ] ; then
+  . "${HOME}/.aliases.inc"
+fi

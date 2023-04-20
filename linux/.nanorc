@@ -1,0 +1,59 @@
+# syntax highlighting
+include "/usr/share/nano/*.nanorc"
+
+# make nano more developer friendly
+set autoindent # auto indents the next line to the same level as the previous line
+set boldtext # use bold text
+set constantshow # show cursor position
+set indicator # show scroll bar
+set linenumbers # show line numbers
+set mouse # enable mouse support
+set tabsize 2 # 2 spaces
+set tabstospaces # no tabs
+set zap # deletes entire selections
+unset minibar # use the default status bar
+unset rebinddelete # delete should backspace on mac
+unset nonewlines # add newlines at the end of files
+
+# theme
+set titlecolor bold,white,blue
+set promptcolor white,grey
+set statuscolor cyan
+set errorcolor bold,white,red
+set spotlightcolor black,yellow
+set selectedcolor white,magenta
+set scrollercolor white
+set numbercolor cyan
+set keycolor cyan
+set functioncolor green
+
+# keybindings
+bind ^X cut main
+bind ^C copy main
+bind ^V paste all
+bind ^Q exit all
+bind ^S savefile main
+bind ^W writeout main
+bind ^O insert main
+bind ^H help all
+bind ^H exit help
+bind ^F whereis all
+bind ^G findnext all
+bind ^B wherewas all
+bind ^D findprevious all
+bind ^R replace main
+bind ^Z undo main
+bind ^Y redo main
+bind ^A mark main
+bind ^P location main
+bind ^T gotoline main
+bind ^T gotodir browser
+bind ^T cutrestoffile execute
+bind ^L linter execute
+bind ^E execute main
+unbind ^K main
+unbind ^U all
+unbind ^N main
+unbind ^Y all
+unbind M-J main
+unbind M-T main
