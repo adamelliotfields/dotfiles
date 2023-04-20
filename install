@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$(dirname "$0")/lib/apt.sh"
-source "$(dirname "$0")/lib/chsh.sh"
-source "$(dirname "$0")/lib/deb.sh"
-source "$(dirname "$0")/lib/brew.sh"
-source "$(dirname "$0")/lib/link.sh"
-source "$(dirname "$0")/lib/prompt.sh"
-source "$(dirname "$0")/lib/sudo.sh"
+main() {
+  source "$(dirname "$0")/functions"
 
-source "$(dirname "$0")/lib/util/echo_bold.sh"
-source "$(dirname "$0")/lib/util/with_sudo.sh"
-
-_install() {
   # set to 0 to only symlink dotfiles
   local install_linux=${DF_INSTALL_LINUX:-1}
   local install_mac=${DF_INSTALL_MAC:-0}
@@ -63,7 +54,4 @@ _install() {
 
   echo_bold 'Done! 🎉'
   return 0
-}
-
-_install "$@"
-exit $?
+} ; main

@@ -7,31 +7,27 @@ git clone https://github.com/adamelliotfields/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
 ```
 
-The scripts in [`lib`](./lib/) can be used individually, too.
+The _functions_ in [`functions`](./functions) can be used individually, too.
 
 ```bash
+source ~/.dotfiles/functions
+
 # install the deb for diskus from GitHub Releases
-source lib/deb.sh
 df_deb sharkdp/diskus
 
 # install the asdf version manager with the node and deno plugins
-source lib/asdf.sh
 df_asdf nodejs deno
 
 # install nvm and node
-source lib/nvm.sh
 df_nvm
 
 # install deno from GitHub Releases
-source lib/deno.sh
 df_deno
 
 # install go from golang.org
-source lib/go.sh
 df_go
 
 # install rust via rustup
-source lib/rust.sh
 df_rust
 ```
 

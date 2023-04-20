@@ -1,0 +1,354 @@
+# shellcheck shell=bash
+
+# print bold text unless stdout is not a terminal
+echo_bold() {
+  local -a args=("$@")
+
+  # -t 1 means stdout is a terminal
+  if [ ! -t 1 ] ; then
+    echo "${args[*]}"
+    return
+  fi
+
+  echo -e "\e[1m\e[37m${args[*]}\e[0m"
+}
+
+# run a command with sudo if not root
+with_sudo() {
+  if [ $EUID -ne 0 ] ; then
+    sudo "$@"
+  else
+    "$@"
+  fi
+}
+
+# configures apt and installs packages if specified (linux only)
+df_apt() {
+  if [ "$(uname)" != 'Linux' ] ; then
+    echo "df_apt: Unsupported OS $(uname -s)"
+    return 1
+  fi
+
+  local -a args=("$@")
+
+  # the Ubuntu images are "minimized" so they don't include (or download) man pages
+  # you can run `sudo unminimize` but this reinstalls every package and takes minutes
+  # these steps restore man functionality without reinstalling packages
+  # use `sudo apt install --reinstall` to reinstall a package
+  [ -e /etc/dpkg/dpkg.cfg.d/excludes ] && with_sudo rm -f /etc/dpkg/dpkg.cfg.d/excludes
+  [ -e /etc/update-motd.d/60-unminimize ] && with_sudo rm -f /etc/update-motd.d/60-unminimize
+
+  if [ "$(dpkg-divert --truename /usr/bin/man)" = "/usr/bin/man.REAL" ] ; then
+    # remove diverted man binary
+    with_sudo rm -f /usr/bin/man
+    with_sudo dpkg-divert --quiet --remove --rename /usr/bin/man
+  fi
+
+  # don't download man page translations when installing packages
+  if [ ! -e /etc/apt/apt.conf.d/99translations ] ; then
+    with_sudo mkdir -p /etc/apt/apt.conf.d
+    echo 'Acquire::Languages "none";' | with_sudo tee /etc/apt/apt.conf.d/99translations >/dev/null
+  fi
+
+  with_sudo apt-get update
+
+  # install packages
+  if [ "${#args[@]}" -ne 0 ] ; then
+    export DEBIAN_FRONTEND=noninteractive
+    with_sudo apt-get install -y --no-install-recommends "${args[@]}" | grep -v 'warning: ' # ignore update-alternatives warnings
+    unset DEBIAN_FRONTEND
+  fi
+}
+
+# installs asdf and plugins if specified
+df_asdf() {
+  # exit if $HOME is not set
+  local dest="${HOME:?}/.asdf"
+  local -a args=("$@")
+
+  rm -rf "$dest"
+  git clone --depth=1 https://github.com/asdf-vm/asdf.git "$dest"
+
+  if [ "${#args[@]}" -ne 0 ] ; then
+    source "$dest/asdf.sh"
+    for plugin in "${args[@]}" ; do
+      asdf plugin add "$plugin"
+      asdf install "$plugin" latest
+      asdf global "$plugin" latest
+    done
+  fi
+}
+
+# installs homebrew (mac only)
+df_brew() {
+  # not mac
+  if [ "$(uname -s)" != 'Darwin' ] ; then
+    echo "df_brew: Unsupported OS $(uname -s)"
+    return 1
+  fi
+
+  # already installed
+  if command -v brew >/dev/null ; then
+    return 0
+  fi
+
+  # to be truly non-interactive you must already have passwordless sudo enabled
+  local url='https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh'
+  NONINTERACTIVE=1 /usr/bin/env bash -c "$(curl -fsSL $url)"
+}
+
+# changes the default shell for the current user
+df_chsh() {
+  local shell=${1:-/bin/zsh}
+
+  # add shell to /etc/shells if not already there
+  if ! grep -q "$shell" /etc/shells ; then
+    echo "$shell" | with_sudo tee -a /etc/shells >/dev/null
+  fi
+
+  # change shell for current user
+  chsh -s "$shell"
+}
+
+# downloads a list of deb packages from GitHub releases and installs them with dpkg (linux only)
+df_deb() {
+  if [ "$(uname)" != 'Linux' ] ; then
+    echo "df_deb: Unsupported OS $(uname -s)"
+    return 1
+  fi
+
+  local -a args=("$@")
+
+  for repo in "${args[@]}" ; do
+    local bin=$(echo "$repo" | awk -F '/' '{print $2}')
+    local token="${GH_TOKEN:-${GITHUB_TOKEN:-''}}"
+    local arch=''
+    local opts=''
+
+    # set arch
+    case "$(uname -m)" in
+      aarch64|arm64) arch='arm64' ;;
+      x86_64|amd64)  arch='amd64' ;;
+      *)             echo "df_deb: Unsupported architecture: $(uname -m)" ; return 1 ;;
+    esac
+
+    # GitHub CLI is installed as `gh`
+    if [ "$repo" = 'cli/cli' ] ; then
+      bin='gh'
+      arch="linux_${arch}"
+    fi
+
+    # already installed
+    if command -v "$bin" >/dev/null ; then
+      continue
+    fi
+
+    # use GitHub token if available
+    if [ -n "$token" ] ; then
+      opts="-fsSLH 'Authorization: token $token'"
+    else
+      opts='-fsSL'
+    fi
+
+    # get the latest release
+    local assets=$(eval "curl $opts https://api.github.com/repos/$repo/releases/latest" | jq -r '.assets')
+    local asset="$(echo "$assets" | jq -r ".[] | select(.name | test(\"${bin}_(.+)_${arch}.deb\"))")"
+
+    # no deb
+    if [ -z "$asset" ] ; then
+      echo "df_deb: $repo deb not found"
+      return 1
+    fi
+
+    # download the deb
+    sleep 0.1
+    local browser_download_url=$(echo "$asset" | jq -r '.browser_download_url')
+    local filename=$(basename "$browser_download_url")
+    eval "curl -fsSL $browser_download_url -o /tmp/$filename"
+
+    # install and cleanup
+    with_sudo dpkg -i "/tmp/$filename"
+    rm -f "/tmp/$filename"
+  done
+}
+
+# installs deno
+df_deno() {
+  local arch=''
+  local os=''
+
+  # set arch
+  case "$(uname -m)" in
+    aarch64|arm64) arch='aarch64' ;;
+    x86_64|amd64)  arch='x86_64' ;;
+    *)             echo "df_deno: Unsupported architecture $(uname -m)" ; return 1 ;;
+  esac
+
+  # set os
+  # if linux, then arch will always be x86_64
+  case "$(uname -s)" in
+    Darwin) os='apple-darwin' ;;
+    Linux)  os='unknown-linux-gnu' ; arch='x86_64' ;;
+    *)      echo "df_deno: Unsupported OS $(uname -s)" ; return 1 ;;
+  esac
+
+  local filename="deno-${arch}-${os}.zip"
+  local url="https://github.com/denoland/deno/releases/latest/download/${filename}"
+
+  # install deno
+  wget -nv -O "/tmp/${filename}" "${url}"
+  with_sudo unzip -od /usr/local/bin "/tmp/${filename}"
+  with_sudo chmod +x /usr/local/bin/deno
+
+  # install completions
+  deno completions bash | with_sudo tee /etc/bash_completion.d/deno >/dev/null
+  deno completions zsh | with_sudo tee /usr/local/share/zsh/site-functions/_deno >/dev/null
+
+  # cleanup
+  rm -f "/tmp/${filename}"
+}
+
+# installs go
+df_go() {
+  local version=$(curl -fsSL https://go.dev/VERSION?m=text)
+  local arch=''
+  local os=''
+
+  # set arch
+  case "$(uname -m)" in
+    aarch64|arm64) arch='arm64' ;;
+    x86_64|amd64)  arch='amd64' ;;
+    *)             echo "df_go: unsupported architecture: $(uname -m)"; return 1 ;;
+  esac
+
+  # set os
+  case "$(uname -s)" in
+    Darwin) os='darwin' ;;
+    Linux)  os='linux' ;;
+    *)      echo "df_go: unsupported os: $(uname -s)"; return 1 ;;
+  esac
+
+  local filename="${version}.${os}-${arch}.tar.gz"
+
+  wget -nv -O "/tmp/${filename}" "https://golang.org/dl/${filename}"
+  with_sudo tar -C /usr/local -xzf "/tmp/${filename}"
+  rm -f "/tmp/${filename}"
+}
+
+# symlinks the files in linux/mac/shared to the user's home folder
+df_link() {
+  local home="${HOME:?}"
+  local cwd="${BASH_SOURCE[0]:-$0}"
+  local root="$(dirname "$(realpath "$cwd")")"
+  local -a srcs=()
+
+  case "$(uname -s)" in
+    Darwin) srcs=("${root}/shared" "${root}/mac") ;;
+    Linux)  srcs=("${root}/shared" "${root}/linux") ;;
+    *)      srcs=("${root}/shared") ;;
+  esac
+
+  # loop over each dir and symlink the files
+  for src in "${srcs[@]}" ; do
+    # skip if the source directory does not exist
+    if [ ! -d "${src}" ] ; then
+      continue
+    fi
+
+    # need to handle spaces in names
+    find "$src" -type f -print0 | while IFS= read -r -d '' file ; do
+      local dest="${home}/${file#"$src"/}"
+      local dest_dir="$(dirname "$dest")"
+      echo "-> ${dest}"
+
+      # check if the file exists and is not a symlink
+      if [[ -e "$dest" && ! -L "$dest" ]] ; then
+        # Backup the existing file
+        mv "$dest" "${dest}.bak"
+      fi
+
+      # create the target directory
+      mkdir -p "$dest_dir"
+
+      # create the symlink
+      ln -sf "$file" "$dest"
+    done
+  done
+}
+
+# installs nvm and node (lts if not specified)
+df_nvm() {
+  local version=${1:-'lts/*'}
+  local nvm_dir="${HOME:?}/.nvm"
+
+  rm -rf "$nvm_dir"
+  git clone --depth=1 https://github.com/nvm-sh/nvm.git "$nvm_dir"
+
+  unset NVM_DIR
+  source "${nvm_dir}/nvm.sh" --no-use
+  nvm install "$version"
+  nvm alias default "$version"
+}
+
+# clones a repo to ~/.${repo_name}
+df_prompt() {
+  local home="${HOME:?}"
+  local -a args=("$@")
+
+  for prompt in "${args[@]}" ; do
+    # you can use `#` because the format will always be `user/repo` (one slash)
+    # if the format was `path/to/repo` then you would use `##` (many slashes)
+    local dest=".${prompt#*/}"
+    local branch='main'
+
+    # liquidprompt has a special branch
+    if [ "$prompt" = 'nojhan/liquidprompt' ] ; then
+      branch='stable'
+    fi
+
+    rm -rf "${home:?}/${dest}"
+    git clone --depth=1 --branch="$branch" "https://github.com/${prompt}.git" "${home}/${dest}"
+  done
+}
+
+# installs rust
+df_rust() {
+  local default_toolchain='stable'
+  local profile='minimal'
+  local arch=''
+  local os=''
+
+  # set arch
+  case "$(uname -m)" in
+    arm64|aarch64) arch='aarch64' ;;
+    amd64|x86_64)  arch='x86_64' ;;
+    *)             echo "df_rust: Unsupported architecture: $(uname -m)" ; return 1 ;;
+  esac
+
+  # set os
+  case "$(uname -s)" in
+    Darwin) os='apple-darwin' ;;
+    Linux)  os='unknown-linux-gnu' ;;
+    *)      echo "df_rust: Unsupported OS: $(uname -s)" ; return 1 ;;
+  esac
+
+  local default_host="${arch}-${os}"
+  local -a opts=(
+    '-y'
+    '-q'
+    '--no-modify-path'
+    "--default-host=${default_host}"
+    "--default-toolchain=${default_toolchain}"
+    "--profile=${profile}"
+  )
+
+  curl -fsSL --proto '=https' --tlsv1.2 https://sh.rustup.rs | sh -s -- "${opts[@]}"
+}
+
+# adds the user to sudoers if they are not already
+df_sudo() {
+  if [ ! -e "/etc/sudoers.d/$USER" ] ; then
+    with_sudo mkdir -p /etc/sudoers.d
+    echo "$USER ALL=(ALL) NOPASSWD:ALL" | with_sudo tee "/etc/sudoers.d/$USER" >/dev/null
+  fi
+}
