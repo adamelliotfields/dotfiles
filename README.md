@@ -1,4 +1,4 @@
-![dotfiles](./dotfiles.png)
+![dotfiles](./dotfiles.jpg)
 
 ## Usage
 
