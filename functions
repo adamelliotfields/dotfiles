@@ -24,8 +24,8 @@ with_sudo() {
 
 # configures apt and installs packages if specified (linux only)
 df_apt() {
-  if [ "$(uname)" != 'Linux' ] ; then
-    echo "df_apt: Unsupported OS $(uname -s)"
+  if [ "$(uname -s)" != 'Linux' ] ; then
+    echo "df_apt: Unsupported OS"
     return 1
   fi
 
@@ -83,7 +83,7 @@ df_asdf() {
 df_brew() {
   # not mac
   if [ "$(uname -s)" != 'Darwin' ] ; then
-    echo "df_brew: Unsupported OS $(uname -s)"
+    echo "df_brew: Unsupported OS"
     return 1
   fi
 
@@ -112,8 +112,8 @@ df_chsh() {
 
 # downloads a list of deb packages from GitHub releases and installs them with dpkg (linux only)
 df_deb() {
-  if [ "$(uname)" != 'Linux' ] ; then
-    echo "df_deb: Unsupported OS $(uname -s)"
+  if [ "$(uname -s)" != 'Linux' ] ; then
+    echo "df_deb: Unsupported OS"
     return 1
   fi
 
@@ -129,7 +129,7 @@ df_deb() {
     case "$(uname -m)" in
       aarch64|arm64) arch='arm64' ;;
       x86_64|amd64)  arch='amd64' ;;
-      *)             echo "df_deb: Unsupported architecture: $(uname -m)" ; return 1 ;;
+      *)             echo "df_deb: Unsupported architecture" ; return 1 ;;
     esac
 
     # GitHub CLI is installed as `gh`
@@ -181,7 +181,7 @@ df_deno() {
   case "$(uname -m)" in
     aarch64|arm64) arch='aarch64' ;;
     x86_64|amd64)  arch='x86_64' ;;
-    *)             echo "df_deno: Unsupported architecture $(uname -m)" ; return 1 ;;
+    *)             echo "df_deno: Unsupported architecture" ; return 1 ;;
   esac
 
   # set os
@@ -189,7 +189,7 @@ df_deno() {
   case "$(uname -s)" in
     Darwin) os='apple-darwin' ;;
     Linux)  os='unknown-linux-gnu' ; arch='x86_64' ;;
-    *)      echo "df_deno: Unsupported OS $(uname -s)" ; return 1 ;;
+    *)      echo "df_deno: Unsupported OS" ; return 1 ;;
   esac
 
   local filename="deno-${arch}-${os}.zip"
@@ -218,14 +218,14 @@ df_go() {
   case "$(uname -m)" in
     aarch64|arm64) arch='arm64' ;;
     x86_64|amd64)  arch='amd64' ;;
-    *)             echo "df_go: unsupported architecture: $(uname -m)"; return 1 ;;
+    *)             echo "df_go: Unsupported architecture"; return 1 ;;
   esac
 
   # set os
   case "$(uname -s)" in
     Darwin) os='darwin' ;;
     Linux)  os='linux' ;;
-    *)      echo "df_go: unsupported os: $(uname -s)"; return 1 ;;
+    *)      echo "df_go: Unsupported OS"; return 1 ;;
   esac
 
   local filename="${version}.${os}-${arch}.tar.gz"
@@ -322,14 +322,14 @@ df_rust() {
   case "$(uname -m)" in
     arm64|aarch64) arch='aarch64' ;;
     amd64|x86_64)  arch='x86_64' ;;
-    *)             echo "df_rust: Unsupported architecture: $(uname -m)" ; return 1 ;;
+    *)             echo "df_rust: Unsupported architecture" ; return 1 ;;
   esac
 
   # set os
   case "$(uname -s)" in
     Darwin) os='apple-darwin' ;;
     Linux)  os='unknown-linux-gnu' ;;
-    *)      echo "df_rust: Unsupported OS: $(uname -s)" ; return 1 ;;
+    *)      echo "df_rust: Unsupported OS" ; return 1 ;;
   esac
 
   local default_host="${arch}-${os}"
