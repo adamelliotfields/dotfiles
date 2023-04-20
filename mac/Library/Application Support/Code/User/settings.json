@@ -1,0 +1,55 @@
+{
+  "dotfiles.repository": "adamelliotfields/dotfiles",
+  "dotfiles.targetPath": "/workspaces/.codespaces/.persistedshare/.dotfiles",
+  "dotfiles.installCommand": "/workspaces/.codespaces/.persistedshare/.dotfiles/install",
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.fontFamily": "'MonoLisa Variable', 'Symbols Nerd Font', 'CaskaydiaCove Nerd Font', Menlo, 'DejaVu Sans Mono', monospace",
+  "editor.fontLigatures": "'ss02' on", // set to `true` for ligatures but not cursive
+  "editor.fontSize": 20,
+  "editor.fontVariations": true, // translate font weight for variable fonts
+  "editor.fontWeight": 500,
+  "editor.inlineSuggest.enabled": true,
+  "editor.lineHeight": 0, // 0 is 'auto'
+  "editor.linkedEditing": true,
+  "editor.renderFinalNewline": "on",
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [100],
+  "editor.stickyScroll.enabled": true,
+  "editor.tabSize": 2,
+  "explorer.confirmDragAndDrop": false,
+  "files.enableTrash": false,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "github.copilot.enable": {
+    "*": true,
+    "csv": false
+  },
+  "security.workspace.trust.enabled": false,
+  "settingsSync.ignoredSettings": ["workbench.colorTheme"], // can't use Dracula Pro in Codespaces
+  "telemetry.telemetryLevel": "off",
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "block",
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "terminal.integrated.defaultProfile.osx": "fish",
+  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.profiles.linux": {
+    "zsh": {
+      "path": "/usr/bin/zsh",
+      "icon": "terminal"
+    }
+  },
+  "terminal.integrated.profiles.osx": {
+    "fish": {
+      "path": "/usr/local/bin/fish",
+      "icon": "terminal"
+    }
+  },
+  "terminal.integrated.scrollback": 9999,
+  "window.nativeTabs": true, // mac new window tabs
+  "window.restoreWindows": "none",
+  "workbench.colorTheme": "Dracula Pro (Van Helsing)",
+  "workbench.editor.highlightModifiedTabs": true,
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.startupEditor": "none"
+}
