@@ -10,7 +10,7 @@ main() {
 
   # linux config
   local -a linux_prompts=( 'nojhan/liquidprompt' 'sindresorhus/pure' )
-  local -a linux_apt=( 'exa' 'fzf' 'git-extras' 'ripgrep' )
+  local -a linux_apt=( 'exa' 'fzf' 'git-extras' 'ripgrep' 'vim' )
   local -a linux_deb=( 'cli/cli' 'sharkdp/bat' 'sharkdp/fd' 'dandavison/delta' 'ajeetdsouza/zoxide' )
 
   echo_bold 'Symlinking dotfiles...'
