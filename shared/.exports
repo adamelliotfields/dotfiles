@@ -1,6 +1,6 @@
 # shellcheck shell=sh
 HOME="${HOME:?}"
-PATH="/usr/games/bin:/usr/games:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+PATH="/usr/games/bin:/usr/games:${PATH}"
 
 # mac overrides
 if [ "$(uname -s)" = 'Darwin' ] ; then
@@ -23,15 +23,14 @@ if [ "$(uname -s)" = 'Darwin' ] ; then
   export BAT_THEME='Dracula Pro (Van Helsing)' # ln -sf ~/.dracula/themes/sublime ~/.config/bat/themes && bat cache --build
 
   # editor
-  export VISUAL="${HOMEBREW_PREFIX}/bin/code -w"
-  export EDITOR="${HOMEBREW_PREFIX}/bin/vim"
+  export EDITOR='vim'
 
   # gcloud
   export CLOUDSDK_HOME="${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
   export CLOUDSDK_PYTHON="${HOMEBREW_PREFIX}/bin/python3.10"
 
   # path
-  PATH="${HOMEBREW_PREFIX}/bin:${HOMEBREW_PREFIX}/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+  PATH="${HOMEBREW_PREFIX}/bin:${HOMEBREW_PREFIX}/sbin:${PATH}"
   PATH="${HOMEBREW_PREFIX}/opt/libpq/bin:${PATH}"
   PATH="${CLOUDSDK_HOME}/bin:${PATH}"
 fi
@@ -62,7 +61,9 @@ export RUSTUP_HOME="${HOME}/.rustup"
 PATH="${HOME}/.cargo/bin:${PATH}"
 
 # misc
-export GIT_EDITOR="${EDITOR:-vim}"
+export VISUAL='code -w'
+export EDITOR="${EDITOR:-code -w}"
+export GIT_EDITOR="$EDITOR"
 export PAGER='less -RFX --tabs=2'
 export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain --paging=always'"
 export BAT_PAGER="$PAGER"
