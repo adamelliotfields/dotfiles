@@ -1,3 +1,10 @@
 {
-  "unwantedRecommendations": ["ms-vscode.makefile-tools"]
+  "recommendations": [
+    "bmalehorn.vscode-fish",
+    "editorconfig.editorconfig",
+    "timonwong.shellcheck"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.makefile-tools"
+  ]
 }

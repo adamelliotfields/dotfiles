@@ -1,12 +1,3 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/base:jammy",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "bmalehorn.vscode-fish",
-        "editorconfig.editorconfig",
-        "timonwong.shellcheck"
-      ]
-    }
-  }
+  "image": "mcr.microsoft.com/devcontainers/base:jammy"
 }
