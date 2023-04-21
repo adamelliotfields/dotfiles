@@ -19,6 +19,9 @@ if [ "$(uname -s)" = 'Darwin' ] ; then
   export MANPATH="${HOMEBREW_PREFIX}/share/man:${MANPATH}"
   export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH}"
 
+  # bat
+  export BAT_THEME='Dracula Pro (Van Helsing)' # ln -sf ~/.dracula/themes/sublime ~/.config/bat/themes && bat cache --build
+
   # editor
   export VISUAL="${HOMEBREW_PREFIX}/bin/code -w"
   export EDITOR="${HOMEBREW_PREFIX}/bin/vim"
@@ -63,7 +66,6 @@ export GIT_EDITOR="${EDITOR:-vim}"
 export PAGER='less -RFX --tabs=2'
 export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain --paging=always'"
 export BAT_PAGER="$PAGER"
-export BAT_THEME='Dracula Pro (Van Helsing)' # ln -sf ~/.dracula/themes/sublime ~/.config/bat/themes && bat cache --build
 
 # path
 # https://blog.ronin.cloud/linux-directories-paths
