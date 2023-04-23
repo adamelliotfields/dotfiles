@@ -1,9 +1,9 @@
 [core]
-  # editor isn't read when $GIT_EDITOR is set
+	# editor isn't read when $GIT_EDITOR is set
 	autocrlf = input
 	pager = delta --navigate --file-style=cyan --file-decoration-style='cyan box' --hunk-header-style=omit
 [credential "https://github.com"]
-  # the `!` prefix tells git to run the command as a shell script
+	# the `!` prefix tells git to run the command as a shell script
 	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = !gh auth git-credential

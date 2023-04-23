@@ -3,6 +3,11 @@
     "editor.insertSpaces": false,
     "editor.tabSize": 2
   },
+  // gitconfig
+  "[properties]": {
+    "editor.insertSpaces": false,
+    "editor.tabSize": 2
+  },
   "editor.codeActionsOnSave": {
     "source.fixAll.shellcheck": true
   },
