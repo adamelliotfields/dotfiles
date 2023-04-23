@@ -1,0 +1,42 @@
+[core]
+	# editor isn't read when $GIT_EDITOR is set
+	autocrlf = input
+	pager = delta --navigate --file-style=cyan --file-decoration-style='cyan box' --hunk-header-style=omit
+[credential "https://github.com"]
+	# the `!` prefix tells git to run the command as a shell script
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = !gh auth git-credential
+[interactive]
+	diffFilter = delta --color-only
+[color]
+	ui = always
+[init]
+	defaultBranch = main
+[push]
+	default = simple
+[pull]
+	rebase = false
+	ff = only
+[diff]
+	colorMoved = default
+[difftool]
+	prompt = false
+	trustExitCode = true
+# https://github.com/git/git/blob/master/mergetools/smerge
+[difftool "smerge"]
+	cmd = smerge difftool $LOCAL $REMOTE
+# https://code.visualstudio.com/docs/sourcecontrol/overview#_vs-code-as-git-difftool-and-mergetool
+[difftool "code"]
+	cmd = code --wait --diff $LOCAL $REMOTE
+[mergetool]
+	prompt = false
+	keepBackup = false
+[mergetool "code"]
+	cmd = code --wait --diff $REMOTE $LOCAL $BASE $MERGED
+	trustExitCode = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
