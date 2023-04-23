@@ -7,7 +7,7 @@ git clone https://github.com/adamelliotfields/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
 ```
 
-The _functions_ in [`functions`](./functions) can be used individually, too.
+The [`functions`](./functions) can be used individually, too.
 
 ```bash
 source ~/.dotfiles/functions
@@ -29,6 +29,35 @@ df_go
 
 # install rust via rustup
 df_rust
+```
+
+## Git
+
+I use 2 Git config files:
+  1. [`~/.config/git/config`](./shared/.config/git/config) - global read-only config
+  2. `~/.gitconfig` - global user config
+
+When you run `git config --global`, it won't write to `~/.config/git/config` if `~/.gitconfig` exists. This mechanism makes it convenient for the latter to store "dynamic" information like email address and GPG key.
+
+For managing the user config, I created [`git_user.fish`](./mac/.config/fish/functions/git_user.fish).
+
+A sample `~/.gitconfig` looks like this:
+
+> _NB: **name** and **email** are required; everything else is optional._
+
+```properties
+[user]
+	name = <your_name>
+	email = <your_email>
+	signingkey = <your_key>
+[diff]
+	tool = <smerge|code>
+[merge]
+	tool = <smerge|code>
+[commit]
+	gpgsign = true
+[gpg]
+	program = /path/to/gpg
 ```
 
 ## Games

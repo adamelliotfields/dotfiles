@@ -12,7 +12,7 @@
   "editor.inlineSuggest.enabled": true,
   "editor.lineHeight": 0, // 0 is 'auto'
   "editor.linkedEditing": true,
-  "editor.renderFinalNewline": "on",
+  "editor.renderFinalNewline": "on", // this renders a final newline in the editor
   "editor.renderWhitespace": "boundary",
   "editor.rulers": [100],
   "editor.stickyScroll.enabled": true,
@@ -20,13 +20,18 @@
   "explorer.confirmDragAndDrop": false,
   "files.enableTrash": false,
   "files.eol": "\n",
-  "files.insertFinalNewline": true,
+  "files.insertFinalNewline": true, // this actually inserts a final newline in the file
   "github.copilot.enable": {
     "*": true,
-    "csv": false
+    "csv": false,
+    "markdown": true
   },
   "security.workspace.trust.enabled": false,
-  "settingsSync.ignoredSettings": ["workbench.colorTheme"], // can't use Dracula Pro in Codespaces
+  "settingsSync.ignoredSettings": [
+    // shouldn't have access to private themes in Codespaces
+    // i say "shouldn't" because it does appear and then reverts to the stock theme
+    "workbench.colorTheme"
+  ],
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "block",
