@@ -23,20 +23,23 @@
 # keybase pgp export --unencrypted -q $key_id | tee /tmp/pub.asc >/dev/null
 # gh gpg-key add /tmp/pub.asc # requires gpg scope on your GH_TOKEN
 # ```
-function git_user --description 'Switches the current Git user'
-  set -l user ''
-  set -l email 'false'
-  set -l key 'false'
-  set -l xdg 'false'
-  set -l help 'false'
-  set -l dry_run 'false'
-  set -l help_msg "git_user
+function gituser -d 'Switches the current Git user'
+  argparse 'd/dry-run' 'e/email' 'h/help' 'k/key' 'x/xdg' -- $argv ; or return 1
+
+  set -l dry_run $_flag_d
+  set -l email $_flag_e
+  set -l help $_flag_h
+  set -l key $_flag_k
+  set -l xdg $_flag_x
+
+  set -l user $argv
+  set -l help_msg "gituser
 
 Updates your Git and GPG configs to use the given email address and associated key.
 Requires the key to be in your keyring. Will clobber your existing GPG config if you have one.
 
 USAGE:
-  git_user [ARGS] [FLAGS]
+  gituser [ARGS] [FLAGS]
 
 ARGS:
   user           The email address of the user to sign commits
@@ -48,36 +51,9 @@ FLAGS:
   -k, --key      Print the current signing key
   -x, --xdg      Use \$XDG_CONFIG_HOME/git/config instead of default git config handling"
 
-  # parse the command line arguments
-  while test (count $argv) -gt 0
-    switch $argv[1]
-      case -d --dry-run
-        set dry_run 'true'
-        set -e argv[1] # https://stackoverflow.com/a/24101186/3586996
-      case -e --email
-        set email 'true'
-        set -e argv[1]
-      case -h --help
-        set help 'true'
-        set -e argv[1]
-      case -k --key
-        set key 'true'
-        set -e argv[1]
-      case -x --xdg
-        set xdg 'true'
-        set -e argv[1]
-      case '-*'
-        echo "$help_msg"
-        return 1
-      case '*'
-        set user $argv[1]
-        set -e argv[1]
-    end
-  end
-
   # exit early for help
-  if test "$help" = 'true'
-    echo "$help_msg"
+  if test -n "$help"
+    echo $help_msg
     return 0
   end
 
@@ -88,21 +64,21 @@ FLAGS:
   set -l xdg_git_config ''
 
   # force using the XDG config
-  if test "$xdg" = 'true'
+  if test -n "$xdg"
     if test -z "$XDG_CONFIG_HOME"
-      set xdg_config_home "$HOME/.config"
+      set xdg_config_home $HOME'/.config'
     else
-      set xdg_config_home "$XDG_CONFIG_HOME"
+      set xdg_config_home $XDG_CONFIG_HOME
     end
 
-    set xdg_git_config "$xdg_config_home/git/config"
+    set xdg_git_config $xdg_config_home'/git/config'
 
     if test -e "$xdg_git_config"
-      set current_user (git config -f "$xdg_git_config" user.email 2>/dev/null)
-      set current_key_id (git config -f "$xdg_git_config" user.signingkey 2>/dev/null)
+      set current_user (git config -f $xdg_git_config user.email 2>/dev/null)
+      set current_key_id (git config -f $xdg_git_config user.signingkey 2>/dev/null)
     else
-      mkdir -p "$xdg_config_home/git"
-      touch "$xdg_git_config"
+      mkdir -p $xdg_config_home'/git'
+      touch $xdg_git_config
     end
   else
     # use default config resolution
@@ -111,9 +87,9 @@ FLAGS:
   end
 
   # print the current user or key and exit if one of the flags was passed
-  if test "$email" = 'true' ; or test "$key" = 'true'
-    test "$email" = 'true' ; and echo "$current_user"
-    test "$key" = 'true' ; and echo "$current_key_id"
+  if test -n "$email" ; or test -n "$key"
+    test -n "$email" ; and echo $current_user
+    test -n "$key" ; and echo $current_key_id
     return 0
   end
 
@@ -124,12 +100,12 @@ FLAGS:
   signingkey = $current_key_id"
 
   if test -z "$user" ; or test "$user" = "$current_user"
-    echo "$result"
+    echo $result
     return 0
   end
 
   # get all of the keys for the provided email address
-  set -l gpg_keys (gpg --list-keys --with-colons "$user")
+  set -l gpg_keys (gpg --list-keys --with-colons $user)
 
   # gpg will print an error if the email isn't in the keyring
   if test $status -ne 0
@@ -139,16 +115,16 @@ FLAGS:
   # get the public key id specifically
   # convert the spaces to newlines then find the line that starts with "pub"
   # the fields are separated by colons and the 5th field is the key id
-  set -l key_id (echo "$gpg_keys" | tr ' ' '\n' | grep '^pub' | cut -d':' -f5)
+  set -l key_id (echo $gpg_keys | tr ' ' '\n' | grep '^pub' | cut -d':' -f5)
 
   # update the git config
-  if test "$dry_run" != 'true'
-    if test "$xdg" = 'true'
-      git config -f "$xdg_git_config" user.email "$user"
-      git config -f "$xdg_git_config" user.signingkey "$key_id"
+  if not test -n "$dry_run"
+    if test -n "$xdg"
+      git config -f $xdg_git_config user.email $user
+      git config -f $xdg_git_config user.signingkey $key_id
     else
-      git config --global user.email "$user"
-      git config --global user.signingkey "$key_id"
+      git config --global user.email $user
+      git config --global user.signingkey $key_id
     end
 
     # update the gpg config
@@ -165,8 +141,8 @@ FLAGS:
 
   # print a color diff if bat is installed
   if command -v bat >/dev/null
-    echo "$diff" | bat -pp -l diff --color=always
+    echo $diff | bat -pp -l diff --color=always
   else
-    echo "$diff"
+    echo $diff
   end
 end
