@@ -1,30 +1,21 @@
-# requires jorgebucaran/getopts
 function ubuntu -d 'Run an Ubuntu container mounted to the current directory'
+  argparse 'h/help' 'p/port=' 's/shell=' -- $argv ; or return 1
+
   # get the basename of the current directory
   set -l base_dir (basename $PWD)
   set -l shell 'bash'
   set -l port ''
-  set -l _help "\
+  set -l help_msg "\
 Usage:  ubuntu [OPTIONS]\n
 Run an Ubuntu container mounted to the current directory 🐧\n
 Options:
   -p, --port   The host port to bind to (default: none)
-  -s, --shell  The shell to use (default: $shell)"
+  -s, --shell  The shell to use (default: $shell)
+  -h, --help   Show this message and exit"
 
-  # parse options
-  if type -q getopts
-    getopts $argv | while read -l key value
-      switch $key
-        case h help
-          echo -e $_help
-          return
-        case p port
-          set port $value
-        case s shell
-          set shell $value
-      end
-    end
-  end
+  set -q _flag_p ; and set port $_flag_p
+  set -q _flag_s ; and set shell $_flag_s
+  set -q _flag_h ; and echo -e $help_msg ; and return 0
 
   # docker run options
   set -l opts \

@@ -24,7 +24,7 @@ brew "git"
 brew "git-delta"
 brew "git-extras"
 brew "git-lfs"
-brew "gnupg"
+brew "gnupg" # gnupg2 was a transitional package for both brew and apt
 brew "go"
 brew "htop"
 brew "imagemagick"
