@@ -118,12 +118,17 @@ df_deb() {
   fi
 
   local -a args=("$@")
+  local token="${GH_TOKEN:-${GITHUB_TOKEN:-''}}"
+
+  if [ -z "$token" ] ; then
+    echo "df_deb: GH_TOKEN or GITHUB_TOKEN not set. skipping..."
+    return 0
+  fi
 
   for repo in "${args[@]}" ; do
     local bin=$(echo "$repo" | awk -F '/' '{print $2}')
-    local token="${GH_TOKEN:-${GITHUB_TOKEN:-''}}"
+    local opts="-fsSLH 'Authorization: token $token'"
     local arch=''
-    local opts=''
 
     # set arch
     case "$(uname -m)" in
@@ -143,13 +148,6 @@ df_deb() {
       continue
     fi
 
-    # use GitHub token if available
-    if [ -n "$token" ] ; then
-      opts="-fsSLH 'Authorization: token $token'"
-    else
-      opts='-fsSL'
-    fi
-
     # get the latest release
     local assets=$(eval "curl $opts https://api.github.com/repos/$repo/releases/latest" | jq -r '.assets')
     local asset="$(echo "$assets" | jq -r ".[] | select(.name | test(\"${bin}_(.+)_${arch}.deb\"))")"
@@ -161,7 +159,6 @@ df_deb() {
     fi
 
     # download the deb
-    sleep 0.1
     local browser_download_url=$(echo "$asset" | jq -r '.browser_download_url')
     local filename=$(basename "$browser_download_url")
     eval "curl -fsSL $browser_download_url -o /tmp/$filename"
