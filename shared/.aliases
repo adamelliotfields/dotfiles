@@ -1,45 +1,19 @@
 # shellcheck shell=sh
 # shellcheck disable=SC2016,SC2120,SC2142
-alias update="sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y"
-alias octal='stat -f "%a"'
-alias uuid='uuidgen'
-alias python='python3'
+[ -n "$BASH_VERSION" ] && alias refresh="source ~/.bashrc"
+[ -n "$ZSH_VERSION" ] && alias refresh="source ~/.zshrc"
 
-# mac overrides
-if [ "$(uname -s)" = 'Darwin' ] ; then
-  alias restart="sudo shutdown -r now"
-  alias shutdown="sudo shutdown -h now"
-  alias mute='osascript -e "set volume output muted true"'
-  alias unmute='osascript -e "set volume output muted false"'
-  alias update="brew update && brew upgrade && brew cleanup"
-  alias octal='stat -f "%A"'
-  alias uuid='uuidgen | tr "[:upper:]" "[:lower:]"'
-  alias python='/usr/local/bin/python3.10'
-fi
-
-if [ -n "$BASH_VERSION" ] ; then
-  alias refresh="source ~/.bashrc"
-fi
-
-if [ -n "$ZSH_VERSION" ] ; then
-  alias refresh="source ~/.zshrc"
-fi
-
-alias ..='cd ..'
-alias ...='cd ../..'
+# misc
 alias c='clear'
 alias t='type -a'
-alias v='vim'
 alias r='rm -r'
 alias rf='rm -rf'
-# alias rnm='find . -type d -name node_modules -maxdepth 3 | xargs -I{} rm -r {}'
-alias rnm='fd -I -td -d3 -cnever --prune node_modules . -x rm -rf {}' # note: anything you type after `rmnm` will be passed to `rm` NOT `fd`
-alias todo='rg "TODO: |FIXME: "'
+alias rnm='find . -type d -name node_modules -maxdepth 3 | xargs -I{} rm -r {}'
 
 # bat
 alias b='bat -n' # line numbers
 alias bp='bat -pp' # plain no paging
-alias bman='bat -pl man'
+alias bman='bat -pl man' # e.g., gh --help | bman
 
 # exa
 alias l='exa -labgh --no-permissions --octal-permissions --group-directories-first --color-scale --color=always'
@@ -100,7 +74,7 @@ alias gb='git branch'
 alias gba='git branch --all' # list ALL local and remote branches
 alias gbd='git branch --delete' # delete a branch
 alias gbD='git branch -D' # force delete a branch
-alias gc='git commit' # opens your $EDITOR for message
+alias gc='git commit' # opens your $GIT_EDITOR or $EDITOR
 alias gcm='git commit --message' # enter message after command, e.g., gcm 'initial commit'
 alias gca='git commit --all' # stage and commit all tracked files (ignores new files)
 alias gcam='git commit --all --message'
@@ -134,7 +108,7 @@ alias gsl='git stash list'
 alias gslp='git stash list -p'
 alias gss='git stash show'
 alias gssp='git stash show -p'
-alias gstat='git status'
+alias gst='git status'
 alias gsw='git switch' # use this one to switch to a different branch
 alias gswc='git switch -c' # use this one to create a new branch and switch to it
 
@@ -180,14 +154,12 @@ alias dri='docker run -it'
 alias drr='docker run --rm'
 alias drir='docker run -it --rm'
 alias dc='docker container'
-alias dcl='docker container logs'
-alias dclf='docker container logs -f'
+alias dcl='docker container logs -f'
 alias dcls='docker container ls -a'
 alias dclsq='docker container ls -aq'
 alias dcs='docker container start'
 alias dcst='docker container stop'
-alias dcr='docker container rm'
-alias dcrf='docker container rm -f'
+alias dcr='docker container rm -f'
 alias dcrs='docker container restart'
 alias dce='docker container exec'
 alias dcei='docker container exec -it'
@@ -199,36 +171,34 @@ alias di='docker image'
 alias dil='docker image ls'
 alias dilq='docker image ls -q'
 alias dip='docker image pull'
-alias dir='docker image rm'
-alias dirf='docker image rm -f'
+alias dir='docker image rm -f'
 alias dvl='docker volume ls'
 alias dvlq='docker volume ls -q'
 alias dv='docker volume'
 alias dvc='docker volume create'
-alias dvr='docker volume rm'
-alias dvrf='docker volume rm -f'
+alias dvr='docker volume rm -f'
 alias dn='docker network'
 alias dnl='docker network ls'
 alias dnlq='docker network ls -q'
-alias dnr='docker network rm'
-alias dnrf='docker network rm -f'
+alias dnr='docker network rm -f'
 
 # kubectl
+# see https://github.com/ahmetb/kubectl-aliases
 alias k='kubectl'
+alias ki='kubectl cluster-info'
+alias kl='kubectl logs -f'
 alias kc='kubectl config'
+alias kcv='kubectl config view --minify'
 alias kccc='kubectl config current-context'
+alias kccns="kubectl config view --minify --output='jsonpath={..namespace}'"
 alias kcgc='kubectl config get-contexts'
 alias kcuc='kubectl config use-context'
-alias kcun='kubectl config set-context --current --namespace' # set the namespace for the current context (there is no `kubectl config use-namespace`)
-alias kci='kubectl cluster-info'
+alias kcuns='kubectl config set-context --current --namespace' # set the namespace for the current context (there is no `kubectl config use-namespace`)
+alias kcusns='kubectl config unset contexts.$(kubectl config current-context).namespace' # unset namespace
 alias kg='kubectl get'
 alias kga='kubectl get --all-namespaces'
 alias kgj='kubectl get --output=json'
-alias kgy='kubectl get --output=yaml'
-alias kl='kubectl logs'
-alias klf='kubectl logs -f'
+alias kgns='kubectl get namespaces'
 
 # put any additional aliases here
-if [ -s "${HOME}/.aliases.inc" ] ; then
-  . "${HOME}/.aliases.inc"
-fi
+[ -s "$HOME/.aliases.inc" ] && . "$HOME/.aliases.inc"
