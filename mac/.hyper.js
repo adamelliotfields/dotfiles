@@ -2,7 +2,7 @@
 module.exports = {
   config: {
     updateChannel: "stable",
-    fontSize: 20,
+    fontSize: 24,
     fontFamily:
       "'MonoLisa Variable', 'Symbols Nerd Font', 'CaskaydiaCove Nerd Font', Menlo, 'DejaVu Sans Mono', monospace",
     fontWeight: "normal",

@@ -12,7 +12,7 @@ window:
     y: 32
 
 font:
-  size: 20.0
+  size: 24.0
   offset:
     y: 4
   normal:
