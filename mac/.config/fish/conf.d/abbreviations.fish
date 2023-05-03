@@ -15,3 +15,4 @@ abbr -a -- update 'brew update && brew upgrade && brew cleanup'
 abbr -a -- octal "stat -f '%A'" # use `%a` on linux
 abbr -a -- uuid "uuidgen | tr '[:upper:]' '[:lower:]'"
 abbr -a -- todo "rg 'TODO: |FIXME: '"
+abbr -a -- fzgu 'gituser (gituser --list | fzf)'

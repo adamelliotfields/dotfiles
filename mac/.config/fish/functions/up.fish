@@ -1,6 +1,18 @@
 function up -d 'Move up n-directories'
+  argparse 'completions' -- $argv ; or return 1
+
   set -l n $argv[1]
+  set -l completions $_flag_completions
   set -l path ''
+
+  # completions
+  # usage: up --completions | source
+  if test -n "$completions"
+    echo "\
+complete -c up -f
+complete -c up -a \"(__complete_up)\""
+    return 0
+  end
 
   # check that n is a positive number
   # can also check if n is any number with `$n -eq $n`
@@ -13,4 +25,16 @@ function up -d 'Move up n-directories'
   test -n "$path"
     and cd $path
     or echo -e "up: $n is not a positive number\n\nUSAGE:\n  up <n>"
+end
+
+
+# https://fishshell.com/docs/current/completions.html
+function __complete_up
+  # count the number of slashes in the current directory
+  set -l segments (echo $PWD | tr -cd '/' | wc -c)
+
+  # e.g., if you're in /foo/bar/baz you can move up 2 times
+  for i in (seq (math $segments - 1))
+    test $i -gt 0 ; and echo $i
+  end
 end

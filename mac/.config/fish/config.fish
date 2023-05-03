@@ -11,6 +11,10 @@ if type -q replay
   test -s "$HOME/.aliases" ; and source $HOME/.aliases
 end
 
+# personal functions
+type -q gituser ; and gituser --completions | source
+type -q up ; and up --completions | source
+
 # 1password
 if command -v op >/dev/null
   op completion fish | source
