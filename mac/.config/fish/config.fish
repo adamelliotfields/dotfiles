@@ -13,6 +13,7 @@ end
 
 # personal functions
 type -q gituser ; and gituser --completions | source
+type -q fgpt ; and fgpt --completions | source
 type -q up ; and up --completions | source
 
 # 1password
