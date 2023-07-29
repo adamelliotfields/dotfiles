@@ -1,21 +1,26 @@
 function ubuntu -d 'Run an Ubuntu container mounted to the current directory'
-  argparse 'h/help' 'p/port=' 's/shell=' -- $argv ; or return 1
+  argparse 'h/help' 'p/port=' 's/shell=' -- $argv || return 1
 
   # get the basename of the current directory
   set -l base_dir (basename $PWD)
   set -l shell 'bash'
   set -l port ''
-  set -l help_msg "\
-Usage:  ubuntu [OPTIONS]\n
-Run an Ubuntu container mounted to the current directory 🐧\n
-Options:
-  -p, --port   The host port to bind to (default: none)
-  -s, --shell  The shell to use (default: $shell)
-  -h, --help   Show this message and exit"
 
-  set -q _flag_p ; and set port $_flag_p
-  set -q _flag_s ; and set shell $_flag_s
-  set -q _flag_h ; and echo -e $help_msg ; and return 0
+  set -q _flag_p && set port $_flag_p
+  set -q _flag_s && set shell $_flag_s
+
+  set -q _flag_h && begin
+    echo 'Run an Ubuntu container mounted to the current directory  🐧'
+    echo
+    echo (set_color -o)'USAGE'(set_color normal)
+    echo '  ubuntu [flags]'
+    echo
+    echo (set_color -o)'FLAGS'(set_color normal)
+    echo '  -p, --port   The host port to bind to (default: none)'
+    echo "  -s, --shell  The shell to use (default: '$shell')"
+    echo '  -h, --help   Show this message and exit'
+    return 0
+  end
 
   # docker run options
   set -l opts \
@@ -26,13 +31,13 @@ Options:
     -v $PWD:/$base_dir
 
   # set port if it exists
-  test -n $port ; and set -a opts \
+  test -n $port && set -a opts \
     -p $port:$port
 
   # set GH_TOKEN if it exists
-  set -q GH_TOKEN ; and set -a opts \
+  set -q GH_TOKEN && set -a opts \
     -e GH_TOKEN=$GH_TOKEN
 
   # if the container already exists, Docker will simply print an error message and exit
-  docker run $opts mcr.microsoft.com/devcontainers/base:ubuntu $shell
+  docker run $opts mcr.microsoft.com/devcontainers/base:jammy $shell
 end
