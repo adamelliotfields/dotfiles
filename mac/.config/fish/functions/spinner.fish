@@ -5,7 +5,7 @@
 #   kill $pid
 #   echo -ne '\r'
 function spinner -d 'A simple loading spinner for Fish'
-  argparse 'm/moon' 'c/cloud' -- $argv
+  argparse 'm/moon' 'c/cloud' -- $argv 2>/dev/null
 
   set -l moon $_flag_m
   set -l cloud $_flag_c
@@ -44,7 +44,7 @@ function spinner -d 'A simple loading spinner for Fish'
   end
 
   # I cannot get something like `trap 'echo -ne "\r"' EXIT INT` to work
-  # so you just have to clear it manually
+  # so you just have to clear it manually with `echo -ne '\r'`
   set -l i 1
   while true
     printf '%b%b%s' $cr $chars[$i] $spaces

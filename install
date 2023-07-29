@@ -1,57 +1,63 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-main() {
-  source "$(dirname "$0")/functions"
+for func in 'apt' 'chsh' 'clone' 'deb' 'homebrew' 'link' 'nvm' 'sudoers' ; do
+  source "$(dirname "$0")/lib/${func}.sh"
+done
 
-  # set to 0 to only symlink dotfiles
-  local install_linux=${DF_INSTALL_LINUX:-1}
-  local install_mac=${DF_INSTALL_MAC:-0}
+# linux config
+declare -a linux_prompts=( 'nojhan/liquidprompt' )
+declare -a linux_apt=( 'build-essential' 'curl' 'fzf' 'git' 'git-extras' 'gnupg' 'jq' 'ripgrep' 'unzip' 'wget' )
+declare -a linux_apt_python=( 'libbz2-dev' 'libffi-dev' 'liblzma-dev' 'libncurses-dev' 'libreadline-dev' 'libsqlite3-dev' )
+declare -a linux_deb=( 'cli/cli' 'lsd-rs/lsd' 'sharkdp/bat' 'sharkdp/fd' 'dandavison/delta' 'ajeetdsouza/zoxide' )
 
-  # linux config
-  local -a linux_prompts=( 'nojhan/liquidprompt' 'sindresorhus/pure' )
-  local -a linux_apt=( 'curl' 'exa' 'fzf' 'git' 'git-extras' 'gnupg' 'jq' 'ripgrep' 'unzip' 'vim' 'wget' )
-  local -a linux_deb=( 'cli/cli' 'sharkdp/bat' 'sharkdp/fd' 'dandavison/delta' 'ajeetdsouza/zoxide' )
+# linux
+if [[ $(uname) == 'Linux' ]] ; then
+  echo 'Symlinking dotfiles...'
+  dotfiles_link shared linux
 
-  echo_bold 'Symlinking dotfiles...'
-  df_link
+  echo 'Installing apt packages...'
+  dotfiles_apt "${linux_apt[@]}" "${linux_apt_python[@]}"
 
-  # linux
-  if [[ $install_linux -ne 0 && $(uname) == 'Linux' ]] ; then
-    echo_bold 'Installing apt packages...'
-    df_apt "${linux_apt[@]}"
+  echo 'Installing deb packages...'
+  dotfiles_deb "${linux_deb[@]}"
 
-    echo_bold 'Installing deb packages...'
-    df_deb "${linux_deb[@]}"
+  # install prompts with homebrew on mac
+  echo 'Installing prompts...'
+  dotfiles_clone "${linux_prompts[@]}"
+fi
 
-    echo_bold 'Installing prompts...'
-    df_prompt "${linux_prompts[@]}"
-  fi
+# mac
+if [[ $(uname) == 'Darwin' ]] ; then
+  echo 'Symlinking dotfiles...'
+  dotfiles_link shared mac
 
-  # mac
-  if [[ $install_mac -ne 0 && $(uname) == 'Darwin' ]] ; then
-    # requires relogin to take effect
-    echo_bold 'Enabling passwordless sudo...'
-    df_sudo
+  # requires relogin to take effect
+  echo 'Enabling passwordless sudo...'
+  dotfiles_sudoers
 
-    # requires passwordless sudo
-    echo_bold 'Installing Homebrew...'
-    df_brew
+  echo 'Installing Homebrew...'
+  dotfiles_homebrew
 
-    # probably requires passwordless sudo
-    echo_bold 'Installing Homebrew packages...'
-    eval "$(brew shellenv)"
-    brew bundle --global --no-lock
+  echo 'Installing Homebrew packages...'
+  eval "$(brew shellenv)"
+  brew bundle --global --no-lock
 
-    # requires the previous 2
-    echo_bold 'Installing Fish plugins...'
-    fish -c 'fisher update'
+  # requires fish (in Brewfile)
+  echo 'Installing Fish plugins...'
+  fish -c 'fisher update'
 
-    # also requires relogin to take effect
-    echo_bold 'Changing default shell to Fish...'
-    df_chsh '/usr/local/bin/fish'
-  fi
+  # requires relogin
+  echo 'Changing default shell to Fish...'
+  dotfiles_chsh '/usr/local/bin/fish'
 
-  echo_bold 'Done! 🎉'
-  return 0
-} ; main
+  # command + shift + .
+  echo 'Showing hidden files in Finder...'
+  defaults write com.apple.finder AppleShowAllFiles true
+  killall Finder
+
+  echo 'Installing nvm and Node LTS...'
+  dotfiles_nvm 'lts/*'
+fi
+
+echo 'Done! 🎉'

@@ -1,16 +1,14 @@
 function up -d 'Move up n-directories'
-  argparse 'completions' -- $argv ; or return 1
+  argparse 'completions' -- $argv || return 1
 
   set -l n $argv[1]
-  set -l completions $_flag_completions
   set -l path ''
 
   # completions
   # usage: up --completions | source
-  if test -n "$completions"
-    echo "\
-complete -c up -f
-complete -c up -a \"(__complete_up)\""
+  set -q _flag_completions && begin
+    echo 'complete -c up -f'
+    echo "complete -c up -a \"(__complete_up)\""
     return 0
   end
 
@@ -35,6 +33,6 @@ function __complete_up
 
   # e.g., if you're in /foo/bar/baz you can move up 2 times
   for i in (seq (math $segments - 1))
-    test $i -gt 0 ; and echo $i
+    test $i -gt 0 && echo $i
   end
 end

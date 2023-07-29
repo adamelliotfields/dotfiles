@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "bmalehorn.vscode-fish",
-    "editorconfig.editorconfig",
     "timonwong.shellcheck"
   ],
   "unwantedRecommendations": [

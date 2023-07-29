@@ -1,15 +1,22 @@
-# Need `gpg` and optionally `bat`:
-#   - Linux: `apt install gnpupg bat`
-#   - macOS: `brew install gnupg bat`
+# Need `gpg`:
+#   - Linux: `apt install gnupg`
+#   - macOS: `brew install gnupg`
 #
 # Your *secret* key must be in your GPG keyring.
-# ```sh
-# keybase pgp list # view your key ids
-# key_id=<your_key_id>
-# keybase pgp export --secret --unencrypted -q $key_id | gpg --import
-#
 # ```
-# You have to trust the key with `gpg --edit-key $key_id` and then `5 (trust ultimately)` and `quit`.
+# $ cat /path/to/your.sec.key | gpg --import
+# ```
+#
+# You have to trust the key for signing commits.
+# ```
+# $ gpg --keyid-format=long --list-secret-keys # find the 16-digit key id
+# $ gpg --edit-key $your_key_id
+# > trust
+# > 5
+# > y
+# > quit
+# ```
+#
 # To automatically sign commits you need this in your `~/.gitconfig`:
 # ```
 # [commit]
@@ -19,9 +26,8 @@
 # ```
 #
 # Finally, your *public* key must be in your GitHub account.
-# ```sh
-# keybase pgp export --unencrypted -q $key_id | tee /tmp/pub.asc >/dev/null
-# gh gpg-key add /tmp/pub.asc # requires gpg scope on your GH_TOKEN
+# ```
+# $ gh gpg-key add /path/to/your.pub.key # requires gpg scope on your GH_TOKEN
 # ```
 function gituser -d 'Switches the current Git user'
   set -l completions_txt 'Print Fish completions'

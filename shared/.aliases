@@ -1,5 +1,6 @@
 # shellcheck shell=sh
 # shellcheck disable=SC2016,SC2120,SC2142
+# see mac/.config/fish/conf.d/abbreviations.fish for more
 [ -n "$BASH_VERSION" ] && alias refresh="source ~/.bashrc"
 [ -n "$ZSH_VERSION" ] && alias refresh="source ~/.zshrc"
 
@@ -10,33 +11,18 @@ alias r='rm -r'
 alias rf='rm -rf'
 alias rnm='find . -type d -name node_modules -maxdepth 3 | xargs -I{} rm -r {}'
 
+# aichat
+alias ai='aichat -m gpt-3.5-turbo -r chatgpt --' # https://github.com/sigoden/aichat#roles
+
 # bat
 alias b='bat -n' # line numbers
 alias bp='bat -pp' # plain no paging
 alias bman='bat -pl man' # e.g., gh --help | bman
 
-# exa
-alias l='exa -labgh --no-permissions --octal-permissions --group-directories-first --color-scale --color=always'
-alias lg='exa -labgh --git --git-ignore --icons --no-permissions --octal-permissions --group-directories-first --color-scale --color=always' # with git
-alias lt='exa -aTL1 --icons --group-directories-first --color=always' # tree with icons
-
-# spotify
-# playback commands require you to be connected to the currently playing device
-# the device can be selected interactively in the UI by pressing `d`
-# you can also pass the device name to commands with the `-d` flag
-# the current device is cached
-alias s='spt'
-alias sl='spt list'
-alias sld='spt list --devices'
-alias slp='spt list --playlists'
-alias sp='spt playback'
-alias sps='spt playback --status'
-alias spn='spt playback --next'
-alias spp='spt playback --previous'
-alias spst='spt playback --share-track'
-alias spsa='spt playback --share-album'
-alias splay='spt playback --toggle'
-alias spause='spt playback --toggle'
+# lsd
+# prefer over exa
+alias l='lsd -lA --date=relative --group-dirs=first --permission=octal --size=short'
+alias lt='lsd -a --tree --depth=1 --group-dirs=first --icon=never'
 
 # fd
 # use globs all the time
@@ -199,6 +185,3 @@ alias kg='kubectl get'
 alias kga='kubectl get --all-namespaces'
 alias kgj='kubectl get --output=json'
 alias kgns='kubectl get namespaces'
-
-# put any additional aliases here
-[ -s "$HOME/.aliases.inc" ] && . "$HOME/.aliases.inc"
