@@ -10,6 +10,7 @@ function fish_prompt -d 'Write out the prompt'
   set -l color_git_key yellow
   set -l color_git_email brblack
   set -l color_duration black
+  set -l color_docker $color_k8s
 
   # prompt chars from https://github.com/IlanCosman/tide
   set -l char_prompt_top '╭─'
@@ -19,10 +20,12 @@ function fish_prompt -d 'Write out the prompt'
   set -l icon_git '󰊢' # nf-md-git
   set -l icon_key '󰌆' # nf-md-key
   set -l icon_k8s '󱃾' # nf-md-kubernetes
+  set -l icon_docker '󰡨' # nf-md-docker
 
   # features
-  set -l show_git true # toggled by FISH_PROMPT_GIT=<0|1>
-  set -l show_k8s true # toggled by FISH_PROMPT_K8S=<0|1>
+  set -l show_git false # toggled by FISH_PROMPT_GIT=<0|1>
+  set -l show_k8s false # toggled by FISH_PROMPT_K8S=<0|1>
+  set -l show_docker false # toggled by FISH_PROMPT_DOCKER=<0|1>
 
   # $status is the exit code of the last command (i.e., $? in bash)
   # $pipestatus is an array of exit codes for each command in a pipe
@@ -37,7 +40,7 @@ function fish_prompt -d 'Write out the prompt'
   if test $__last_status_generation -ne $status_generation
     set show_status true
 
-    # command duration colors (disabled)
+    # command duration colors (not using)
     # test $last_cmd_duration -gt 49 ; and test $last_cmd_duration -lt 60000 ; and set color_duration yellow
     # test $last_cmd_duration -gt 59999 ; and set color_duration red
 
@@ -52,8 +55,9 @@ function fish_prompt -d 'Write out the prompt'
   end
 
   # set these after reading $status as they do return an exit code
-  set -q FISH_PROMPT_GIT ; and contains -- $FISH_PROMPT_GIT 0 false ; and set show_git false
-  set -q FISH_PROMPT_K8S ; and contains -- $FISH_PROMPT_K8S 0 false ; and set show_k8s false
+  set -q FISH_PROMPT_GIT ; and contains -- $FISH_PROMPT_GIT 1 true ; and set show_git true
+  set -q FISH_PROMPT_K8S ; and contains -- $FISH_PROMPT_K8S 1 true ; and set show_k8s true
+  set -q FISH_PROMPT_DOCKER ; and contains -- $FISH_PROMPT_DOCKER 1 true ; and set show_docker true
 
   # prefix
   echo -ns (set_color $color_prompt) $char_prompt_top ' '
@@ -67,17 +71,6 @@ function fish_prompt -d 'Write out the prompt'
   set -l color_pwd $fish_color_cwd
   fish_is_root_user ; and set color_pwd $fish_color_cwd_root
   echo -ns (set_color $color_pwd) (prompt_pwd) ' '
-
-  # kubernetes
-  # show if docker is running
-  # https://gist.github.com/nuxlli/7553996
-  if test "$show_k8s" = true ; and echo -n 'GET /info HTTP/1.0\r\n\r\n' | nc -U ~/.docker/run/docker.sock &>/dev/null # /var/run/docker.sock is a symlink on mac
-    set -l k8s_context (kubectl config view --minify --output 'jsonpath={.current-context}:{..namespace}' | string trim -r -c ':' 2>/dev/null)
-
-    if test -n "$k8s_context"
-      echo -ns (set_color $color_k8s) $icon_k8s ' ' (set_color $color_k8s_context) $k8s_context ' '
-    end
-  end
 
   # git
   # variables are set in ../conf.d/fish_git_prompt.fish
@@ -104,10 +97,25 @@ function fish_prompt -d 'Write out the prompt'
     fish_git_prompt $template'%s '
   end
 
+  # kubernetes
+  if test "$show_k8s" = true ; and command -v kubectl >/dev/null
+    set -l k8s_context (kubectl config view --minify --output 'jsonpath={.current-context}:{..namespace}' | string trim -r -c ':' 2>/dev/null)
+
+    if test -n "$k8s_context"
+      echo -ns (set_color $color_k8s) $icon_k8s ' ' (set_color $color_k8s_context) $k8s_context ' '
+    end
+  end
+
+  # docker
+  # https://gist.github.com/nuxlli/7553996
+  if test "$show_docker" = true ; and echo -n 'GET /info HTTP/1.0\r\n\r\n' | nc -U ~/.docker/run/docker.sock &>/dev/null # /var/run/docker.sock is a symlink on mac
+    echo -ns (set_color $color_docker) $icon_docker ' '
+  end
+
   # command duration and exit status
   if test "$show_status" = true
     if test $last_cmd_duration -gt 0
-      echo -ns (set_color $color_duration) (humantime $last_cmd_duration) ' '
+      echo -ns (set_color $color_duration) (format -t $last_cmd_duration) ' '
     end
 
     # prints nothing if the last command returned an exit code of 0 or 141
