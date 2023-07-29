@@ -7,48 +7,47 @@ git clone https://github.com/adamelliotfields/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
 ```
 
-The [`functions`](./functions) can be used individually, too.
+## Functions
 
-```bash
-source ~/.dotfiles/functions
+The [`install`](./install) script calls the functions in [`lib`](./lib/):
+  * [`dotfiles_apt`](./lib/apt.sh)
+  * [`dotfiles_chsh`](./lib/chsh.sh)
+  * [`dotfiles_clone`](./lib/clone.sh)
+  * [`dotfiles_deb`](./lib/deb.sh)
+  * [`dotfiles_deno`](./lib/deno.sh)
+  * [`dotfiles_go`](./lib/go.sh)
+  * [`dotfiles_homebrew`](./lib/homebrew.sh)
+  * [`dotfiles_link`](./lib/link.sh)
+  * [`dotfiles_nvm`](./lib/nvm.sh)
+  * [`dotfiles_pyenv`](./lib/pyenv.sh)
+  * [`dotfiles_rustup`](./lib/rustup.sh)
+  * [`dotfiles_sudoers`](./lib/sudoers.sh)
 
-# install the deb for diskus from GitHub Releases
-df_deb sharkdp/diskus
+In Fish you just need to run them via `replay`:
 
-# install the asdf version manager with the node and deno plugins
-df_asdf nodejs deno
-
-# install nvm and node
-df_nvm
-
-# install deno from GitHub Releases
-df_deno
-
-# install go from golang.org
-df_go
-
-# install rust via rustup
-df_rust
+```fish
+# assuming you cloned to ~/.dotfiles and you want to install deno
+replay "source $HOME/.dotfiles/lib/deno.sh ; dotfiles_deno"
 ```
 
 ## Git
 
+> I use a single GitHub account for personal projects and work. My Git setup allows for quick toggling of the email address and GPG key used for signing commits.
+
 I use 2 Git config files:
   1. [`~/.config/git/config`](./shared/.config/git/config) - global read-only config
-  2. `~/.gitconfig` - global user config
+  2. `~/.gitconfig` - global user config (Git-ignored)
 
 When you run `git config --global`, it won't write to `~/.config/git/config` if `~/.gitconfig` exists. This mechanism makes it convenient for the latter to store "dynamic" information like email address and GPG key.
 
-For managing the user config, I created [`git_user.fish`](./mac/.config/fish/functions/git_user.fish).
+For managing the _user_ config, I created [`gituser.fish`](./mac/.config/fish/functions/gituser.fish), which updates `~/.gitconfig` with the provided email address and the corresponding GPG key. You can also call [`fzgu`](./mac/.config/fish/conf.d/abbreviations.fish) to interactively select a Git user powered by `fzf`.
 
 A sample `~/.gitconfig` looks like this:
 
-> _NB: **name** and **email** are required; everything else is optional._
-
 ```properties
 [user]
-	name = <your_name>
-	email = <your_email>
+	name = <your_name> # required
+	email = <your_email> # required
 	signingkey = <your_key>
 [diff]
 	tool = <smerge|code>
@@ -77,8 +76,10 @@ Terminal games you can install with `apt` :joystick:
 
 ## References
 
-* [jessfraz/dotfiles](https://github.com/jessfraz/dotfiles) :fire:
+* [jessfraz/dotfiles](https://github.com/jessfraz/dotfiles)
+* [holman/dotfiles](https://github.com/holman/dotfiles)
 * [dotphiles/dotphiles](https://github.com/dotphiles/dotphiles)
+* [alexanderepstein/bash-snippets](https://github.com/alexanderepstein/Bash-Snippets)
 * [lra/mackup](https://github.com/lra/mackup)
 * [GitHub Does Dotfiles](https://dotfiles.github.io)
 * [Personalizing GitHub Codespaces for your account](https://docs.github.com/en/codespaces/customizing-your-codespace/personalizing-github-codespaces-for-your-account#dotfiles)
