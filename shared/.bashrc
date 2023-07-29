@@ -25,11 +25,11 @@ completions_dir=''
 unset completions_dir
 
 # pyenv
-command -v pyenv >/dev/null && eval "$(pyenv init -)"
+[[ -n $(command -v pyenv 2>/dev/null) ]] && eval "$(pyenv init -)"
 
 # nvm
 unset NVM_DIR
-[[ -d "${HOMEBREW_PREFIX:-/usr/local}/share/nvm" ]] && export NVM_DIR="${HOMEBREW_PREFIX:-/usr/local}/share/nvm"
+[[ -d /usr/local/share/nvm ]] && export NVM_DIR='/usr/local/share/nvm'
 [[ -z $NVM_DIR && -d ${HOME}/.nvm ]] && export NVM_DIR="${HOME}/.nvm"
 [[ -n $NVM_DIR && -s ${NVM_DIR}/nvm.sh ]] && source "${NVM_DIR}/nvm.sh"
 

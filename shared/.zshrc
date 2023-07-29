@@ -20,7 +20,6 @@ PROMPT_EOL_MARK=''
   [ -s "${HOME}/.secrets" ] && source "${HOME}/.secrets"
   [ -s "${HOME}/.aliases" ] && source "${HOME}/.aliases"
 
-  local prefix="${HOMEBREW_PREFIX:-/usr/local}"
   local zsh_site_functions="${prefix}/share/zsh/site-functions"
 
   # set fpath before loading functions
@@ -31,11 +30,11 @@ PROMPT_EOL_MARK=''
   [ $+functions[complete] -eq 0 ] && autoload -Uz bashcompinit ; bashcompinit
 
   # pyenv
-  command -v pyenv >/dev/null && eval "$(pyenv init -)"
+  [[ -n $(command -v pyenv 2>/dev/null) ]] && eval "$(pyenv init -)"
 
   # nvm
   unset NVM_DIR
-  [[ -d ${prefix}/share/nvm ]] && export NVM_DIR="${prefix}/share/nvm"
-  [[ -z $NVM_DIR && -d ${home}/.nvm ]] && export NVM_DIR="${home}/.nvm"
+  [[ -d /usr/local/share/nvm ]] && export NVM_DIR='/usr/local/share/nvm'
+  [[ -z $NVM_DIR && -d ${HOME}/.nvm ]] && export NVM_DIR="${HOME}/.nvm"
   [[ -n $NVM_DIR && -s ${NVM_DIR}/nvm.sh ]] && source "${NVM_DIR}/nvm.sh"
 }
