@@ -15,7 +15,6 @@ brew "fisher" # fish package manager; requires fish
 brew "fzf"
 brew "gh"
 brew "git"
-brew "git-delta"
 brew "git-extras"
 brew "git-lfs"
 brew "gnupg" # gnupg2 was a transitional package before gnupg was updated

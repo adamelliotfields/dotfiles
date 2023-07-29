@@ -27,6 +27,7 @@
     "csv": false,
     "markdown": true
   },
+  "remoteHub.commitDirectlyWarning": "off",
   "security.workspace.trust.enabled": false,
   "settingsSync.ignoredSettings": ["workbench.colorTheme"],
   "telemetry.telemetryLevel": "off",

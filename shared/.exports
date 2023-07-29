@@ -82,7 +82,7 @@ export FISH_PROMPT_GIT=1
 export FISH_PROMPT_DOCKER=1
 
 # misc
-export PAGER='less -RFX --tabs=2'
+export PAGER='less -FRSX --tabs=2'
 export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain --paging=always'"
 export BAT_PAGER="$PAGER"
 
