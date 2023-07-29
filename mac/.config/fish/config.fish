@@ -4,26 +4,32 @@ set -g fish_greeting ''
 # force 24bit color
 set -g fish_term24bit 1
 
-# exports and aliases
+# run `fisher update` if you don't have replay yet
 if type -q replay
-  # run `fisher install` if you don't have replay yet
-  test -s "$HOME/.exports" ; and replay "source $HOME/.exports"
-  test -s "$HOME/.aliases" ; and source $HOME/.aliases
+  test -s "$HOME/.exports" && replay "source $HOME/.exports"
+  test -s "$HOME/.secrets" && replay "source $HOME/.secrets"
+  test -s "$HOME/.aliases" && source "$HOME/.aliases"
+
+  # nvm
+  # only source if a node version is installed
+  set -gx NVM_DIR $HOME/.nvm
+  if test -n "$(ls $NVM_DIR/versions/node 2>/dev/null)"
+    replay "source $NVM_DIR/nvm.sh"
+  end
 end
 
 # personal functions
-type -q gituser ; and gituser --completions | source
-type -q fgpt ; and fgpt --completions | source
-type -q up ; and up --completions | source
+type -q gituser && gituser --completions | source
+type -q up && up --completions | source
+
+# pyenv
+if command -v pyenv >/dev/null
+  pyenv init - | source
+end
 
 # 1password
 if command -v op >/dev/null
   op completion fish | source
-end
-
-# nodenv
-if command -v nodenv >/dev/null
-  source (nodenv init -|psub)
 end
 
 # zoxide
