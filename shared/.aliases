@@ -11,6 +11,9 @@ alias r='rm -r'
 alias rf='rm -rf'
 alias rnm='find . -type d -name node_modules -maxdepth 3 | xargs -I{} rm -r {}'
 
+# https://sgeb.io/posts/git-diff-anywhere
+alias gdiff='git diff --no-ext-diff --no-index'
+
 # aichat
 alias ai='aichat -m gpt-3.5-turbo -r chatgpt --' # https://github.com/sigoden/aichat#roles
 
