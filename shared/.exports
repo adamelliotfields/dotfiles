@@ -5,7 +5,13 @@ PATH="/usr/games/bin:/usr/games:${PATH}"
 # linux
 if [ "$(uname -s)" = 'Linux' ] ; then
   # brew
-  export HOMEBREW_PREFIX='/home/linuxbrew/.linuxbrew'
+  if [ -d /home/linuxbrew ] ; then
+    export HOMEBREW_PREFIX='/home/linuxbrew/.linuxbrew'
+    export HOMEBREW_CELLAR="${HOMEBREW_PREFIX}/Cellar"
+    export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
+    export MANPATH="${HOMEBREW_PREFIX}/share/man${MANPATH+:$MANPATH}:"
+    export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH:-}"
+  fi
 
   # editor
   # use vscode as the default editor in codespaces
@@ -20,12 +26,7 @@ if [ "$(uname -s)" = 'Darwin' ] ; then
   export BASH_SILENCE_DEPRECATION_WARNING=1
 
   # brew (intel)
-  export HOMEBREW_BUNDLE_NO_LOCK=1
   export HOMEBREW_PREFIX='/usr/local'
-  export HOMEBREW_CELLAR="${HOMEBREW_PREFIX}/Cellar"
-  export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
-  export MANPATH="${HOMEBREW_PREFIX}/share/man${MANPATH+:$MANPATH}:"
-  export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH:-}"
 
   # brew (apple)
   # https://docs.brew.sh/FAQ#why-is-the-default-installation-prefix-opthomebrew-on-apple-silicon
@@ -33,6 +34,13 @@ if [ "$(uname -s)" = 'Darwin' ] ; then
     arm64|aarch64)
       export HOMEBREW_PREFIX='/opt/homebrew' ;;
   esac
+
+  # brew (common)
+  export HOMEBREW_BUNDLE_NO_LOCK=1
+  export HOMEBREW_CELLAR="${HOMEBREW_PREFIX}/Cellar"
+  export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
+  export MANPATH="${HOMEBREW_PREFIX}/share/man${MANPATH+:$MANPATH}:"
+  export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH:-}"
 
   # bat can use sublime themes
   # mkdir -p ~/.config/bat && ln -sf ~/.dracula/themes/sublime ~/.config/bat/themes && bat cache --build
