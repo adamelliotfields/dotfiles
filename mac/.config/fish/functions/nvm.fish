@@ -9,7 +9,7 @@ function nvm -d 'nvm'
     or set nvm_dir $HOME'/.nvm'
 
   if test -s $nvm_dir'/nvm.sh'
-    replay "set -eu ; source $nvm_dir/nvm.sh --no-use ; nvm $argv"
+    replay "set -e ; source $nvm_dir/nvm.sh --no-use ; nvm $argv"
     return $status
   end
 

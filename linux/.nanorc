@@ -12,7 +12,6 @@ set tabsize 2 # 2 spaces
 set tabstospaces # no tabs
 set zap # deletes entire selections
 unset minibar # use the default status bar
-unset rebinddelete # delete should backspace on mac
 unset nonewlines # add newlines at the end of files
 
 # theme
