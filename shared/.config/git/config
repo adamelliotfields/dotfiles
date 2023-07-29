@@ -1,16 +1,19 @@
 [core]
 	# editor isn't read when $GIT_EDITOR is set
 	autocrlf = input
-	pager = delta --navigate --file-style=cyan --file-decoration-style='cyan box' --hunk-header-style=omit
+	pager = less -FRSX --tabs=2
 [credential "https://github.com"]
 	# the `!` prefix tells git to run the command as a shell script
 	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = !gh auth git-credential
-[interactive]
-	diffFilter = delta --color-only
 [color]
 	ui = always
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
 [init]
 	defaultBranch = main
 [push]
@@ -19,6 +22,7 @@
 	rebase = false
 	ff = only
 [diff]
+	color = always
 	colorMoved = default
 [difftool]
 	prompt = false
