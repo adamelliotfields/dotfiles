@@ -7,7 +7,7 @@
   "auto_complete_include_snippets":false,
   "caret_style": "phase",
   "close_windows_when_empty": true,
-  "color_scheme": "Packages/Dracula Pro/Dracula Pro (Van Helsing).tmTheme",
+  "color_scheme": "Packages/Dracula Pro/Dracula Pro (Van Helsing).tmTheme", // ln -s ~/.dracula/themes/sublime ~/Library/Application\ Support/Sublime\ Text/Packages/Dracula\ Pro
   "copy_with_empty_selection": false,
   "default_line_ending": "unix",
   "draw_minimap_border": true,
