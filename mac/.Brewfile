@@ -21,9 +21,11 @@ brew "gnupg" # gnupg2 was a transitional package before gnupg was updated
 brew "htop"
 brew "jq"
 brew "libpq" # provides psql command
+brew "libsodium" # required by some node-gyp packages
 brew "liquidprompt" # bash prompt
 brew "lsd"
 brew "nano"
+brew "openssl" # requires ca-certificates
 brew "ripgrep"
 brew "shellcheck"
 brew "tmux"
