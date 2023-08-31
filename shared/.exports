@@ -1,9 +1,10 @@
 # shellcheck shell=sh
-HOME="${HOME:?}"
-PATH="/usr/games/bin:/usr/games:${PATH}"
-
 # linux
 if [ "$(uname -s)" = 'Linux' ] ; then
+  # games
+  if ! echo ":${PATH}:" | grep -q ':/usr/games:' ; then PATH="/usr/games:${PATH}" ; fi
+  if ! echo ":${PATH}:" | grep -q ':/usr/games/bin:' ; then PATH="/usr/games/bin:${PATH}" ; fi
+
   # brew
   if [ -d /home/linuxbrew ] ; then
     export HOMEBREW_PREFIX='/home/linuxbrew/.linuxbrew'
@@ -24,6 +25,11 @@ fi
 if [ "$(uname -s)" = 'Darwin' ] ; then
   # https://support.apple.com/en-us/HT208050
   export BASH_SILENCE_DEPRECATION_WARNING=1
+
+  # icloud
+  # ex: cp $ICLOUD/file.txt ~/Desktop
+  # note: fish handles the space; bash requires double quotes
+  export ICLOUD="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
 
   # brew (intel)
   export HOMEBREW_PREFIX='/usr/local'
@@ -87,7 +93,15 @@ export NVM_SYMLINK_CURRENT=true
 # fish prompt
 export FISH_PROMPT_K8S=0
 export FISH_PROMPT_GIT=1
-export FISH_PROMPT_DOCKER=1
+export FISH_PROMPT_GIT_USER=0
+export FISH_PROMPT_DOCKER=0
+
+# telemetry
+export HOMEBREW_NO_ANALYTICS=1
+export NEXT_TELEMETRY_DISABLED=1
+export ASTRO_TELEMETRY_DISABLED=1
+export STORYBOOK_DISABLE_TELEMETRY=1
+export PLOOMBER_STATS_ENABLED=false # jupysql
 
 # misc
 export PAGER='less -FRSX --tabs=2'

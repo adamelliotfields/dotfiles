@@ -30,7 +30,7 @@ module.exports = {
     css: "",
     // backgroundColor: "#0d1117", // https://github.com/sindresorhus/github-markdown-css/blob/main/github-markdown-dark.css
   },
-  localPlugins: ["dracula-pro", "hyper-quit"], // ln -s ~/.dracula/themes/hyper/dracula-pro-van-helsing ~/.hyper_plugins/local/dracula-pro
+  localPlugins: ["dracula-pro", "hyper-quit"], // ln -s ~/.dracula/themes/hyper/dracula-pro ~/.hyper_plugins/local/dracula-pro
   plugins: [],
   keymaps: {},
 };

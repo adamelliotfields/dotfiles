@@ -1,9 +1,6 @@
 # taps
 tap "homebrew/bundle"
-tap "homebrew/cask-drivers"
 tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
-tap "homebrew/services"
 
 # formulae
 brew "aichat"
@@ -19,6 +16,7 @@ brew "git-extras"
 brew "git-lfs"
 brew "gnupg" # gnupg2 was a transitional package before gnupg was updated
 brew "htop"
+brew "imagemagick"
 brew "jq"
 brew "libpq" # provides psql command
 brew "libsodium" # required by some node-gyp packages
@@ -42,20 +40,19 @@ cask "adguard"
 cask "adguard-vpn"
 # cask "alacritty", args: {"no-quarantine": true} # brew install --cask --no-quarantine
 cask "alfred"
-cask "chatgpt"
-# cask "cleanmymac"
+cask "alt-tab"
+cask "cleanmymac"
 cask "cleanshot"
 cask "discord"
 # cask "disk-drill"
 cask "docker"
+cask "eloston-chromium"
 cask "hyper"
 cask "insomnia"
 cask "istat-menus"
 # cask "jetbrains-toolbox"
-cask "keybase"
 cask "lunar"
 # cask "marked"
-cask "microsoft-edge"
 cask "pixelsnap"
 cask "readdle-spark"
 cask "rectangle"
@@ -63,7 +60,7 @@ cask "spotify"
 cask "sublime-merge"
 cask "sublime-text"
 # cask "transmit"
-cask "visual-studio-code" # also install https://code.visualstudio.com/insiders side-by-side
+cask "visual-studio-code"
 
 # font casks
 cask "font-caskaydia-cove-nerd-font"

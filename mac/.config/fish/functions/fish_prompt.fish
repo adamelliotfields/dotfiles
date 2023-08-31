@@ -24,6 +24,7 @@ function fish_prompt -d 'Write out the prompt'
 
   # features
   set -l show_git false # toggled by FISH_PROMPT_GIT=<0|1>
+  set -l show_git_user false # toggled by FISH_PROMPT_GIT_USER=<0|1>
   set -l show_k8s false # toggled by FISH_PROMPT_K8S=<0|1>
   set -l show_docker false # toggled by FISH_PROMPT_DOCKER=<0|1>
 
@@ -56,6 +57,7 @@ function fish_prompt -d 'Write out the prompt'
 
   # set these after reading $status as they do return an exit code
   set -q FISH_PROMPT_GIT ; and contains -- $FISH_PROMPT_GIT 1 true ; and set show_git true
+  set -q FISH_PROMPT_GIT_USER ; and contains -- $FISH_PROMPT_GIT_USER 1 true ; and set show_git_user true
   set -q FISH_PROMPT_K8S ; and contains -- $FISH_PROMPT_K8S 1 true ; and set show_k8s true
   set -q FISH_PROMPT_DOCKER ; and contains -- $FISH_PROMPT_DOCKER 1 true ; and set show_docker true
 
@@ -80,19 +82,22 @@ function fish_prompt -d 'Write out the prompt'
     # which calls `git rev-parse` to check if we're in a repo
     set -l template ''
 
-    # signing key
-    set -l signingkey (git config --global user.signingkey 2>/dev/null)
-    if test -n "$signingkey"
-      set template $template$(set_color $color_git_key)$icon_key' '
+    # git user
+    if test "$show_git_user" = true
+      # signing key
+      set -l signingkey (git config --global user.signingkey 2>/dev/null)
+      if test -n "$signingkey"
+        set template $template$(set_color $color_git_key)$icon_key' '
+      end
+
+      # email
+      set -l email (git config --global user.email 2>/dev/null)
+      if test -n "$email"
+        set template $template$(set_color $color_git_email)$email' '
+      end
     end
 
-    # email
-    set -l email (git config --global user.email 2>/dev/null)
-    if test -n "$email"
-      set template $template$(set_color $color_git_email)$email' '
-    end
-
-    # status
+    # git status
     set template $template$(set_color $color_git)$icon_git' '
     fish_git_prompt $template'%s '
   end
