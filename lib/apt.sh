@@ -27,11 +27,10 @@ function dotfiles_apt {
     echo 'Acquire::Languages "none";' | sudo tee /etc/apt/apt.conf.d/99translations >/dev/null
   fi
 
-  sudo apt-get update
-
   # install packages
   if [[ "${#args[@]}" -ne 0 ]] ; then
     export DEBIAN_FRONTEND=noninteractive
+    sudo apt-get update
     sudo apt-get install -y --no-install-recommends "${args[@]}" | grep -v 'warning: ' # ignore update-alternatives warnings
     unset DEBIAN_FRONTEND
   fi
