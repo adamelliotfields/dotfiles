@@ -10,8 +10,7 @@ function fgpt -d 'FishGPT'
     'no-system' \
     'presence=' \
     's/system=' \
-    't/temperature=' \
-    'w/wrap='
+    't/temperature='
   argparse $args -- $argv ; or return $status
 
   # arguments
@@ -22,7 +21,6 @@ function fgpt -d 'FishGPT'
   set -l presence $_flag_presence
   set -l system $_flag_s
   set -l temperature $_flag_t
-  set -l wrap $_flag_w
 
   # env vars
   test -z "$api_key" ; and set api_key $OPENAI_API_KEY
@@ -31,24 +29,21 @@ function fgpt -d 'FishGPT'
   test -z "$presence" ; and set presence $FISH_GPT_PRESENCE
   test -z "$system" ; and set system $FISH_GPT_SYSTEM
   test -z "$temperature" ; and set temperature $FISH_GPT_TEMPERATURE
-  test -z "$wrap" ; and set wrap $FISH_GPT_WRAP
 
   # defaults
   test -z "$max_tokens" ; and set max_tokens null
   test -z "$temperature" ; and set temperature 1
   test -z "$frequency" ; and set frequency 0
   test -z "$presence" ; and set presence 0
-  test -z "$wrap" ; and set wrap 100
   set -l is_tty ; test -t 1 ; and set is_tty true ; or set is_tty false
 
   # system prompt for completions
   # tune the model's response generation for your use case
   test -z "$system"
-    and set system        'You are a friendly AI language model trained to generate concise responses.'\n
-    and set system $system'The user will only ask you a single question at a time.'\n
-    and set system $system'Do not ask the user for more information as they will not be able to respond to you.'\n
+    and set system        'Your responses are concise but still friendly.'\n
     and set system $system'Refrain from mentioning your AI nature and limitations.'\n
-    and set system $system'Default to responding in Markdown format.'
+    and set system $system'I will only ever ask you a single question at a time and will not be able to respond to you.'\n
+    and set system $system'Default to always responding in Markdown format.'
 
   # help menu and completion text
   set -l api_key_txt 'Your OpenAI API key'
@@ -61,7 +56,6 @@ function fgpt -d 'FishGPT'
   set -l presence_txt 'Number between -2.0 and 2.0; positive values penalize tokens on presence (default: 0.0)'
   set -l system_txt 'Text to use as the system prompt'
   set -l temperature_txt 'Number between 0.0 and 2.0; lower is more deterministic (default: 1.0)'
-  set -l wrap_txt 'Integer of characters to wrap the response at (0 to disable) (default: 100)'
 
   # exit early for help
   if set -q _flag_h
@@ -84,7 +78,6 @@ function fgpt -d 'FishGPT'
     echo '      --presence          '$presence_txt
     echo '  -s, --system            '$system_txt
     echo '  -t, --temperature       '$temperature_txt
-    echo '  -w, --wrap              '$wrap_txt
     echo
     echo (set_color -o)'ENVIRONMENT VARIABLES'(set_color normal)
     echo '  OPENAI_API_KEY          Overridden by -a/--api-key'
@@ -93,7 +86,6 @@ function fgpt -d 'FishGPT'
     echo '  FISH_GPT_PRESENCE       Overridden by --presence'
     echo '  FISH_GPT_SYSTEM         Overridden by -s/--system'
     echo '  FISH_GPT_TEMPERATURE    Overridden by -t/--temperature'
-    echo '  FISH_GPT_WRAP           Overridden by -w/--wrap'
     return 0
   end
 
@@ -111,7 +103,6 @@ function fgpt -d 'FishGPT'
     echo "complete -c fgpt -l presence -d '$presence_txt'"
     echo "complete -c fgpt -s s -l system -d '$system_txt'"
     echo "complete -c fgpt -s t -l temperature -d '$temperature_txt'"
-    echo "complete -c fgpt -s w -l wrap -d '$wrap_txt'"
     return 0
   end
 
@@ -218,9 +209,8 @@ function fgpt -d 'FishGPT'
   end
 
   # print response
-  # wrap unless disabled or piped
-  if $is_tty ; and test -n "$wrap" ; and test "$wrap" -gt 0 2>/dev/null ; and command -v fold >/dev/null
-    echo $content | fold -sw $wrap
+  if command -v bat >/dev/null
+    echo $content | bat -pp -l md --color=always
     return 0
   end
 
