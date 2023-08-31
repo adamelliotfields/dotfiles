@@ -87,7 +87,15 @@ export NVM_SYMLINK_CURRENT=true
 # fish prompt
 export FISH_PROMPT_K8S=0
 export FISH_PROMPT_GIT=1
-export FISH_PROMPT_DOCKER=1
+export FISH_PROMPT_GIT_USER=0
+export FISH_PROMPT_DOCKER=0
+
+# telemetry
+export HOMEBREW_NO_ANALYTICS=1
+export NEXT_TELEMETRY_DISABLED=1
+export ASTRO_TELEMETRY_DISABLED=1
+export STORYBOOK_DISABLE_TELEMETRY=1
+export PLOOMBER_STATS_ENABLED=false # jupysql
 
 # misc
 export PAGER='less -FRSX --tabs=2'
