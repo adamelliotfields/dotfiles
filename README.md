@@ -32,6 +32,7 @@ replay "source $HOME/.dotfiles/lib/deno.sh ; dotfiles_deno"
 
 ## Git
 
+> [!NOTE]
 > I use a single GitHub account for personal projects and work. My Git setup allows for quick toggling of the email address and GPG key used for signing commits.
 
 I use 2 Git config files:
