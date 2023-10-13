@@ -11,6 +11,7 @@ function fish_prompt -d 'Write out the prompt'
   set -l color_git_email brblack
   set -l color_duration black
   set -l color_docker $color_k8s
+  set -l color_python $color_k8s
 
   # prompt chars from https://github.com/IlanCosman/tide
   set -l char_prompt_top '╭─'
@@ -21,6 +22,7 @@ function fish_prompt -d 'Write out the prompt'
   set -l icon_key '󰌆' # nf-md-key
   set -l icon_k8s '󱃾' # nf-md-kubernetes
   set -l icon_docker '󰡨' # nf-md-docker
+  set -l icon_python '󰌠' # nf-md-language_python
 
   # features
   set -l show_git false # toggled by FISH_PROMPT_GIT=<0|1>
@@ -100,6 +102,11 @@ function fish_prompt -d 'Write out the prompt'
     # git status
     set template $template$(set_color $color_git)$icon_git' '
     fish_git_prompt $template'%s '
+  end
+
+  # python
+  set -q VIRTUAL_ENV ; and begin
+    echo -ns (set_color $color_python)$icon_python' '
   end
 
   # kubernetes
