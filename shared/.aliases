@@ -63,6 +63,8 @@ alias gb='git branch'
 alias gba='git branch --all' # list ALL local and remote branches
 alias gbd='git branch --delete' # delete a branch
 alias gbD='git branch -D' # force delete a branch
+alias gbr='git branch -r' # list remote branches
+alias gbrd='git branch -rd' # delete a remote branch
 alias gc='git commit' # opens your $GIT_EDITOR or $EDITOR
 alias gcm='git commit --message' # enter message after command, e.g., gcm 'initial commit'
 alias gca='git commit --all' # stage and commit all tracked files (ignores new files)
@@ -74,6 +76,7 @@ alias gd='git diff'
 alias gdt='git difftool'
 alias gf='git fetch'
 alias gfo='git fetch origin'
+alias gfp='git fetch --prune' # prunes deleted remote branches from local
 alias gi='git init'
 alias gl='git log'
 alias glp='git log -p' # paginated log, shows diffs colored by git-delta (the program `delta`)
@@ -84,9 +87,9 @@ alias gmt='git mergetool'
 alias gp='git push'
 alias gpo='git push -u origin'
 alias gpl='git pull'
-alias gplnf='git pull --no-ff' # use this one to force a merge commit
+alias gplnff='git pull --no-ff' # use this one to force a merge commit
 alias gplo='git pull origin'
-alias gplnfo='git pull --no-ff origin'
+alias gplnffo='git pull --no-ff origin'
 alias gr='git reset --' # use this one to reset staged files
 alias grs='git restore --' # use this one to restore a changed file
 alias grao='git remote add origin'
@@ -102,9 +105,8 @@ alias gsw='git switch' # use this one to switch to a different branch
 alias gswc='git switch -c' # use this one to create a new branch and switch to it
 
 # git extras
-alias gu='git undo' # git reset --soft HEAD~1 (undoes the last commit but leaves files staged)
-alias gus='git undo -s' # git undo; git reset (undoes the last commit and unstages all files)
-alias gsum='git summary' # see `man git-summary`
+alias gu='git reset --soft HEAD~1' # git-undo (undoes the last commit but leaves files staged)
+alias gus='git reset --soft HEAD~1 ; git reset' # git-undo -s (undoes the last commit and unstages all files)
 
 # github cli
 alias ghr='gh repo'

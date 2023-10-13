@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-for func in 'apt' 'chsh' 'clone' 'deb' 'homebrew' 'link' 'nvm' 'sudoers' ; do
+for func in 'apt' 'chsh' 'clone' 'deb' 'homebrew' 'link' 'nvm' 'python' 'sudoers' ; do
   source "$(dirname "$0")/lib/${func}.sh"
 done
 
 # linux config
 declare -a linux_prompts=( 'nojhan/liquidprompt' )
-declare -a linux_apt=( 'build-essential' 'curl' 'fzf' 'git' 'git-extras' 'gnupg' 'jq' 'ripgrep' 'unzip' 'wget' )
+declare -a linux_apt=( 'build-essential' 'curl' 'fzf' 'git' 'gnupg' 'jq' 'ripgrep' 'unzip' 'wget' )
 declare -a linux_apt_python=( 'libbz2-dev' 'libffi-dev' 'liblzma-dev' 'libncurses-dev' 'libreadline-dev' 'libsqlite3-dev' )
 declare -a linux_deb=( 'cli/cli' 'lsd-rs/lsd' 'sharkdp/bat' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
 
@@ -48,8 +48,8 @@ if [[ $(uname) == 'Darwin' ]] ; then
   fish -c 'fisher update'
 
   # requires relogin
-  echo 'Changing default shell to Fish...'
-  dotfiles_chsh '/usr/local/bin/fish'
+  echo 'Changing default shell to Bash...'
+  dotfiles_chsh '/bin/bash'
 
   # command + shift + .
   echo 'Showing hidden files in Finder...'
@@ -58,6 +58,9 @@ if [[ $(uname) == 'Darwin' ]] ; then
 
   echo 'Installing nvm and Node LTS...'
   dotfiles_nvm 'lts/*'
+
+  echo 'Installing Python...'
+  dotfiles_python
 fi
 
 echo 'Done! 🎉'
