@@ -4,7 +4,7 @@
   "dotfiles.installCommand": "/workspaces/.codespaces/.persistedshare/.dotfiles/install",
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.bracketPairColorization.enabled": true,
-  "editor.fontFamily": "'MonoLisa Variable', 'Symbols Nerd Font', 'CaskaydiaCove Nerd Font', Menlo, 'DejaVu Sans Mono', monospace",
+  "editor.fontFamily": "'MonoLisa Variable', 'Symbols Nerd Font', 'CaskaydiaCove Nerd Font', 'Cascadia Code', Menlo, 'DejaVu Sans Mono', monospace",
   "editor.fontLigatures": "'ss02' on", // set to `true` for ligatures but not cursive
   "editor.fontSize": 20,
   "editor.fontVariations": true, // translate font weight for variable fonts
@@ -28,15 +28,18 @@
   "github.copilot.enable": {
     "*": true,
     "csv": false,
-    "markdown": true
+    "markdown": true,
+    "plaintext": false,
+    "scminput": false
   },
+  "notebook.lineNumbers": "on",
   "remoteHub.commitDirectlyWarning": "off",
   "security.workspace.trust.enabled": false,
   "settingsSync.ignoredSettings": ["workbench.colorTheme", "-window.zoomLevel"], // unignore zoom
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.defaultProfile.linux": "bash",
   "terminal.integrated.defaultProfile.osx": "fish",
-  "terminal.integrated.fontSize": 18,
+  "terminal.integrated.fontSize": 16,
   "terminal.integrated.profiles.linux": {
     "bash": {
       "path": "/usr/bin/bash",
@@ -53,9 +56,9 @@
   "vsicons.dontShowNewVersionMessage": true,
   "window.nativeTabs": true, // mac new window tabs
   "window.restoreWindows": "none",
-  "workbench.colorTheme": "Dracula Pro",
+  "window.zoomLevel": 0,
   "workbench.editor.highlightModifiedTabs": true,
   "workbench.iconTheme": "vscode-icons",
   "workbench.startupEditor": "none",
-  "window.zoomLevel": 1 // each increment is 20% zoom
+  "workbench.colorTheme": "GitHub Light"
 }
