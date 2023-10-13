@@ -1,6 +1,6 @@
 # shellcheck shell=bash
-# installs pyenv, python, pipx, and pipenv (similar toolchain to nvm/node/npx/npm)
-dotfiles_pyenv() {
+# installs pyenv, python, pipx, and poetry (similar toolchain to nvm/node/npx/npm)
+dotfiles_python() {
   local version="$1"
   local pyenv_root="${HOME:?}/.pyenv"
 
@@ -17,5 +17,5 @@ dotfiles_pyenv() {
   pyenv install "$version"
   pyenv global "$version" # creates ~/.pyenv/version
   pyenv exec pip install --user pipx
-  pipx install pipenv
+  pipx install poetry
 }
