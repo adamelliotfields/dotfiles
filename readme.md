@@ -1,4 +1,9 @@
-![dotfiles](./dotfiles.jpg)
+<div align="center">
+  <img src="./dotfiles.jpg" width="360" height="270" alt="A digital world with a shell and fish" />
+  <h1 align="center"><code>dotfiles</code></h1>
+</div>
+
+These are my configuration files and shell scripts that I use across all my _personal computers_ (including Codespaces) :octocat:
 
 ## Usage
 
@@ -7,7 +12,7 @@ git clone https://github.com/adamelliotfields/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
 ```
 
-## Functions
+## Lib
 
 The [`install`](./install) script calls the functions in [`lib`](./lib/):
   * [`dotfiles_apt`](./lib/apt.sh)
@@ -19,7 +24,7 @@ The [`install`](./install) script calls the functions in [`lib`](./lib/):
   * [`dotfiles_homebrew`](./lib/homebrew.sh)
   * [`dotfiles_link`](./lib/link.sh)
   * [`dotfiles_nvm`](./lib/nvm.sh)
-  * [`dotfiles_pyenv`](./lib/pyenv.sh)
+  * [`dotfiles_python`](./lib/python.sh)
   * [`dotfiles_rustup`](./lib/rustup.sh)
   * [`dotfiles_sudoers`](./lib/sudoers.sh)
 

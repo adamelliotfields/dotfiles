@@ -24,6 +24,7 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true, // this actually inserts a final newline in the file
   "git.autofetch": true,
+  "git.confirmSync": false,
   "git.openRepositoryInParentFolders": "never",
   "github.copilot.enable": {
     "*": true,
@@ -32,7 +33,9 @@
     "plaintext": false,
     "scminput": false
   },
+  "jupyter.askForKernelRestart": false,
   "notebook.lineNumbers": "on",
+  "python.terminal.activateEnvironment": false,
   "remoteHub.commitDirectlyWarning": "off",
   "security.workspace.trust.enabled": false,
   "settingsSync.ignoredSettings": ["workbench.colorTheme", "-window.zoomLevel"], // unignore zoom
