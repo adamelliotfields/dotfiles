@@ -60,17 +60,17 @@ I've been using Fish for a few years. My favorite feature is [function autoloadi
 
 ### Functions
 
-* [`drac`](./mac/.config/fish/functions/drac.fish) - Dracula Pro theme switcher for Hyper
-* [`fgpt`](./mac/.config/fish/functions/fgpt.fish) - OpenAI GPT CLI
-* [`fish_prompt`](./mac/.config/fish/functions/fish_prompt.fish) - My custom prompt 🐠
-* [`gituser`](./mac/.config/fish/functions/gituser.fish) - Update `~/.gitconfig` with email address and corresponding GPG key
-* [`goog`](./mac/.config/fish/functions/goog.fish) - Open various Google pages with params
-* [`mkcd`](./mac/.config/fish/functions/mkcd.fish) - Make a directory and change into it
-* [`nvm`](./mac/.config/fish/functions/nvm.fish) - NVM proxy via [replay](https://github.com/jorgebucaran/replay.fish)
-* [`postgres`](./mac/.config/fish/functions/postgres.fish) - Run a Postgres [container](https://hub.docker.com/_/postgres)
-* [`redis`](./mac/.config/fish/functions/redis.fish) - Run a Redis Stack [container](https://hub.docker.com/r/redis/redis-stack) with RedisInsight web GUI
-* [`ubuntu`](./mac/.config/fish/functions/ubuntu.fish) - Start an Ubuntu [container](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) mounted to the current directory
-* [`up`](./mac/.config/fish/functions/up.fish) - Move up $n$ directories
+* [`drac`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/drac.fish) - Dracula Pro theme switcher for Hyper
+* [`fgpt`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/fgpt.fish) - OpenAI GPT CLI
+* [`fish_prompt`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/fish_prompt.fish) - My custom prompt 🐠
+* [`gituser`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/gituser.fish) - Update `~/.gitconfig` with email address and corresponding GPG key
+* [`goog`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/goog.fish) - Open various Google pages with params
+* [`mkcd`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/mkcd.fish) - Make a directory and change into it
+* [`nvm`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/nvm.fish) - NVM proxy via [replay](https://github.com/jorgebucaran/replay.fish)
+* [`postgres`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/postgres.fish) - Run a Postgres [container](https://hub.docker.com/_/postgres)
+* [`redis`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/redis.fish) - Run a Redis Stack [container](https://hub.docker.com/r/redis/redis-stack) with RedisInsight web GUI
+* [`ubuntu`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/ubuntu.fish) - Start an Ubuntu [container](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) mounted to the current directory
+* [`up`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/up.fish) - Move up $n$ directories
 
 ## Games
 
