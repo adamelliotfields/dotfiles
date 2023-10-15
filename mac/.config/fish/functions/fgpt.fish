@@ -8,6 +8,7 @@ function fgpt -d 'FishGPT'
     'h/help' \
     'm/max-tokens=' \
     'no-system' \
+    'o/open' \
     'presence=' \
     's/system=' \
     't/temperature='
@@ -40,10 +41,9 @@ function fgpt -d 'FishGPT'
   # system prompt for completions
   # tune the model's response generation for your use case
   test -z "$system"
-    and set system        'Your responses are concise but still friendly.'\n
-    and set system $system'Refrain from mentioning your AI nature and limitations.'\n
-    and set system $system'I will only ever ask you a single question at a time and will not be able to respond to you.'\n
-    and set system $system'Default to always responding in Markdown format.'
+    and set system        'You are a helpful assistant.'\n
+    and set system $system'You are only able to send a single response to the user as they cannot reply to you.'\n
+    and set system $system'Always respond in Markdown format.'
 
   # help menu and completion text
   set -l api_key_txt 'Your OpenAI API key'
@@ -53,6 +53,7 @@ function fgpt -d 'FishGPT'
   set -l help_txt 'Print this message and exit'
   set -l max_tokens_txt 'Integer of maximum tokens in response (default: null)'
   set -l no_system_txt 'Disable the default system prompt'
+  set -l open_txt 'Open the ChatGPT web app'
   set -l presence_txt 'Number between -2.0 and 2.0; positive values penalize tokens on presence (default: 0.0)'
   set -l system_txt 'Text to use as the system prompt'
   set -l temperature_txt 'Number between 0.0 and 2.0; lower is more deterministic (default: 1.0)'
@@ -75,6 +76,7 @@ function fgpt -d 'FishGPT'
     echo '  -h, --help              '$help_txt
     echo '  -m, --max-tokens        '$max_tokens_txt
     echo '      --no-system         '$no_system_txt
+    echo '  -o, --open              '$open_txt
     echo '      --presence          '$presence_txt
     echo '  -s, --system            '$system_txt
     echo '  -t, --temperature       '$temperature_txt
@@ -103,6 +105,11 @@ function fgpt -d 'FishGPT'
     echo "complete -c fgpt -l presence -d '$presence_txt'"
     echo "complete -c fgpt -s s -l system -d '$system_txt'"
     echo "complete -c fgpt -s t -l temperature -d '$temperature_txt'"
+    return 0
+  end
+
+  if set -q _flag_o
+    open https://chat.openai.com
     return 0
   end
 
@@ -210,7 +217,7 @@ function fgpt -d 'FishGPT'
 
   # print response
   if command -v bat >/dev/null
-    echo $content | bat -pp -l md --color=always
+    echo $content | bat -pp -l md --color=auto
     return 0
   end
 

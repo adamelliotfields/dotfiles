@@ -1,9 +1,10 @@
 <div align="center">
+  <!-- Illustration of an underwater haven where the sand is etched with bright, neon circuit motifs. Schools of robot-like fish with a metallic luster navigate amidst fluorescent marine plants. A radiant shell opens, standing out as a guiding light for the marine tech realm. -->
   <img src="./dotfiles.jpg" width="360" height="270" alt="A digital world with a shell and fish" />
   <h1 align="center"><code>dotfiles</code></h1>
 </div>
 
-These are my configuration files and shell scripts that I use across all my _personal computers_ (including Codespaces) :octocat:
+These are my configuration files and shell scripts that I use across all my _personal computers_ :octocat:
 
 ## Usage
 
@@ -28,25 +29,13 @@ The [`install`](./install) script calls the functions in [`lib`](./lib/):
   * [`dotfiles_rustup`](./lib/rustup.sh)
   * [`dotfiles_sudoers`](./lib/sudoers.sh)
 
-In Fish you just need to run them via `replay`:
-
-```fish
-# assuming you cloned to ~/.dotfiles and you want to install deno
-replay "source $HOME/.dotfiles/lib/deno.sh ; dotfiles_deno"
-```
-
 ## Git
 
-> [!NOTE]
-> I use a single GitHub account for personal projects and work. My Git setup allows for quick toggling of the email address and GPG key used for signing commits.
-
 I use 2 Git config files:
-  1. [`~/.config/git/config`](./shared/.config/git/config) - global read-only config
-  2. `~/.gitconfig` - global user config (Git-ignored)
+  1. [`~/.config/git/config`](./shared/.config/git/config) - global read-only config (in Git)
+  2. `~/.gitconfig` - global user config (not in Git)
 
 When you run `git config --global`, it won't write to `~/.config/git/config` if `~/.gitconfig` exists. This mechanism makes it convenient for the latter to store "dynamic" information like email address and GPG key.
-
-For managing the _user_ config, I created [`gituser.fish`](./mac/.config/fish/functions/gituser.fish), which updates `~/.gitconfig` with the provided email address and the corresponding GPG key. You can also call [`fzgu`](./mac/.config/fish/conf.d/abbreviations.fish) to interactively select a Git user powered by `fzf`.
 
 A sample `~/.gitconfig` looks like this:
 
@@ -64,6 +53,24 @@ A sample `~/.gitconfig` looks like this:
 [gpg]
 	program = /path/to/gpg
 ```
+
+## Fish
+
+I've been using Fish for a few years. My favorite feature is [function autoloading](https://fishshell.com/docs/current/tutorial.html#autoloading-functions). Unlike other shells that require you to explicitly `source` a file (or loop over a folder of files), Fish can load functions on-demand. If you call `foo` and it isn't in your `PATH`, Fish will look for it in `$fish_function_path`. This also means you can edit functions and they'll be "hot reloaded" the next time you call them.
+
+### Functions
+
+* [`drac`](./mac/.config/fish/functions/drac.fish) - Dracula Pro theme switcher for Hyper
+* [`fgpt`](./mac/.config/fish/functions/fgpt.fish) - OpenAI GPT CLI
+* [`fish_prompt`](./mac/.config/fish/functions/fish_prompt.fish) - My custom prompt 🐠
+* [`gituser`](./mac/.config/fish/functions/gituser.fish) - Update `~/.gitconfig` with email address and corresponding GPG key
+* [`goog`](./mac/.config/fish/functions/goog.fish) - Open various Google pages with params
+* [`mkcd`](./mac/.config/fish/functions/mkcd.fish) - Make a directory and change into it
+* [`nvm`](./mac/.config/fish/functions/nvm.fish) - NVM proxy via [replay](https://github.com/jorgebucaran/replay.fish)
+* [`postgres`](./mac/.config/fish/functions/postgres.fish) - Run a Postgres [container](https://hub.docker.com/_/postgres)
+* [`redis`](./mac/.config/fish/functions/redis.fish) - Run a Redis Stack [container](https://hub.docker.com/r/redis/redis-stack) with RedisInsight web GUI
+* [`ubuntu`](./mac/.config/fish/functions/ubuntu.fish) - Start an Ubuntu [container](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) mounted to the current directory
+* [`up`](./mac/.config/fish/functions/up.fish) - Move up $n$ directories
 
 ## Games
 
