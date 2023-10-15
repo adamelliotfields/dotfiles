@@ -3,8 +3,7 @@ module.exports = {
   config: {
     updateChannel: "stable",
     fontSize: 24,
-    fontFamily:
-      "'MonoLisa Variable', 'Symbols Nerd Font', 'CaskaydiaCove Nerd Font', Menlo, 'DejaVu Sans Mono', monospace",
+    fontFamily: "'MonoLisa Variable', 'Symbols Nerd Font', 'CaskaydiaCove Nerd Font', Menlo, monospace",
     fontWeight: "normal",
     fontWeightBold: "bold",
     lineHeight: 1,
@@ -28,9 +27,12 @@ module.exports = {
     preserveCWD: true,
     termCSS: "",
     css: "",
+    // backgroundColor: "#ffffff", // https://github.com/sindresorhus/github-markdown-css/blob/main/github-markdown-light.css
     // backgroundColor: "#0d1117", // https://github.com/sindresorhus/github-markdown-css/blob/main/github-markdown-dark.css
   },
-  localPlugins: ["dracula-pro", "hyper-quit"], // ln -s ~/.dracula/themes/hyper/dracula-pro ~/.hyper_plugins/local/dracula-pro
+  // mkdir -p ~/.hyper_plugins/local/dracula-pro
+  // ln -s ~/.dracula/themes/hyper/dracula-pro/index.js ~/.hyper_plugins/local/dracula-pro/index.js
+  localPlugins: ["dracula-pro", "hyper-quit"],
   plugins: [],
   keymaps: {},
 };
