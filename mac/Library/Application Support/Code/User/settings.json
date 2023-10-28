@@ -18,6 +18,7 @@
   "editor.rulers": [100],
   "editor.stickyScroll.enabled": true,
   "editor.tabSize": 2,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
   "explorer.confirmDragAndDrop": false,
   "extensions.ignoreRecommendations": true,
   "files.enableTrash": false,
@@ -28,17 +29,17 @@
   "git.openRepositoryInParentFolders": "never",
   "github.copilot.enable": {
     "*": true,
-    "csv": false,
-    "markdown": true,
     "plaintext": false,
-    "scminput": false
+    "markdown": true,
+    "scminput": false,
+    "csv": false
   },
   "jupyter.askForKernelRestart": false,
   "notebook.lineNumbers": "on",
   "python.terminal.activateEnvironment": false,
   "remoteHub.commitDirectlyWarning": "off",
   "security.workspace.trust.enabled": false,
-  "settingsSync.ignoredSettings": ["workbench.colorTheme", "-window.zoomLevel"], // unignore zoom
+  "settingsSync.ignoredSettings": ["workbench.colorTheme"],
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.defaultProfile.linux": "bash",
   "terminal.integrated.defaultProfile.osx": "fish",
@@ -59,9 +60,9 @@
   "vsicons.dontShowNewVersionMessage": true,
   "window.nativeTabs": true, // mac new window tabs
   "window.restoreWindows": "none",
-  "window.zoomLevel": 0,
   "workbench.editor.highlightModifiedTabs": true,
   "workbench.iconTheme": "vscode-icons",
   "workbench.startupEditor": "none",
-  "workbench.colorTheme": "GitHub Light"
+  "workbench.colorTheme": "GitHub Light",
+  "window.zoomLevel": 0
 }

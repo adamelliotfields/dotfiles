@@ -27,7 +27,7 @@ function drac -d 'Dracula'
     echo (set_color -o)'INSTALL'(set_color normal)
     echo '  1. Download from https://gum.co/dracula-pro'
     echo '  2. Unzip to ~/.dracula'
-    echo '  3. Append `"dracula-pro"` to `localPlugins` in ~/.hyper.js'
+    echo '  3. Append "dracula-pro" to `localPlugins` in ~/.hyper.js'
     return 0
   end
 
