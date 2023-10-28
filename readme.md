@@ -13,7 +13,7 @@ git clone https://github.com/adamelliotfields/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
 ```
 
-## Lib
+## Install
 
 The [`install`](./install) script calls the functions in [`lib`](./lib/):
   * [`dotfiles_apt`](./lib/apt.sh)
@@ -32,7 +32,7 @@ The [`install`](./install) script calls the functions in [`lib`](./lib/):
 ## Git
 
 I use 2 Git config files:
-  1. [`~/.config/git/config`](./shared/.config/git/config) - global read-only config (in Git)
+  1. [`~/.config/git/config`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/git/config) - global read-only config (in Git)
   2. `~/.gitconfig` - global user config (not in Git)
 
 When you run `git config --global`, it won't write to `~/.config/git/config` if `~/.gitconfig` exists. This mechanism makes it convenient for the latter to store "dynamic" information like email address and GPG key.
@@ -56,7 +56,7 @@ A sample `~/.gitconfig` looks like this:
 
 ## Fish
 
-I've been using Fish for a few years. My favorite feature is [function autoloading](https://fishshell.com/docs/current/tutorial.html#autoloading-functions). Unlike other shells that require you to explicitly `source` a file (or loop over a folder of files), Fish can load functions on-demand. If you call `foo` and it isn't in your `PATH`, Fish will look for it in `$fish_function_path`. This also means you can edit functions and they'll be "hot reloaded" the next time you call them.
+I've been using Fish for a few years. My favorite feature is [function autoloading](https://fishshell.com/docs/current/tutorial.html#autoloading-functions). Unlike other shells that require you to explicitly `source` a file (or loop over a folder of files), Fish can load functions on-demand. If you call a function and it isn't in your `PATH`, Fish will look for it in `$fish_function_path`. This also means you can edit functions and they'll be "live reloaded" the next time you call them.
 
 ### Functions
 
@@ -68,8 +68,9 @@ I've been using Fish for a few years. My favorite feature is [function autoloadi
 * [`mkcd`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/mkcd.fish) - Make a directory and change into it
 * [`nvm`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/nvm.fish) - NVM proxy via [replay](https://github.com/jorgebucaran/replay.fish)
 * [`postgres`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/postgres.fish) - Run a Postgres [container](https://hub.docker.com/_/postgres)
+* [`pypi`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/pypi.fish) - Search PyPI for package information
 * [`redis`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/redis.fish) - Run a Redis Stack [container](https://hub.docker.com/r/redis/redis-stack) with RedisInsight web GUI
-* [`ubuntu`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/ubuntu.fish) - Start an Ubuntu [container](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) mounted to the current directory
+* [`ubuntu`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/ubuntu.fish) - Run an Ubuntu [container](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) mounted to the current directory
 * [`up`](https://github.com/adamelliotfields/dotfiles/blob/main/mac/.config/fish/functions/up.fish) - Move up $n$ directories
 
 ## Games

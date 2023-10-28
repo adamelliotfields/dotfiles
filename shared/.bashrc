@@ -1,4 +1,6 @@
 # shellcheck shell=bash
+set +o posix
+
 # update window size after each command
 shopt -s checkwinsize
 
