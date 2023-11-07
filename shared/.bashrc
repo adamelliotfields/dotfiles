@@ -35,6 +35,9 @@ unset NVM_DIR
 [[ -z $NVM_DIR && -d ${HOME}/.nvm ]] && export NVM_DIR="${HOME}/.nvm"
 [[ -n $NVM_DIR && -s ${NVM_DIR}/nvm.sh ]] && source "${NVM_DIR}/nvm.sh"
 
+# zoxide
+[[ -n $(command -v zoxide 2>/dev/null) ]] && eval "$(zoxide init bash)"
+
 # prompt last
 [[ -n $HOMEBREW_PREFIX && -s "${HOMEBREW_PREFIX}/share/liquidprompt" ]] && source "${HOMEBREW_PREFIX}/share/liquidprompt"
 [[ -z $HOMEBREW_PREFIX && -s "${HOME}/.liquidprompt/liquidprompt" ]] && source "${HOME}/.liquidprompt/liquidprompt"
