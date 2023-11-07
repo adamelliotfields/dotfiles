@@ -6,7 +6,8 @@
   "auto_complete_include_snippets":false,
   "caret_style": "phase",
   "close_windows_when_empty": true,
-  "color_scheme": "Packages/Dracula Pro/Dracula Pro.tmTheme", // ln -s ~/.dracula/themes/sublime ~/Library/Application\ Support/Sublime\ Text/Packages/Dracula\ Pro
+  // "color_scheme": "Packages/Dracula Pro/Dracula Pro.tmTheme", // ln -s ~/.dracula/themes/sublime ~/Library/Application\ Support/Sublime\ Text/Packages/Dracula\ Pro
+  "color_scheme": "GitHub Light.sublime-color-scheme", // https://github.com/mauroreisvieira/github-sublime-theme
   "copy_with_empty_selection": false,
   "default_line_ending": "unix",
   "drag_text": false,
