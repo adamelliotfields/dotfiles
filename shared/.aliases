@@ -16,6 +16,9 @@ alias gdiff='git diff --no-ext-diff --no-index'
 # python
 alias venv='python -m venv'
 
+# 🤗
+alias hf='huggingface-cli'
+
 # bat
 alias b='bat -n' # line numbers
 alias bp='bat -pp' # plain no paging
