@@ -13,6 +13,8 @@ declare -a linux_deb=( 'cli/cli' 'lsd-rs/lsd' 'sharkdp/bat' 'sharkdp/fd' 'ajeetd
 
 # linux
 if [[ $(uname) == 'Linux' ]] ; then
+  export DEBIAN_FRONTEND=noninteractive
+
   echo 'Symlinking dotfiles...'
   dotfiles_link shared linux
 
