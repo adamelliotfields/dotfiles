@@ -93,6 +93,10 @@ export RUSTUP_HOME="${HOME}/.rustup"
 export CARGO_HOME="${HOME}/.cargo"
 PATH="${CARGO_HOME}/bin:${PATH}"
 
+# npm
+export NPM_CONFIG_AUDIT=false
+export NPM_CONFIG_FUND=false
+
 # nvm
 export NVM_SYMLINK_CURRENT=true
 

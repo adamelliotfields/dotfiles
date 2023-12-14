@@ -9,10 +9,11 @@
     "editor.tabSize": 2
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.shellcheck": true
+    "source.fixAll.shellcheck": "explicit"
   },
   "editor.rulers": [80],
   "editor.unicodeHighlight.includeStrings": false, // don't highlight quoted unicode characters (prompt)
+  "files.autoSave": "off",
   "shellcheck.customArgs": ["--external-sources"],
   "shellcheck.exclude": ["1090", "1091", "2155"],
   "shellcheck.ignorePatterns": {
