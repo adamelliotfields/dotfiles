@@ -2,7 +2,9 @@
 # downloads a list of deb packages from GitHub releases and installs them with dpkg (linux only)
 function dotfiles_deb {
   local -a repos=("$@")
-  local token="${GH_TOKEN:-$GITHUB_TOKEN}"
+
+  local token="${GITHUB_TOKEN:-}"
+  local token="${GH_TOKEN:-$token}"
 
   if [[ -z $(command -v dpkg 2>/dev/null) || "$(uname -s)" != 'Linux' ]] ; then
     echo "dotfiles_deb: Unsupported OS"
@@ -11,7 +13,7 @@ function dotfiles_deb {
 
   # don't panic if token isn't set
   if [[ -z "$token" ]] ; then
-    echo "dotfiles_deb: set GH_TOKEN or GITHUB_TOKEN and try again"
+    echo "dotfiles_deb: GH_TOKEN not set... skipping"
     return 0
   fi
 

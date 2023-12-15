@@ -1,3 +1,6 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/base:jammy"
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
+  "containerEnv": {
+    "GH_TOKEN": "${localEnv:GH_TOKEN}"
+  }
 }
