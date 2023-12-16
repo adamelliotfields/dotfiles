@@ -1,6 +1,9 @@
 {
   "recommendations": [
+    "bierner.github-markdown-preview",
     "bmalehorn.vscode-fish",
+    "editorconfig.editorconfig",
+    "github.copilot",
     "timonwong.shellcheck"
   ],
   "unwantedRecommendations": [
