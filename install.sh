@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-for func in 'apt' 'chsh' 'clone' 'deb' 'homebrew' 'link' 'nvm' 'python' 'sudoers' ; do
+for func in 'apt' 'clone' 'deb' 'homebrew' 'link' 'nvm' 'python' ; do
   source "$(dirname "$0")/lib/${func}.sh"
 done
 
@@ -11,12 +11,12 @@ declare -a linux_apt=( 'build-essential' 'curl' 'fzf' 'git' 'gnupg' 'jq' 'ripgre
 declare -a linux_apt_python=( 'libbz2-dev' 'libffi-dev' 'liblzma-dev' 'libncurses-dev' 'libreadline-dev' 'libsqlite3-dev' )
 declare -a linux_deb=( 'cli/cli' 'lsd-rs/lsd' 'sharkdp/bat' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
 
-# linux
-if [[ $(uname) == 'Linux' ]] ; then
-  export DEBIAN_FRONTEND=noninteractive
+echo 'Symlinking dotfiles...'
+dotfiles_link
 
-  echo 'Symlinking dotfiles...'
-  dotfiles_link shared linux
+# linux
+if [[ $(uname -s) == 'Linux' ]] ; then
+  export DEBIAN_FRONTEND=noninteractive
 
   echo 'Installing apt packages...'
   dotfiles_apt "${linux_apt[@]}" "${linux_apt_python[@]}"
@@ -27,42 +27,37 @@ if [[ $(uname) == 'Linux' ]] ; then
   # install prompts with homebrew on mac
   echo 'Installing prompts...'
   dotfiles_clone "${linux_prompts[@]}"
+  unset DEBIAN_FRONTEND
 fi
 
 # mac
-if [[ $(uname) == 'Darwin' ]] ; then
-  echo 'Symlinking dotfiles...'
-  dotfiles_link shared mac
-
-  # requires relogin to take effect
-  echo 'Enabling passwordless sudo...'
-  dotfiles_sudoers
-
+# run these commands manually and log out after each before proceding:
+#   $ source lib/sudoers.sh ; dotfiles_sudoers
+#   $ source lib/chsh.sh ; dotfiles_chsh /bin/bash
+if [[ $(uname -s) == 'Darwin' ]] ; then
   echo 'Installing Homebrew...'
   dotfiles_homebrew
 
+  # comment out if you're in a hurry
   echo 'Installing Homebrew packages...'
   eval "$(brew shellenv)"
   brew bundle --global --no-lock
 
-  # requires fish (in Brewfile)
+  # requires fish (installed above)
   echo 'Installing Fish plugins...'
   fish -c 'fisher update'
 
-  # requires relogin
-  echo 'Changing default shell to Bash...'
-  dotfiles_chsh '/bin/bash'
+  # requires some homebrew packages (installed above)
+  echo 'Installing Python...'
+  dotfiles_python
+
+  echo 'Installing nvm and Node LTS...'
+  dotfiles_nvm 'lts/*'
 
   # command + shift + .
   echo 'Showing hidden files in Finder...'
   defaults write com.apple.finder AppleShowAllFiles true
   killall Finder
-
-  echo 'Installing nvm and Node LTS...'
-  dotfiles_nvm 'lts/*'
-
-  echo 'Installing Python...'
-  dotfiles_python
 fi
 
 echo 'Done! 🎉'
