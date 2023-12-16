@@ -1,5 +1,16 @@
 {
   "image": "mcr.microsoft.com/devcontainers/base:jammy",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bierner.github-markdown-preview",
+        "bmalehorn.vscode-fish",
+        "editorconfig.editorconfig",
+        "github.copilot",
+        "timonwong.shellcheck"
+      ]
+    }
+  },
   "containerEnv": {
     "GH_TOKEN": "${localEnv:GH_TOKEN}"
   }
