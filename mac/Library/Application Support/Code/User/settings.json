@@ -1,7 +1,7 @@
 {
-  "dotfiles.repository": "adamelliotfields/dotfiles",
-  "dotfiles.targetPath": "/workspaces/.codespaces/.persistedshare/.dotfiles",
-  "dotfiles.installCommand": "/workspaces/.codespaces/.persistedshare/.dotfiles/install",
+  // "dotfiles.repository": "adamelliotfields/dotfiles",
+  // "dotfiles.targetPath": "~/.dotfiles",
+  // "dotfiles.installCommand": "~/.dotfiles/install.sh",
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.bracketPairColorization.enabled": true,
   "editor.fontFamily": "'MonoLisa Variable', 'Symbols Nerd Font', 'CaskaydiaCove Nerd Font', 'Cascadia Code', Menlo, 'DejaVu Sans Mono', monospace",
@@ -21,6 +21,7 @@
   "editor.unicodeHighlight.ambiguousCharacters": false,
   "explorer.confirmDragAndDrop": false,
   "extensions.ignoreRecommendations": true,
+  "files.autoSave": "off",
   "files.enableTrash": false,
   "files.eol": "\n",
   "files.insertFinalNewline": true, // this actually inserts a final newline in the file
