@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+#!/usr/bin/env bash
 # clones github repos to ~/.${repo}
 function dotfiles_clone {
   local -a repos=("$@")
@@ -17,3 +17,8 @@ function dotfiles_clone {
     git clone --depth=1 --branch="$branch" "https://github.com/${repo}.git" "${HOME:?}/${dest}"
   done
 }
+
+# if not sourced
+if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
+  dotfiles_clone "$@"
+fi

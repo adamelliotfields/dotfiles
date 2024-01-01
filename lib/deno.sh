@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+#!/usr/bin/env bash
 # installs deno
 function dotfiles_deno {
   local arch=''
@@ -20,19 +20,34 @@ function dotfiles_deno {
     *)      echo 'dotfiles_deno: Unsupported OS' ; return 1 ;;
   esac
 
+  # if x86_64-apple-darwin check if we're in Rosetta
+  if [[ $os == 'apple-darwin' && $arch == 'x86_64' ]] ; then
+    if [[ $(sysctl -n sysctl.proc_translated 2>/dev/null) -eq 1 ]] ; then
+      echo 'dotfiles_deno: Rosetta detected; installing aarch64'
+      arch='aarch64'
+    fi
+  fi
+
   local filename="deno-${arch}-${os}.zip"
   local url="https://github.com/denoland/deno/releases/latest/download/${filename}"
 
   # install deno
-  wget -nv -O "/tmp/${filename}" "$url"
+  wget -qO "/tmp/${filename}" "$url"
   sudo rm -f /usr/local/bin/deno
-  sudo unzip -od /usr/local/bin "/tmp/${filename}"
+  sudo unzip -qod /usr/local/bin "/tmp/${filename}"
   sudo chmod +x /usr/local/bin/deno
 
   # install completions
+  sudo rm -f "${bash_completion_dir}/deno"
+  sudo rm -f /usr/local/share/zsh/site-functions/_deno
   deno completions bash | sudo tee "${bash_completion_dir}/deno" >/dev/null
   deno completions zsh | sudo tee /usr/local/share/zsh/site-functions/_deno >/dev/null
 
   # cleanup
   rm -f "/tmp/${filename}"
 }
+
+# if not sourced
+if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
+  dotfiles_deno "$@"
+fi

@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+#!/usr/bin/env bash
 # installs nvm and node (lts if not specified)
 dotfiles_nvm() {
   local version=${1:-'lts/*'}
@@ -12,3 +12,8 @@ dotfiles_nvm() {
   nvm install "$version"
   nvm alias default "$version"
 }
+
+# if not sourced
+if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
+  dotfiles_nvm "$@"
+fi

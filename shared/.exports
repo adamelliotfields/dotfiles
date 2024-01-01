@@ -69,6 +69,10 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 PATH="${HOMEBREW_PREFIX}/bin:${HOMEBREW_PREFIX}/sbin:${PATH}"
 PATH="${HOMEBREW_PREFIX}/opt/libpq/bin:${PATH}"
 
+# bun
+export BUN_HOME="${HOME}/.bun"
+PATH="${BUN_HOME}/bin:${PATH}"
+
 # deno
 # https://deno.land/manual/getting_started/setup_your_environment#environment-variables
 # https://deno.land/manual/tools/script_installer

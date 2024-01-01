@@ -1,9 +1,17 @@
-# shellcheck shell=bash
+#!/usr/bin/env bash
 # symlinks the files in the provided folders to the user's home folder while preserving the directory structure
 # @example HOME=$(mktemp -d) dotfiles_link
 function dotfiles_link {
+  local verbose=false
   local os="$(uname -s)"
   local srcs=()
+
+  # check for -v/--verbose flags
+  if [[ ${1:-} == '-v' || ${1:-} == '--verbose' ]] ; then
+    verbose=true
+    shift
+  fi
+
   if [[ $os == 'Darwin' ]] ; then
     srcs=('shared' 'mac')
   elif [[ $os == 'Linux' ]] ; then
@@ -40,15 +48,21 @@ function dotfiles_link {
       if [[ -e "$dest_path" && ! -L "$dest_path" ]] ; then
         # backup the existing file
         mv "$dest_path" "${dest_path}.bak"
-        echo "${dest_path} --> ${dest_path}.bak"
+        [[ $verbose == true ]] && echo "mv       ${dest_path} ${dest_path}.bak"
       fi
 
       # create the target directory
       mkdir -p "$dest_dir"
+      [[ $verbose == true ]] && echo "mkdir -p ${dest_dir}"
 
       # create the symlink
       ln -sf "$file_path" "$dest_path"
-      echo "${file_path} --> ${dest_path}"
+      [[ $verbose == true ]] && echo "ln -s    ${file_path} ${dest_path}"
     done
   done
 }
+
+# if not sourced
+if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
+  dotfiles_link "$@"
+fi
