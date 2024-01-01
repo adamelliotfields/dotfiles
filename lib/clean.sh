@@ -43,7 +43,9 @@ function dotfiles_clean {
       if [[ -L "$dest_path" ]] ; then
         # delete the symlink
         rm -f "$dest_path"
-        [[ $verbose == true ]] && echo "rm    ${dest_path}"
+        if [[ $verbose == true ]] ; then
+          echo "rm    ${dest_path}"
+        fi
       fi
 
       # check if the file is a backup
@@ -51,7 +53,9 @@ function dotfiles_clean {
       if [[ -e "$bak_file" ]] ; then
         # restore the backup
         mv "$bak_file" "$dest_path"
-        [[ $verbose == true ]] && echo "mv    ${bak_file} ${dest_path}"
+        if [[ $verbose == true ]] ; then
+          echo "mv    ${bak_file} ${dest_path}"
+        fi
       fi
 
       # check if the directory is empty
@@ -59,7 +63,9 @@ function dotfiles_clean {
         if [[ -z "$(ls -A "$dest_dir")" ]] ; then
           # delete the directory
           rm -rf "$dest_dir"
-          [[ $verbose == true ]] && echo "rm -r ${dest_dir}"
+          if [[ $verbose == true ]] ; then
+            echo "rm -r ${dest_dir}"
+          fi
         fi
       fi
     done
