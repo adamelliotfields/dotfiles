@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+#!/usr/bin/env bash
 # adds the user to sudoers if they are not already (i.e., passwordless sudo) (requires a complete logout/login to take effect)
 function dotfiles_sudoers {
   if [[ $EUID -eq 0 ]] ; then
@@ -11,3 +11,8 @@ function dotfiles_sudoers {
     echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee "/etc/sudoers.d/$USER" >/dev/null
   fi
 }
+
+# if not sourced
+if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
+  dotfiles_sudoers "$@"
+fi

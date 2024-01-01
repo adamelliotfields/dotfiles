@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+#!/usr/bin/env bash
 # installs homebrew
 function dotfiles_homebrew {
   # already installed
@@ -10,3 +10,8 @@ function dotfiles_homebrew {
   local url='https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh'
   NONINTERACTIVE=1 /usr/bin/env bash -c "$(curl -fsSL $url)"
 }
+
+# if not sourced
+if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
+  dotfiles_homebrew "$@"
+fi

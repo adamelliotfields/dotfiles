@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+#!/usr/bin/env bash
 # configures apt and installs packages if specified (linux only)
 function dotfiles_apt {
   local -a args=("$@")
@@ -33,3 +33,8 @@ function dotfiles_apt {
     sudo apt-get install -y --no-install-recommends "${args[@]}" | grep -v 'warning: ' # ignore update-alternatives warnings
   fi
 }
+
+# if not sourced
+if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
+  dotfiles_apt "$@"
+fi

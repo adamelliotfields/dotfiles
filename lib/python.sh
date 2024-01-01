@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+#!/usr/bin/env bash
 # installs pyenv, python, pipx, and poetry (similar toolchain to nvm/node/npx/npm)
 dotfiles_python() {
   local version="$1"
@@ -19,3 +19,8 @@ dotfiles_python() {
   pyenv exec pip install --user pipx
   pipx install poetry
 }
+
+# if not sourced
+if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
+  dotfiles_python "$@"
+fi

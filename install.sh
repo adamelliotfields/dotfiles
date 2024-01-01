@@ -60,4 +60,4 @@ if [[ $(uname -s) == 'Darwin' ]] ; then
   killall Finder
 fi
 
-echo 'Done! 🎉'
+echo 'Done!'

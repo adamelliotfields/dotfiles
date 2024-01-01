@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+#!/usr/bin/env bash
 # installs rust via rustup
 function dotfiles_rustup {
   local default_toolchain='stable'
@@ -20,6 +20,14 @@ function dotfiles_rustup {
     *)      echo "dotfiles_rustup: Unsupported OS" ; return 1 ;;
   esac
 
+  # if x86_64-apple-darwin check if we're in Rosetta
+  if [[ $os == 'apple-darwin' && $arch == 'x86_64' ]] ; then
+    if [[ $(sysctl -n sysctl.proc_translated 2>/dev/null) -eq 1 ]] ; then
+      echo 'dotfiles_rustup: Rosetta detected; installing aarch64'
+      arch='aarch64'
+    fi
+  fi
+
   local default_host="${arch}-${os}"
   local -a opts=(
     '-y'
@@ -32,3 +40,8 @@ function dotfiles_rustup {
 
   curl -fsSL --proto '=https' --tlsv1.2 https://sh.rustup.rs | sh -s -- "${opts[@]}"
 }
+
+# if not sourced
+if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
+  dotfiles_rustup "$@"
+fi
