@@ -19,6 +19,7 @@ if type -q replay
 end
 
 # personal functions
+type -q chat && chat --completions | source
 type -q gituser && gituser --completions | source
 type -q up && up --completions | source
 
