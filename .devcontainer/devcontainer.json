@@ -12,6 +12,8 @@
     }
   },
   "containerEnv": {
-    "GH_TOKEN": "${localEnv:GH_TOKEN}"
+    "GH_TOKEN": "${localEnv:GH_TOKEN}",
+    "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}",
+    "PERPLEXITY_API_KEY": "${localEnv:PERPLEXITY_API_KEY}"
   }
 }
