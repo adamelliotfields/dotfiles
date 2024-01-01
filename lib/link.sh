@@ -48,16 +48,22 @@ function dotfiles_link {
       if [[ -e "$dest_path" && ! -L "$dest_path" ]] ; then
         # backup the existing file
         mv "$dest_path" "${dest_path}.bak"
-        [[ $verbose == true ]] && echo "mv       ${dest_path} ${dest_path}.bak"
+        if [[ $verbose == true ]] ; then
+          echo "mv       ${dest_path} ${dest_path}.bak"
+        fi
       fi
 
       # create the target directory
       mkdir -p "$dest_dir"
-      [[ $verbose == true ]] && echo "mkdir -p ${dest_dir}"
+      if [[ $verbose == true ]] ; then
+        echo "mkdir -p ${dest_dir}"
+      fi
 
       # create the symlink
       ln -sf "$file_path" "$dest_path"
-      [[ $verbose == true ]] && echo "ln -s    ${file_path} ${dest_path}"
+      if [[ $verbose == true ]] ; then
+        echo "ln -s    ${file_path} ${dest_path}"
+      fi
     done
   done
 }
