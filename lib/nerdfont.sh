@@ -7,7 +7,10 @@ function dotfiles_nerdfont {
   local name="$1"
 
   # only on Linux
-  $(uname -s) != 'Linux'
+  if [[ $(uname -s) != 'Linux' ]] ; then
+    echo 'dotfiles_nerdfont: unsupported OS'
+    return 1
+  fi
 
   # requires an argument
   if [[ -z $name ]] ; then
