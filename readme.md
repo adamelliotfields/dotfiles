@@ -46,6 +46,28 @@ For example:
 source lib/python.sh ; dotfiles_python 3.11.6
 ```
 
+### Fish
+
+I :heart: [Fish](https://fishshell.com). The language is more expressive than Bash and the shell is designed for interactivity.
+
+![A demo of Fish shell](./fish.gif)
+
+These are some of the [functions](https://fishshell.com/docs/current/tutorial.html#autoloading-functions) I've written:
+
+* [`chat`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/chat.fish) - OpenAI/Perplexity API Chat CLI
+* [`drac`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/drac.fish) - Dracula Pro theme switcher for Hyper
+* [`file`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/file.fish) - [file.io](https://file.io) CLI
+* [`fish_prompt`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/fish_prompt.fish) - My custom prompt 🐠
+* [`gituser`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/gituser.fish) - Update `~/.gitconfig` with email address and corresponding GPG key
+* [`goog`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/goog.fish) - Open various Google pages with params
+* [`mkcd`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/mkcd.fish) - Make a directory and change into it
+* [`nvm`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/nvm.fish) - NVM proxy via [replay](https://github.com/jorgebucaran/replay.fish)
+* [`postgres`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/postgres.fish) - Run a Postgres [container](https://hub.docker.com/_/postgres)
+* [`pypi`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/pypi.fish) - Search PyPI for package information
+* [`redis`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/redis.fish) - Run a Redis Stack [container](https://hub.docker.com/r/redis/redis-stack) with RedisInsight web GUI
+* [`ubuntu`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/ubuntu.fish) - Run an Ubuntu [container](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) mounted to the current directory
+* [`up`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/up.fish) - Move up $n$ directories
+
 ### Git
 
 Most is in [`.config/git/config`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/git/config). The rest goes in `~/.gitconfig`:
@@ -70,27 +92,6 @@ See the [`git config`](https://git-scm.com/docs/git-config#FILES) docs for detai
 ### Secrets
 
 All shell RC files source `~/.secrets` if it exists. This file should be a series of `export VAR=val` statements. Not in Git obvi.
-
-### Fish
-
-I :heart: [Fish](https://fishshell.com). The language is more expressive than Bash and the shell is designed for interactive use.
-
-![A demo of Fish shell](./fish.gif)
-
-These are some of the [functions](https://fishshell.com/docs/current/tutorial.html#autoloading-functions) I've written:
-
-* [`chat`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/chat.fish) - OpenAI/Perplexity API Chat CLI
-* [`drac`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/drac.fish) - Dracula Pro theme switcher for Hyper
-* [`fish_prompt`](https://github.com/adamelliotfields/dotfiles/blob/shared/mac/.config/fish/functions/fish_prompt.fish) - My custom prompt 🐠
-* [`gituser`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/gituser.fish) - Update `~/.gitconfig` with email address and corresponding GPG key
-* [`goog`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/goog.fish) - Open various Google pages with params
-* [`mkcd`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/mkcd.fish) - Make a directory and change into it
-* [`nvm`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/nvm.fish) - NVM proxy via [replay](https://github.com/jorgebucaran/replay.fish)
-* [`postgres`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/postgres.fish) - Run a Postgres [container](https://hub.docker.com/_/postgres)
-* [`pypi`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/pypi.fish) - Search PyPI for package information
-* [`redis`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/redis.fish) - Run a Redis Stack [container](https://hub.docker.com/r/redis/redis-stack) with RedisInsight web GUI
-* [`ubuntu`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/ubuntu.fish) - Run an Ubuntu [container](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) mounted to the current directory
-* [`up`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/up.fish) - Move up $n$ directories
 
 ### `vhs`
 
