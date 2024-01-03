@@ -13,8 +13,10 @@ function dotfiles_fish {
   fi
 
   # install `apt-add-repository`
-  sudo apt-get update
-  sudo apt-get install -y software-properties-common
+  if [[ -z $(command -v apt-add-repository 2>/dev/null) ]] ; then
+    sudo apt-get update
+    sudo apt-get install -y software-properties-common
+  fi
 
   # install fish
   sudo apt-add-repository -y ppa:fish-shell/release-3
