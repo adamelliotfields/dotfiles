@@ -1,34 +1,3 @@
-# Need `gpg`:
-#   - Linux: `apt install gnupg`
-#   - macOS: `brew install gnupg`
-#
-# Your *secret* key must be in your GPG keyring.
-# ```
-# $ cat /path/to/your.sec.key | gpg --import
-# ```
-#
-# You have to trust the key for signing commits.
-# ```
-# $ gpg --keyid-format=long --list-secret-keys # find the 16-digit key id
-# $ gpg --edit-key $your_key_id
-# > trust
-# > 5
-# > y
-# > quit
-# ```
-#
-# To automatically sign commits you need this in your `~/.gitconfig`:
-# ```
-# [commit]
-#   gpgsign = true
-# [gpg]
-#   program = /usr/local/bin/gpg # or wherever gpg is installed
-# ```
-#
-# Finally, your *public* key must be in your GitHub account.
-# ```
-# $ gh gpg-key add /path/to/your.pub.key # requires gpg scope on your GH_TOKEN
-# ```
 function gituser -d 'Switches the current Git user'
   set -l completions_txt 'Print Fish completions'
   set -l dry_run_txt 'Print the git config changes without making them'
