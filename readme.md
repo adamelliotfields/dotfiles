@@ -83,17 +83,81 @@ Most is in [`.config/git/config`](https://github.com/adamelliotfields/dotfiles/b
 	tool = <smerge|code>
 [commit]
 	gpgsign = true
-[gpg]
-	program = /path/to/gpg
 ```
 
 See the [`git config`](https://git-scm.com/docs/git-config#FILES) docs for details on how the files are resolved.
+
+### GPG
+
+_GNU Privacy Guard_ is the de facto implementation of the OpenPGP (Pretty Good Privacy) standard. I use it so my Git commits are signed by my email address.
+
+#### Generate a key
+
+```sh
+# install gnupg if necessary
+# it's the same package in Homebrew
+sudo apt install -y gnupg
+
+# you'll be asked a few questions:
+#   1. RSA and RSA
+#   2. 4096
+#   3. 0 (does not expire)
+# then enter your full name and email address; passphrase can be left empty
+gpg --full-generate-key
+
+# this command prints the ID of the key associated with your email address
+# (you can also use the fingerprint, which is a hash of the public key)
+gpg --list-keys --with-colons $YOUR_EMAIL | tr ' ' '\n' | grep '^pub' | cut -d':' -f5
+
+# export the keys and write them by hand on a piece of paper
+# the armor flag outputs ASCII (text) instead of binary ("ASCII armor")
+# add your email in a comment so you know what the key is for
+gpg --armor --comment $YOUR_EMAIL --export $YOUR_EMAIL > your.pub.key
+gpg --armor --comment $YOUR_EMAIL --export-secret-keys $YOUR_EMAIL > your.sec.key
+```
+
+#### Import a key
+
+If you just made the key, then it is already in the keychain of the computer you made it on. Here's how to import the secret key everywhere else:
+
+```sh
+cat your.sec.key | gpg --import
+```
+
+Now you have to _trust_ the key so you can sign with it:
+
+```sh
+# get the 16-digit key ID again
+YOUR_KEY=$(gpg --list-keys --with-colons $YOUR_EMAIL | tr ' ' '\n' | grep '^pub' | cut -d':' -f5)
+
+# enter the following:
+#   1. trust (type out the word "trust")
+#   2. 5
+#   3. y
+#   4. quit
+gpg --edit-key $YOUR_KEY
+```
+
+#### Sign commits
+
+Put this in `~/.gitconfig`:
+
+```properties
+[commit]
+	gpgsign = true
+```
+
+Finally, you need to let GitHub know about your key. You can do it through the website or `gh` **if** you have GPG scope on your `GH_TOKEN`.
+
+```sh
+gh gpg-key add /path/to/your.pub.key
+```
 
 ### Secrets
 
 All shell RC files source `~/.secrets` if it exists. This file should be a series of `export VAR=val` statements. Not in Git obvi.
 
-### `vhs`
+### VHS
 
 Use [`vhs`](https://github.com/charmbracelet/vhs) to create terminal screen recordings using [code](./fish.tape). The [`base-ubuntu`](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) dev container image requires some additional packages to install:
 
