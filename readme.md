@@ -56,7 +56,7 @@ These are some of the [functions](https://fishshell.com/docs/current/tutorial.ht
 
 * [`chat`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/chat.fish) - OpenAI/Perplexity API Chat CLI
 * [`drac`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/drac.fish) - Dracula Pro theme switcher for Hyper
-* [`file`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/file.fish) - [file.io](https://file.io) CLI
+* [`fio`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/fio.fish) - [file.io](https://file.io) CLI
 * [`fish_prompt`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/fish_prompt.fish) - My custom prompt 🐠
 * [`gituser`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/gituser.fish) - Update `~/.gitconfig` with email address and corresponding GPG key
 * [`goog`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/goog.fish) - Open various Google pages with params

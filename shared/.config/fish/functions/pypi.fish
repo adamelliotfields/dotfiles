@@ -1,4 +1,4 @@
-function pypi -d 'Search PyPI'
+function pypi -d 'pypi.fish'
   set -l args \
     'd/description' \
     'h/help' \
@@ -6,17 +6,21 @@ function pypi -d 'Search PyPI'
     'v/version'
   argparse $args -- $argv ; or return $status
 
+  # app name
+  set -l app pypi
+
+  # arguments
   set -l package (string lower $argv[1])
 
   # help
   if set -q _flag_h
-    echo 'Search PyPI for package info'
+    echo $app'.fish: Search pypi.org for package info'
     echo
     echo (set_color -o)'USAGE'(set_color normal)
-    echo '  pypi [flags] [--] <package>'
+    echo '  '$app' [flags] [--] <args>'
     echo
     echo (set_color -o)'ARGS'(set_color normal)
-    echo '  package            Package name to search for'
+    echo '  package            Package to search for'
     echo
     echo (set_color -o)'FLAGS'(set_color normal)
     echo '  -d, --description  Show package description'
@@ -28,19 +32,19 @@ function pypi -d 'Search PyPI'
 
   # no package
   if test -z $package
-    echo 'pypi: No package specified'
+    echo $app': No package specified'
     return 1
   end
 
   # get response
   set response (curl -fsL 'https://pypi.org/pypi/'$package'/json') ; or begin
-    echo 'pypi: Error fetching package "'$package'"'
+    echo $app': Error fetching package "'$package'"'
     return 1
   end
 
   # description flag
   if set -q _flag_d
-    echo $response | jq -r '.info.description' | bat -pl markdown
+    echo $response | jq -rM '.info.description' | bat -pl markdown
     return 0
   end
 
@@ -50,11 +54,11 @@ function pypi -d 'Search PyPI'
     set -l project_urls_values
     set -l i 1
 
-    for key in (echo $response | jq -r '.info.project_urls | keys[]')
+    for key in (echo $response | jq -rM '.info.project_urls | keys[]')
       set project_urls_keys $project_urls_keys $key
     end
 
-    for value in (echo $response | jq -r '.info.project_urls | .[]')
+    for value in (echo $response | jq -rM '.info.project_urls | .[]')
       set project_urls_values $project_urls_values $value
     end
 
@@ -67,13 +71,13 @@ function pypi -d 'Search PyPI'
 
   # version flag
   if set -q _flag_v
-    echo $response | jq -r '.info.version'
+    echo $response | jq -rM '.info.version'
     return 0
   end
 
   # no flags
-  set -l ver (echo $response | jq -r '.info.version')
-  set -l summary (echo $response | jq -r '.info.summary')
+  set -l ver (echo $response | jq -rM '.info.version')
+  set -l summary (echo $response | jq -rM '.info.summary')
   set -l url 'https://pypi.org/project/'$package
 
   echo (set_color -o)$package(set_color normal)' v'$ver
