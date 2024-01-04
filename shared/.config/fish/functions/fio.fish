@@ -1,9 +1,9 @@
-function file -d 'file.fish'
+function fio -d 'fio.fish'
   set -l args 'e/expires=' 'h/help' 'o/out='
   argparse $args -- $argv ; or return $status
 
   # app name
-  set -l app file
+  set -l app fio
 
   # arguments
   set -l expires $_flag_e
