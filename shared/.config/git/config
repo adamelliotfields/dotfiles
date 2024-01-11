@@ -1,10 +1,10 @@
+# `core.editor` isn't read when $GIT_EDITOR is set in ~/.exports
 [core]
-	# editor isn't read when $GIT_EDITOR is set
 	autocrlf = input
 	pager = less -FRSX --tabs=2
+# https://cli.github.com/manual/gh_auth_login
 [credential "https://github.com"]
-	# the `!` prefix tells git to run the command as a shell script
-	helper = !gh auth git-credential
+	helper = !gh auth git-credential # `!` means run as a script
 [credential "https://gist.github.com"]
 	helper = !gh auth git-credential
 [color]
@@ -27,17 +27,20 @@
 [difftool]
 	prompt = false
 	trustExitCode = true
-# https://github.com/git/git/blob/master/mergetools/smerge
-[difftool "smerge"]
-	cmd = smerge difftool $LOCAL $REMOTE
 # https://code.visualstudio.com/docs/sourcecontrol/overview#_vs-code-as-git-difftool-and-mergetool
 [difftool "code"]
 	cmd = code --wait --diff $LOCAL $REMOTE
+# https://github.com/git/git/blob/master/mergetools/smerge
+[difftool "smerge"]
+	cmd = smerge difftool $LOCAL $REMOTE
 [mergetool]
 	prompt = false
 	keepBackup = false
 [mergetool "code"]
-	cmd = code --wait --diff $REMOTE $LOCAL $BASE $MERGED
+	cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+	trustExitCode = true
+[mergetool "smerge"]
+	cmd = smerge mergetool $BASE $LOCAL $REMOTE -o $MERGED
 	trustExitCode = true
 [filter "lfs"]
 	clean = git-lfs clean -- %f

@@ -11,3 +11,6 @@ reports/
 # Added by Webstorm when using the GraphQL plugin
 /.graphqlconfig
 /schema.graphql
+
+# The most annoying file in the world
+.DS_Store

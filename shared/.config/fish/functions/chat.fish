@@ -9,12 +9,15 @@ function chat -d 'chat.fish'
     'max-tokens=' \
     'm/model=' \
     'no-system' \
-    'o/open' \
     'presence=' \
-    'save=?' \
-    's/system=' \
+    's/save=?' \
+    'system=' \
     't/temperature='
   argparse $args -- $argv ; or return $status
+
+  # default models
+  set -l DEFAULT_PERPLEXITY pplx-7b-chat
+  set -l DEFAULT_OPENAI gpt-3.5-turbo
 
   # app name
   set -l app chat
@@ -27,7 +30,7 @@ function chat -d 'chat.fish'
   set -l max_tokens $_flag_max_tokens
   set -l model $_flag_m
   set -l presence $_flag_presence
-  set -l system $_flag_s
+  set -l system $_flag_system
   set -l temperature $_flag_t
 
   # env vars
@@ -42,7 +45,7 @@ function chat -d 'chat.fish'
   # defaults
   test -z "$host" ; and set host perplexity
   test -z "$max_tokens" ; and set max_tokens null
-  test -z "$model" ; and set model mixtral-8x7b-instruct
+  test -z "$model" ; and set model $DEFAULT_PERPLEXITY
   test -z "$temperature" ; and set temperature 1
   test -z "$frequency" ; and set frequency 0
   test -z "$presence" ; and set presence 0
@@ -62,8 +65,8 @@ function chat -d 'chat.fish'
       return 1
   end
 
-  # use gpt-3.5-turbo at OpenAI
-  test "$host" = openai ; and test "$model" = mixtral-8x7b-instruct ; and set model gpt-3.5-turbo
+  # don't use perplexity models at openai
+  test "$host" = openai ; and test "$model" = $DEFAULT_PERPLEXITY ; and set model $DEFAULT_OPENAI
 
   # frequency of 0 at OpenAI is 1 at Perplexity
   test "$host" = perplexity ; and test "$frequency" = 0 ; and set frequency 1
@@ -80,9 +83,8 @@ function chat -d 'chat.fish'
   set -l help_txt 'Print this message and exit'
   set -l host_txt 'The API host to use (perplexity|openai) (default: perplexity)'
   set -l max_tokens_txt 'Integer of maximum tokens in response (default: null)'
-  set -l model_txt 'The model to use for completion (default: mixtral-8x7b-instruct if perplexity; gpt-3.5-turbo if openai)'
+  set -l model_txt "The model to use for completion (default: $DEFAULT_PERPLEXITY if perplexity; $DEFAULT_OPENAI if openai)"
   set -l no_system_txt 'Disable the default system prompt'
-  set -l open_txt 'Open the ChatGPT/Perplexity web app'
   set -l presence_txt 'Number between -2.0 and 2.0; positive values penalize tokens on presence (default: 0.0)'
   set -l save_txt 'Save the response to an optionally-named file (default: `chat.json` if true)'
   set -l system_txt 'Text to use as the system prompt'
@@ -108,10 +110,9 @@ function chat -d 'chat.fish'
     echo '      --max-tokens         '$max_tokens_txt
     echo '  -m, --model              '$model_txt
     echo '      --no-system          '$no_system_txt
-    echo '  -o, --open               '$open_txt
     echo '      --presence           '$presence_txt
-    echo '      --save               '$save_txt
-    echo '  -s, --system             '$system_txt
+    echo '  -s, --save               '$save_txt
+    echo '      --system             '$system_txt
     echo '  -t, --temperature        '$temperature_txt
     echo
     echo (set_color -o)'ENVIRONMENT VARIABLES'(set_color normal)
@@ -122,7 +123,7 @@ function chat -d 'chat.fish'
     echo '  FISH_CHAT_MAX_TOKENS     Overridden by --max-tokens'
     echo '  FISH_CHAT_MODEL          Overridden by -m/--model'
     echo '  FISH_CHAT_PRESENCE       Overridden by --presence'
-    echo '  FISH_CHAT_SYSTEM         Overridden by -s/--system'
+    echo '  FISH_CHAT_SYSTEM         Overridden by --system'
     echo '  FISH_CHAT_TEMPERATURE    Overridden by -t/--temperature'
     return 0
   end
@@ -141,19 +142,9 @@ function chat -d 'chat.fish'
     echo "complete -c $app -s m -l model -d '$model_txt'"
     echo "complete -c $app -l no-system -d '$no_system_txt'"
     echo "complete -c $app -l presence -d '$presence_txt'"
-    echo "complete -c $app -l save -d '$save_txt'"
-    echo "complete -c $app -s s -l system -d '$system_txt'"
+    echo "complete -c $app -s s -l save -d '$save_txt'"
+    echo "complete -c $app -l system -d '$system_txt'"
     echo "complete -c $app -s t -l temperature -d '$temperature_txt'"
-    return 0
-  end
-
-  # open the chatgpt/perplexity website
-  if set -q _flag_o
-    if test "$url" = https://api.openai.com/v1
-      open https://chat.openai.com
-    else if test "$url" = https://api.perplexity.ai
-      open https://perplexity.ai
-    end
     return 0
   end
 
@@ -185,14 +176,14 @@ function chat -d 'chat.fish'
   # tune the model's response generation for your use case
   set -l has_system
   test -n "$system" ; and set has_system true ; or set has_system false
-  test -z "$system" ; and set system 'You are a helpful assistant.'\n'Answer questions comprehensively while respecting brevity.'\n'Your responses are rendered as Markdown.'
+  test -z "$system" ; and set system 'You are a helpful assistant.'\n'Answer questions comprehensively while respecting brevity.'\n'Your responses are rendered as Markdown.'\n'Always specify the language when using fenced code blocks.'
 
   # if not saving let the model know
-  not set -q _flag_save ; and not set -q _flag_no_system ; and test "$has_system" = false ; and set system $system\n'This is a single-turn conversation; the user cannot respond.'
+  not set -q _flag_s ; and not set -q _flag_no_system ; and test "$has_system" = false ; and set system $system\n'This is a single-turn conversation; the user cannot respond.'
 
   # if saving read the file or initialize it
-  set -q _flag_save ; and begin
-    test -n "$_flag_save" ; and set save_file $_flag_save
+  set -q _flag_s ; and begin
+    test -n "$_flag_s" ; and set save_file $_flag_s
     test -s "$save_file" ; or echo $messages > $save_file
     set messages (cat $save_file | jq -cM . 2>/dev/null)
     # if the file is malformed let the user know
@@ -241,7 +232,7 @@ function chat -d 'chat.fish'
   set -l curl_opts \
     --fail-with-body \
     -s \
-    -L \
+    -m 30 \
     -X POST \
     -H "Authorization: Bearer $api_key" \
     -H "Content-Type: application/json" \
@@ -287,7 +278,7 @@ function chat -d 'chat.fish'
   end
 
   # if saving write to file
-  set -q _flag_save ; and begin
+  set -q _flag_s ; and begin
     set -l assistant_message "{ \"role\": \"assistant\", \"content\": $(echo -n $content | jq -sRM .) }"
     set messages (echo $messages | jq -cM ". + [$assistant_message]" 2>/dev/null)
     echo $messages | jq -M > $save_file

@@ -84,6 +84,7 @@ alias gl='git log'
 alias glp='git log -p' # paginated log, shows diffs colored by git-delta (the program `delta`)
 alias glg='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ar)%Creset %an %C(bold blue)<%ae>%Creset"'
 alias glo='git log --oneline'
+alias gls='git log --show-signature'
 alias gm='git merge'
 alias gmt='git mergetool'
 alias gp='git push'
