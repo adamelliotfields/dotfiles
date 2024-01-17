@@ -5,20 +5,16 @@ if [ "$(uname -s)" = 'Linux' ] ; then
   if ! echo ":${PATH}:" | grep -q ':/usr/games:' ; then PATH="/usr/games:${PATH}" ; fi
   if ! echo ":${PATH}:" | grep -q ':/usr/games/bin:' ; then PATH="/usr/games/bin:${PATH}" ; fi
 
-  # brew
-  if [ -d /home/linuxbrew ] ; then
-    export HOMEBREW_PREFIX='/home/linuxbrew/.linuxbrew'
-    export HOMEBREW_CELLAR="${HOMEBREW_PREFIX}/Cellar"
-    export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
-    export MANPATH="${HOMEBREW_PREFIX}/share/man${MANPATH+:$MANPATH}:"
-    export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH:-}"
-  fi
-
   # editor
   # use vscode as the default editor in codespaces
   export VISUAL="code -w"
   export EDITOR="$VISUAL"
   export GIT_EDITOR="$EDITOR"
+
+  # cuda
+  export CUDA_HOME='/usr/local/cuda'
+  export LD_LIBRARY_PATH="/usr/lib/wsl/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+  PATH="${CUDA_HOME}/bin:${PATH}"
 fi
 
 # mac
@@ -87,6 +83,10 @@ export PIPX_BIN_DIR="${HOME}/.local/bin"
 export PIPX_HOME="${HOME}/.local/pipx"
 export PYENV_ROOT="${HOME}/.pyenv"
 PATH="${PYENV_ROOT}/bin:${PATH}"
+
+# tensorflow
+# (1 ignores INFO, 2 ignores WARNING)
+export TF_CPP_MIN_LOG_LEVEL=2
 
 # 🤗
 # https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables
