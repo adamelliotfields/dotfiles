@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# installs pyenv, python, pipx, and poetry (similar toolchain to nvm/node/npx/npm)
+# installs pyenv, python and pipx
 dotfiles_python() {
   local version="$1"
   local pyenv_root="${HOME:?}/.pyenv"
@@ -11,13 +11,13 @@ dotfiles_python() {
   PYENV_ROOT="${pyenv_root}"
   PATH="${PYENV_ROOT}/bin:${HOME}/.local/bin:${PATH}"
 
-  [[ -z "$version" ]] && version="$(pyenv latest --known=3)"
+  # don't use bare "3" because that can install a new minor version not supported by anything
+  [[ -z "$version" ]] && version=3.11.7
 
-  # requires libbz2-dev libffi-dev liblzma-dev libncurses-dev libreadline-dev libsqlite3-dev
+  # requires libbz2-dev libffi-dev liblzma-dev libncurses-dev libreadline-dev libsqlite3-dev libssl-dev zlib1g-dev
   pyenv install "$version"
   pyenv global "$version" # creates ~/.pyenv/version
   pyenv exec pip install --user pipx
-  pipx install poetry
 }
 
 # if not sourced
