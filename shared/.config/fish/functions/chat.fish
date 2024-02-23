@@ -16,7 +16,7 @@ function chat -d 'chat.fish'
   argparse $args -- $argv ; or return $status
 
   # default models
-  set -l DEFAULT_PERPLEXITY pplx-7b-chat
+  set -l DEFAULT_PERPLEXITY pplx-70b-chat
   set -l DEFAULT_OPENAI gpt-3.5-turbo
 
   # app name
@@ -176,7 +176,7 @@ function chat -d 'chat.fish'
   # tune the model's response generation for your use case
   set -l has_system
   test -n "$system" ; and set has_system true ; or set has_system false
-  test -z "$system" ; and set system 'You are a helpful assistant.'\n'Answer questions comprehensively while respecting brevity.'\n'Your responses are rendered as Markdown.'\n'Always specify the language when using fenced code blocks.'
+  test -z "$system" ; and set system 'You are a helpful assistant.'\n'Answer questions comprehensively while respecting brevity.'\n'Your responses are rendered as Markdown.'
 
   # if not saving let the model know
   not set -q _flag_s ; and not set -q _flag_no_system ; and test "$has_system" = false ; and set system $system\n'This is a single-turn conversation; the user cannot respond.'
