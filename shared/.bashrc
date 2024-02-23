@@ -26,14 +26,20 @@ completions_dir=''
 [[ -n $completions_dir ]] && for file in "${completions_dir}"/* ; do [[ -s $file ]] && source "$file" ; done
 unset completions_dir
 
-# pyenv
-[[ -n $(command -v pyenv 2>/dev/null) ]] && eval "$(pyenv init -)"
-
 # nvm
 unset NVM_DIR
 [[ -d /usr/local/share/nvm ]] && export NVM_DIR='/usr/local/share/nvm'
 [[ -z $NVM_DIR && -d ${HOME}/.nvm ]] && export NVM_DIR="${HOME}/.nvm"
 [[ -n $NVM_DIR && -s ${NVM_DIR}/nvm.sh ]] && source "${NVM_DIR}/nvm.sh"
+
+# mamba
+miniforge_dir="${HOME}/.miniforge3/etc/profile.d"
+# [[ -f ${miniforge_dir}/conda.sh ]] && source "${miniforge_dir}/conda.sh"
+[[ -f ${miniforge_dir}/mamba.sh ]] && source "${miniforge_dir}/mamba.sh"
+unset miniforge_dir
+
+# pyenv
+[[ -n $(command -v pyenv 2>/dev/null) ]] && eval "$(pyenv init -)"
 
 # zoxide
 [[ -n $(command -v zoxide 2>/dev/null) ]] && eval "$(zoxide init bash)"
