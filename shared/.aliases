@@ -114,7 +114,7 @@ alias gus='git reset --soft HEAD~1 ; git reset' # git-undo -s (undoes the last c
 # github cli
 alias ghr='gh repo'
 alias ghrc='gh repo create' # interactive create, will prompt for inputs
-alias ghrcl='gh repo clone' # prefer this over git clone because you can use org/repo format
+alias ghrcl='gh repo clone' # can omit org if it's your own repo
 alias ghrv='gh repo view --web' # same as git browse from git-extras
 
 # npm

@@ -6,12 +6,13 @@ function fish_prompt -d 'Write out the prompt'
   # https://fishshell.com/docs/current/cmds/set_color.html
   set -l color_k8s blue
   set -l color_k8s_context brblack
+  set -l color_docker $color_k8s
+  set -l color_duration black
   set -l color_git green
   set -l color_git_key yellow
   set -l color_git_email brblack
-  set -l color_duration black
-  set -l color_docker $color_k8s
-  set -l color_python $color_k8s
+  set -l color_python blue
+  set -l color_python_conda yellow
 
   # prompt chars from https://github.com/IlanCosman/tide
   set -l char_prompt_top '╭─'
@@ -107,6 +108,11 @@ function fish_prompt -d 'Write out the prompt'
   # python
   set -q VIRTUAL_ENV ; and begin
     echo -ns (set_color $color_python)$icon_python' '
+  end
+
+  # conda/mamba
+  set -q CONDA_DEFAULT_ENV ; and begin
+    echo -ns (set_color $color_python)$icon_python(set_color normal)' ['(set_color $color_python)$CONDA_DEFAULT_ENV(set_color normal)'] '
   end
 
   # kubernetes

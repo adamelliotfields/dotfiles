@@ -39,9 +39,7 @@ function dotfiles_deno {
 
   # install completions
   sudo rm -f "${bash_completion_dir}/deno"
-  sudo rm -f /usr/local/share/zsh/site-functions/_deno
   deno completions bash | sudo tee "${bash_completion_dir}/deno" >/dev/null
-  deno completions zsh | sudo tee /usr/local/share/zsh/site-functions/_deno >/dev/null
 
   # cleanup
   rm -f "/tmp/${filename}"

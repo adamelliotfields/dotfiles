@@ -153,6 +153,23 @@ Finally, you need to let GitHub know about your key. You can do it through the w
 gh gpg-key add /path/to/your.pub.key
 ```
 
+### Python
+
+I use [`pyenv`](https://github.com/pyenv/pyenv) because it's like `nvm` and [`pipx`](https://github.com/pypa/pipx) because it's like `npx`.
+
+For package managers, I use [`poetry`](https://github.com/python-poetry/poetry) and [`mamba`](https://github.com/conda-forge/miniforge).
+
+```sh
+# install pyenv, pipx, and python
+./lib/python.sh
+
+# install poetry
+pipx install poetry
+
+# install mamba
+bash -c "$(curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh) -b -p $HOME/.miniforge3"
+```
+
 ### Secrets
 
 All shell RC files source `~/.secrets` if it exists. This file should be a series of `export VAR=val` statements. Not in Git obvi.
