@@ -123,6 +123,7 @@ export PAGER='less -FRSX --tabs=2'
 export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain --paging=always'"
 export BAT_PAGER="$PAGER"
 export BAT_THEME='GitHub'
+export AICHAT_LIGHT_THEME=true
 
 # path
 # https://blog.ronin.cloud/linux-directories-paths

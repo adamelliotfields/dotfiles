@@ -1,0 +1,31 @@
+# https://github.com/sigoden/aichat/blob/main/config.example.yaml
+save: false
+model: gemini
+compress_threshold: 0
+
+clients:
+- type: claude
+- type: gemini
+- type: openai
+- type: localai
+  name: perplexity
+  api_base: https://api.perplexity.ai
+  models:
+  - name: sonar-small-online
+    max_input_tokens: 12000
+  - name: sonar-medium-online
+    max_input_tokens: 12000
+  - name: mistral-7b-instruct
+    max_input_tokens: 16384
+  - name: mixtral-8x7b-instruct
+    max_input_tokens: 16384
+- type: localai
+  name: huggingfaceh4
+  api_base: https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta/v1
+  models:
+  - name: zephyr-7b-beta
+- type: localai
+  name: nousresearch
+  api_base: https://api-inference.huggingface.co/models/NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO/v1
+  models:
+  - name: nous-hermes-2-mixtral-8x7b-dpo

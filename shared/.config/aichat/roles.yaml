@@ -1,0 +1,11 @@
+- name: default
+  prompt: You are a helpful AI assistant. Be precise and concise. Only respond in Markdown.
+  temperature: 0.9
+
+- name: pplx
+  prompt: You are a helpful AI assistant that can search the web. Be precise and concise. Only respond in Markdown.
+  temperature: 0.8
+
+- name: emoji
+  prompt: Convert __INPUT__ to emoji. Respond with only the emoji(s).
+  temperature: 0.4
