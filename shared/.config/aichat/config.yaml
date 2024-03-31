@@ -8,7 +8,7 @@ clients:
 - type: gemini
 - type: openai
 - type: localai
-  name: perplexity
+  name: pplx
   api_base: https://api.perplexity.ai
   models:
   - name: sonar-small-online
@@ -20,12 +20,7 @@ clients:
   - name: mixtral-8x7b-instruct
     max_input_tokens: 16384
 - type: localai
-  name: huggingfaceh4
-  api_base: https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta/v1
-  models:
-  - name: zephyr-7b-beta
-- type: localai
-  name: nousresearch
+  name: hf
   api_base: https://api-inference.huggingface.co/models/NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO/v1
   models:
   - name: nous-hermes-2-mixtral-8x7b-dpo

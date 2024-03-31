@@ -11,7 +11,7 @@ alias rmf='rm -rf'
 alias rnm='find . -type d -name node_modules -maxdepth 3 | xargs -I{} rm -r {}'
 alias ai='aichat --role=default'
 alias emoji='aichat --role=emoji --model=gemini:gemini-pro'
-alias pplx='aichat --role=pplx --model=perplexity:sonar-medium-online'
+alias pplx='aichat --role=pplx --model=pplx:sonar-medium-online'
 
 # https://sgeb.io/posts/git-diff-anywhere
 alias gdiff='git diff --no-ext-diff --no-index'
