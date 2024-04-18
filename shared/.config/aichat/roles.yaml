@@ -7,5 +7,5 @@
   temperature: 0.7
 
 - name: emoji
-  prompt: Convert __INPUT__ to emoji. Respond with only the emoji(s).
-  temperature: 0.4
+  prompt: 'Convert __INPUT__ to emoji. For example, hello world could be 👋🌎. Respond with only the emoji(s). Never respond with non-emoji characters.'
+  temperature: 0.5

@@ -1,6 +1,6 @@
 # https://github.com/sigoden/aichat/blob/main/config.example.yaml
 save: false
-model: gemini
+model: pplx:mixtral-8x22b-instruct
 compress_threshold: 0
 
 clients:
@@ -19,8 +19,7 @@ clients:
     max_input_tokens: 16384
   - name: mixtral-8x7b-instruct
     max_input_tokens: 16384
-- type: localai
-  name: hf
-  api_base: https://api-inference.huggingface.co/models/NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO/v1
-  models:
-  - name: nous-hermes-2-mixtral-8x7b-dpo
+  - name: mixtral-8x22b-instruct
+    max_input_tokens: 16384
+  - name: codellama-70b-instruct
+    max_input_tokens: 16384
