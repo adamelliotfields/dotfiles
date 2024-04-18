@@ -4,73 +4,44 @@
   <h1><code>dotfiles</code></h1>
 </div>
 
-_Dotfiles_ are your configuration files used to personalize Unix-like systems. This repository also contains the Bash scripts for installing my dotfiles as well as additional software and tools.
+_Dotfiles_ are configuration files used to personalize Unix-like systems.
 
-See [dotfiles.github.io](https://dotfiles.github.io) for more on dotfiles as well as popular tools and example repos to explore. In Codespaces, GitHub will automatically clone and run the [`install.sh`](./install.sh) script, so your terminal experience will be exactly like you're used to ([docs](https://docs.github.com/en/codespaces/customizing-your-codespace/personalizing-github-codespaces-for-your-account#dotfiles)).
-
-_Looking to simply sync settings across computers? See [lra/mackup](https://github.com/lra/mackup) or [twpayne/chezmoi](https://github.com/twpayne/chezmoi). Manage symlinks? See [GNU Stow](https://gnu.org/software/stow)._
-
-### Installation
+## Installation
 
 ```sh
 git clone https://gh.aef.me/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install.sh
 ```
 
-The `install.sh` script calls the functions in [`lib`](./lib/). This folder contains scripts to perform individual tasks. It is inspired by the old Microsoft dev container [script **lib**rary](https://github.com/microsoft/vscode-dev-containers/tree/main/script-library) (now [_"features"_](https://github.com/devcontainers/features)).
+## Features
 
-  * [`apt.sh`](./lib/apt.sh)
-  * [`bun.sh`](./lib/bun.sh)
-  * [`chsh.sh`](./lib/chsh.sh)
-  * [`clean.sh`](./lib/clean.sh)
-  * [`clone.sh`](./lib/clone.sh)
-  * [`deb.sh`](./lib/deb.sh)
-  * [`deno.sh`](./lib/deno.sh)
-  * [`fish.sh`](./lib/fish.sh)
-  * [`go.sh`](./lib/go.sh)
-  * [`homebrew.sh`](./lib/homebrew.sh)
-  * [`link.sh`](./lib/link.sh)
-  * [`nerdfont.sh`](./lib/nerdfont.sh)
-  * [`nvm.sh`](./lib/nvm.sh)
-  * [`python.sh`](./lib/python.sh)
-  * [`rustup.sh`](./lib/rustup.sh)
-  * [`sudoers.sh`](./lib/sudoers.sh)
+  * [`apt.sh`](./lib/apt.sh): Updates and installs Apt packages.
+  * [`bun.sh`](./lib/bun.sh): Installs Bun with completions for your OS and arch.
+  * [`chsh.sh`](./lib/chsh.sh): Sets the default shell for the current user.
+  * [`clean.sh`](./lib/clean.sh): Undoes `link.sh`.
+  * [`clone.sh`](./lib/clone.sh): Clones GitHub repos to `$HOME`.
+  * [`deb.sh`](./lib/deb.sh): Installs Deb packages from GitHub Releases.
+  * [`deno.sh`](./lib/deno.sh): Installs Deno with completions for your OS and arch.
+  * [`fish.sh`](./lib/fish.sh): Installs Fish from the fish-shell PPA.
+  * [`go.sh`](./lib/go.sh): Installs Go for your OS and arch.
+  * [`homebrew.sh`](./lib/homebrew.sh): Installs Homebrew for macOS.
+  * [`link.sh`](./lib/link.sh): Recursively symlinks files.
+  * [`miniforge.sh`](./lib/miniforge.sh): Installs Miniforge for your OS and arch.
+  * [`nerdfont.sh`](./lib/nerdfont.sh): Installs a Nerdfont.
+  * [`node.sh`](./lib/node.sh): Installs Node LTS via NVM.
+  * [`python.sh`](./lib/python.sh): Installs Python and Pipx via PyEnv.
+  * [`rust.sh`](./lib/rust.sh): Installs Rust via Rustup for your OS and arch.
+  * [`sudoers.sh`](./lib/sudoers.sh): Adds the current user to the sudoers file.
 
-For example:
+## Usage
 
-```sh
-# install bun for your OS and arch
-./lib/bun.sh
+### Secrets
 
-# install pyenv from GitHub with Python 3.11.6 (and pipx/poetry) using `source`
-source lib/python.sh ; dotfiles_python 3.11.6
-```
-
-### Fish
-
-I :heart: [Fish](https://fishshell.com). The language is more expressive than Bash and the shell is designed for interactivity.
-
-![A demo of Fish shell](./fish.gif)
-
-These are some of the [functions](https://fishshell.com/docs/current/tutorial.html#autoloading-functions) I've written:
-
-* [`chat`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/chat.fish) - OpenAI/Perplexity API Chat CLI
-* [`drac`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/drac.fish) - Dracula Pro theme switcher for Hyper
-* [`fio`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/fio.fish) - [file.io](https://file.io) CLI
-* [`fish_prompt`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/fish_prompt.fish) - My custom prompt 🐠
-* [`gituser`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/gituser.fish) - Update `~/.gitconfig` with email address and corresponding GPG key
-* [`goog`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/goog.fish) - Open various Google pages with params
-* [`mkcd`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/mkcd.fish) - Make a directory and change into it
-* [`nvm`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/nvm.fish) - NVM proxy via [replay](https://github.com/jorgebucaran/replay.fish)
-* [`postgres`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/postgres.fish) - Run a Postgres [container](https://hub.docker.com/_/postgres)
-* [`pypi`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/pypi.fish) - Search PyPI for package information
-* [`redis`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/redis.fish) - Run a Redis Stack [container](https://hub.docker.com/r/redis/redis-stack) with RedisInsight web GUI
-* [`ubuntu`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/ubuntu.fish) - Run an Ubuntu [container](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) mounted to the current directory
-* [`up`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/fish/functions/up.fish) - Move up $n$ directories
+All shell `*rc` files source `~/.secrets` if it exists. This file should be a series of `export VAR=val` statements. Git ignored.
 
 ### Git
 
-Most is in [`.config/git/config`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/git/config). The rest goes in `~/.gitconfig`:
+Most settings are in [`.config/git/config`](https://github.com/adamelliotfields/dotfiles/blob/main/shared/.config/git/config). The rest go in `~/.gitconfig`:
 
 ```properties
 [user]
@@ -89,7 +60,7 @@ See the [`git config`](https://git-scm.com/docs/git-config#FILES) docs for detai
 
 ### GPG
 
-_GNU Privacy Guard_ is the de facto implementation of the OpenPGP (Pretty Good Privacy) standard. I use it so my Git commits are signed by my email address.
+_GNU Privacy Guard_ is the de facto implementation of the OpenPGP (Pretty Good Privacy) standard. I use it so my Git commits are signed.
 
 #### Generate a key
 
@@ -153,56 +124,7 @@ Finally, you need to let GitHub know about your key. You can do it through the w
 gh gpg-key add /path/to/your.pub.key
 ```
 
-### Python
-
-I use [`pyenv`](https://github.com/pyenv/pyenv) because it's like `nvm` and [`pipx`](https://github.com/pypa/pipx) because it's like `npx`.
-
-For package managers, I use [`poetry`](https://github.com/python-poetry/poetry) and [`mamba`](https://github.com/conda-forge/miniforge).
-
-```sh
-# install pyenv, pipx, and python
-./lib/python.sh
-
-# install poetry
-pipx install poetry
-
-# install mamba
-bash -c "$(curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh) -b -p $HOME/.miniforge3"
-```
-
-### Secrets
-
-All shell RC files source `~/.secrets` if it exists. This file should be a series of `export VAR=val` statements. Not in Git obvi.
-
-### VHS
-
-Use [`vhs`](https://github.com/charmbracelet/vhs) to create terminal screen recordings using [code](./fish.tape). The [`base-ubuntu`](https://github.com/devcontainers/images/tree/main/src/base-ubuntu) dev container image requires some additional packages to install:
-
-```sh
-# install ffmpeg and dependencies
-sudo apt install -y ffmpeg libnss3-dev libatk-bridge2.0-0 libcups2 libxcomposite-dev libxdamage-dev
-
-# use gh cli to download
-gh -R charmbracelet/vhs release download -p '*Linux_x86_64.tar.gz'
-gh -R tsl0922/ttyd release download -p 'ttyd.x86_64' -O ttyd
-
-# extract and move binaries
-tar -xzf vhs_*_Linux_x86_64.tar.gz
-sudo mv vhs /usr/local/bin
-sudo mv ttyd /usr/local/bin
-sudo chmod +x /usr/local/bin/vhs
-sudo chmod +x /usr/local/bin/ttyd
-
-# cleanup
-rm -f vhs_*_Linux_x86_64.tar.gz
-
-# create `fish.gif` (downloads chromium first time)
-vhs fish.tape
-```
-
-### Inspiration
+## Inspiration
 
 * [jessfraz/dotfiles](https://github.com/jessfraz/dotfiles)
 * [holman/dotfiles](https://github.com/holman/dotfiles)
-* [dotphiles/dotphiles](https://github.com/dotphiles/dotphiles)
-* [alexanderepstein/bash-snippets](https://github.com/alexanderepstein/Bash-Snippets)

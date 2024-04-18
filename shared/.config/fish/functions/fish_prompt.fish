@@ -1,4 +1,3 @@
-# Fish prompt by @adamelliotfields 🐟
 # Requires https://nerdfonts.com
 # See https://github.com/fish-shell/fish-shell/blob/master/share/functions/fish_prompt.fish
 function fish_prompt -d 'Write out the prompt'
@@ -44,9 +43,9 @@ function fish_prompt -d 'Write out the prompt'
   if test $__last_status_generation -ne $status_generation
     set show_status true
 
-    # command duration colors (not using)
-    # test $last_cmd_duration -gt 49 ; and test $last_cmd_duration -lt 60000 ; and set color_duration yellow
-    # test $last_cmd_duration -gt 59999 ; and set color_duration red
+    # command duration colors
+    test $last_cmd_duration -gt 49 ; and test $last_cmd_duration -lt 60000 ; and set color_duration yellow
+    test $last_cmd_duration -gt 59999 ; and set color_duration red
 
     # setting these to be the same so the next prompt is cleared if no exit code is returned
     set -g __last_status_generation $status_generation
@@ -132,7 +131,7 @@ function fish_prompt -d 'Write out the prompt'
 
   # command duration and exit status
   if test "$show_status" = true
-    if test $last_cmd_duration -gt 0
+    if test $last_cmd_duration -gt 0 ; and type -q format
       echo -ns (set_color $color_duration) (format -t $last_cmd_duration) ' '
     end
 

@@ -11,12 +11,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.shellcheck": "explicit"
   },
-  "editor.rulers": [80],
-  "editor.unicodeHighlight.includeStrings": false, // don't highlight quoted unicode characters (prompt)
-  "files.autoSave": "off",
-  "github.copilot.enable": {
-    "plaintext": true,
-  },
+  "editor.rulers": [99],
+  "editor.unicodeHighlight.includeStrings": false, // don't highlight quoted unicode characters
   "shellcheck.customArgs": ["--external-sources"],
   "shellcheck.exclude": ["1090", "1091", "2155"],
   "shellcheck.ignorePatterns": {

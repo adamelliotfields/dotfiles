@@ -34,7 +34,7 @@ unset NVM_DIR
 
 # mamba
 miniforge_dir="${HOME}/.miniforge3/etc/profile.d"
-# [[ -f ${miniforge_dir}/conda.sh ]] && source "${miniforge_dir}/conda.sh"
+[[ -f ${miniforge_dir}/conda.sh ]] && source "${miniforge_dir}/conda.sh"
 [[ -f ${miniforge_dir}/mamba.sh ]] && source "${miniforge_dir}/mamba.sh"
 unset miniforge_dir
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # installs nvm and node (lts if not specified)
-dotfiles_nvm() {
+dotfiles_node() {
   local version=${1:-'lts/*'}
   local nvm_dir="${HOME}/.nvm"
 
@@ -15,5 +15,5 @@ dotfiles_nvm() {
 
 # if not sourced
 if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_nvm "$@"
+  dotfiles_node "$@"
 fi
