@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # installs rust via rustup
-function dotfiles_rustup {
+function dotfiles_rust {
   local default_toolchain='stable'
   local profile='minimal'
   local arch=''
@@ -10,20 +10,20 @@ function dotfiles_rustup {
   case "$(uname -m)" in
     arm64|aarch64) arch='aarch64' ;;
     amd64|x86_64)  arch='x86_64' ;;
-    *)             echo "dotfiles_rustup: Unsupported architecture" ; return 1 ;;
+    *)             echo "dotfiles_rust: Unsupported architecture" ; return 1 ;;
   esac
 
   # set os
   case "$(uname -s)" in
     Darwin) os='apple-darwin' ;;
     Linux)  os='unknown-linux-gnu' ;;
-    *)      echo "dotfiles_rustup: Unsupported OS" ; return 1 ;;
+    *)      echo "dotfiles_rust: Unsupported OS" ; return 1 ;;
   esac
 
   # if x86_64-apple-darwin check if we're in Rosetta
   if [[ $os == 'apple-darwin' && $arch == 'x86_64' ]] ; then
     if [[ $(sysctl -n sysctl.proc_translated 2>/dev/null) -eq 1 ]] ; then
-      echo 'dotfiles_rustup: Rosetta detected; installing aarch64'
+      echo 'dotfiles_rust: Rosetta detected; installing aarch64'
       arch='aarch64'
     fi
   fi
@@ -43,5 +43,5 @@ function dotfiles_rustup {
 
 # if not sourced
 if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_rustup "$@"
+  dotfiles_rust "$@"
 fi

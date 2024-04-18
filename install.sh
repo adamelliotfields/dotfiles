@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-for func in 'apt' 'clone' 'deb' 'homebrew' 'link' 'nvm' 'python' ; do
+for func in 'apt' 'clone' 'deb' 'homebrew' 'link' 'node' 'python' ; do
   source "$(dirname "$0")/lib/${func}.sh"
 done
 
@@ -24,16 +24,14 @@ if [[ $(uname -s) == 'Linux' ]] ; then
   echo 'Installing deb packages...'
   dotfiles_deb "${linux_deb[@]}"
 
-  # install prompts with homebrew on mac
+  # note: you install prompts with homebrew on mac
   echo 'Installing prompts...'
   dotfiles_clone "${linux_prompts[@]}"
   unset DEBIAN_FRONTEND
 fi
 
 # mac
-# run these commands manually and log out after each before proceding:
-#   $ source lib/sudoers.sh ; dotfiles_sudoers
-#   $ source lib/chsh.sh ; dotfiles_chsh /bin/bash
+# note: run lib/sudoers.sh and relog to enable passwordless sudo
 if [[ $(uname -s) == 'Darwin' ]] ; then
   echo 'Installing Homebrew...'
   dotfiles_homebrew
@@ -46,13 +44,6 @@ if [[ $(uname -s) == 'Darwin' ]] ; then
   # requires fish (installed above)
   echo 'Installing Fish plugins...'
   fish -c 'fisher update'
-
-  # requires some homebrew packages (installed above)
-  echo 'Installing Python...'
-  dotfiles_python
-
-  echo 'Installing nvm and Node LTS...'
-  dotfiles_nvm 'lts/*'
 
   # command + shift + .
   echo 'Showing hidden files in Finder...'
