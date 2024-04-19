@@ -4,6 +4,7 @@ dotfiles_python() {
   local version="$1"
   local pyenv_root="${HOME:?}/.pyenv"
 
+  # run `pyenv update` to update (i.e., get new versions)
   rm -rf "$pyenv_root"
   git clone --depth=1 https://github.com/pyenv/pyenv.git "$pyenv_root"
   git clone --depth=1 https://github.com/pyenv/pyenv-update.git "$pyenv_root/plugins/pyenv-update"
@@ -12,7 +13,7 @@ dotfiles_python() {
   PATH="${PYENV_ROOT}/bin:${HOME}/.local/bin:${PATH}"
 
   # don't use bare "3" because that can install a new minor version not supported by anything
-  [[ -z "$version" ]] && version=3.11.7
+  [[ -z "$version" ]] && version=3.11.9
 
   # requires libbz2-dev libffi-dev liblzma-dev libncurses-dev libreadline-dev libsqlite3-dev libssl-dev zlib1g-dev
   pyenv install "$version"
