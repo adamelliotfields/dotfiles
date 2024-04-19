@@ -8,7 +8,7 @@ done
 # linux config
 declare -a linux_prompts=( 'nojhan/liquidprompt' )
 declare -a linux_apt=( 'build-essential' 'curl' 'fzf' 'git' 'gnupg' 'jq' 'ripgrep' 'unzip' 'wget' )
-declare -a linux_apt_python=( 'libbz2-dev' 'libffi-dev' 'liblzma-dev' 'libncurses-dev' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'zlib1g-dev' )
+declare -a linux_apt_python=( 'libbz2-dev' 'libffi-dev' 'liblzma-dev' 'libncurses-dev' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'python3-tk' 'zlib1g-dev' )
 declare -a linux_deb=( 'cli/cli' 'lsd-rs/lsd' 'sharkdp/bat' 'sharkdp/diskus' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
 
 echo 'Symlinking dotfiles...'
