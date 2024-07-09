@@ -13,8 +13,16 @@ if [ "$(uname -s)" = 'Linux' ] ; then
 
   # cuda
   export CUDA_HOME='/usr/local/cuda'
-  export LD_LIBRARY_PATH="/usr/lib/wsl/lib:/usr/local/cuda/lib64"
   PATH="${CUDA_HOME}/bin:${PATH}"
+
+  # add to LD_LIBRARY_PATH if not already there
+  if [ -d '/usr/lib/wsl/lib' ] && ! echo ":${LD_LIBRARY_PATH}:" | grep -q ':/usr/lib/wsl/lib:' ; then
+    LD_LIBRARY_PATH="/usr/lib/wsl/lib:${LD_LIBRARY_PATH}"
+  fi
+  if [ -d "${CUDA_HOME}/lib64" ] && ! echo ":${LD_LIBRARY_PATH}:" | grep -q ":${CUDA_HOME}/lib64:" ; then
+    LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}"
+  fi
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH%:}"  # strip trailing colon
 fi
 
 # mac
@@ -121,7 +129,7 @@ export HF_HUB_DISABLE_TELEMETRY=1
 export GRADIO_ANALYTICS_ENABLED=false
 export HOMEBREW_NO_ANALYTICS=1
 export NEXT_TELEMETRY_DISABLED=1
-export PLOOMBER_STATS_ENABLED=false # jupysql
+export PLOOMBER_STATS_ENABLED=false  # jupysql
 export STORYBOOK_DISABLE_TELEMETRY=1
 
 # misc
