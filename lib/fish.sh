@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # installs fish
 function dotfiles_fish {
+  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
+
   # if fish is already in PATH exit
   if [[ -n $(command -v fish 2>/dev/null) ]] ; then
     echo 'dotfiles_fish: fish is already installed!'
@@ -14,14 +16,14 @@ function dotfiles_fish {
 
   # install `apt-add-repository`
   if [[ -z $(command -v apt-add-repository 2>/dev/null) ]] ; then
-    sudo apt-get update
-    sudo apt-get install -y software-properties-common
+    dotfiles_sudo apt-get update
+    dotfiles_sudo apt-get install -y software-properties-common
   fi
 
   # install fish
-  sudo apt-add-repository -y ppa:fish-shell/release-3
-  sudo apt-get update
-  sudo apt-get install -y fish | grep -v 'warning: ' # ignore update-alternatives warnings
+  dotfiles_sudo apt-add-repository -y ppa:fish-shell/release-3
+  dotfiles_sudo apt-get update
+  dotfiles_sudo apt-get install -y fish | grep -v 'warning: ' # ignore update-alternatives warnings
 
   # install fisher if ~/.config/fish/fish_plugins exists
   local url='https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish'

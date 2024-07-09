@@ -50,7 +50,7 @@ function dotfiles_clean {
 
       # check if the file is a backup
       local bak_file="${dest_path}.bak"
-      if [[ -e "$bak_file" ]] ; then
+      if [[ -f "$bak_file" ]] ; then
         # restore the backup
         mv "$bak_file" "$dest_path"
         if [[ $verbose == true ]] ; then

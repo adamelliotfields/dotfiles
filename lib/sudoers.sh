@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 # adds the user to sudoers if they are not already (i.e., passwordless sudo) (requires a complete logout/login to take effect)
 function dotfiles_sudoers {
-  if [[ $EUID -eq 0 ]] ; then
-    echo "dotfiles_sudoers: Already root"
-    return 1
-  fi
+  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
 
-  if [[ ! -s "/etc/sudoers.d/$USER" ]] ; then
-    sudo mkdir -p /etc/sudoers.d
-    echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee "/etc/sudoers.d/$USER" >/dev/null
+  local user="${1:-$USER}"
+
+  if [[ ! -f "/etc/sudoers.d/$user" ]] ; then
+    dotfiles_sudo mkdir -p /etc/sudoers.d
+    echo "$user ALL=(ALL) NOPASSWD:ALL" | dotfiles_sudo tee "/etc/sudoers.d/$user" >/dev/null
   fi
 }
 

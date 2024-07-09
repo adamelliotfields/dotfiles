@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # downloads a list of deb packages from GitHub releases and installs them with dpkg (linux only)
 function dotfiles_deb {
-  local -a repos=("$@")
+  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
 
+  local -a repos=("$@")
   local token="${GITHUB_TOKEN:-}"
   local token="${GH_TOKEN:-$token}"
 
@@ -56,7 +57,7 @@ function dotfiles_deb {
     eval "curl -fsSL $browser_download_url -o /tmp/$filename"
 
     # install and cleanup
-    sudo dpkg -i "/tmp/$filename"
+    dotfiles_sudo dpkg -i "/tmp/$filename"
     rm -f "/tmp/$filename"
   done
 }

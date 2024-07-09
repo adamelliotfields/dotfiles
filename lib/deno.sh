@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # installs deno
 function dotfiles_deno {
+  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
+
   local arch=''
   local os=''
   local bash_completion_dir=''
@@ -33,13 +35,13 @@ function dotfiles_deno {
 
   # install deno
   wget -qO "/tmp/${filename}" "$url"
-  sudo rm -f /usr/local/bin/deno
-  sudo unzip -qod /usr/local/bin "/tmp/${filename}"
-  sudo chmod +x /usr/local/bin/deno
+  dotfiles_sudo rm -f /usr/local/bin/deno
+  dotfiles_sudo unzip -qod /usr/local/bin "/tmp/${filename}"
+  dotfiles_sudo chmod +x /usr/local/bin/deno
 
   # install completions
-  sudo rm -f "${bash_completion_dir}/deno"
-  deno completions bash | sudo tee "${bash_completion_dir}/deno" >/dev/null
+  dotfiles_sudo rm -f "${bash_completion_dir}/deno"
+  deno completions bash | dotfiles_sudo tee "${bash_completion_dir}/deno" >/dev/null
 
   # cleanup
   rm -f "/tmp/${filename}"

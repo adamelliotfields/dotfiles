@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # installs bun
 dotfiles_bun() {
+  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
+
   local url='https://github.com/oven-sh/bun/releases/latest/download'
   local bash_completion_dir=''
   local target=''
@@ -51,8 +53,8 @@ dotfiles_bun() {
   # install completions
   # also installs bunx
   # https://github.com/oven-sh/bun/blob/main/src/cli/install_completions_command.zig
-  sudo rm -f "${bash_completion_dir}/bun"
-  "${bun_dir}/bin/bun" completions | sudo tee "${bash_completion_dir}/bun" >/dev/null
+  dotfiles_sudo rm -f "${bash_completion_dir}/bun"
+  "${bun_dir}/bin/bun" completions | dotfiles_sudo tee "${bash_completion_dir}/bun" >/dev/null
 
   # cleanup
   rm -rf "/tmp/bun-${target}"

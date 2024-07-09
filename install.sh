@@ -2,7 +2,7 @@
 set -euo pipefail
 
 for func in 'apt' 'clone' 'deb' 'homebrew' 'link' 'node' 'python' ; do
-  source "$(dirname "$0")/lib/${func}.sh"
+  source "$(dirname "${BASH_SOURCE[0]}")/lib/${func}.sh"
 done
 
 # linux config
