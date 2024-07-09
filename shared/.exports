@@ -88,14 +88,19 @@ export PYENV_ROOT="${HOME}/.pyenv"
 PATH="${HOME}/.miniforge3/bin:${PATH}"
 PATH="${PYENV_ROOT}/bin:${PATH}"
 
+# sklearn
+export SCIKIT_LEARN_DATA="${XDG_CACHE_HOME}/scikit_learn_data"
+
 # tensorflow
 # (1 ignores INFO, 2 ignores WARNING)
 export TF_CPP_MIN_LOG_LEVEL=2
 export TFDS_DATA_DIR="${XDG_CACHE_HOME}/tensorflow_datasets"
 
 # 🤗
-# https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables
 export HF_HOME="${XDG_CACHE_HOME}/huggingface"
+export HF_DATASETS_CACHE="${XDG_CACHE_HOME}/huggingface/datasets"
+export HF_HUB_CACHE="${XDG_CACHE_HOME}/huggingface/hub"
+export TRANSFORMERS_CACHE="$HF_HUB_CACHE"
 
 # npm
 export NPM_CONFIG_AUDIT=false
@@ -113,6 +118,7 @@ export FISH_PROMPT_DOCKER=0
 # telemetry
 export ASTRO_TELEMETRY_DISABLED=1
 export HF_HUB_DISABLE_TELEMETRY=1
+export GRADIO_ANALYTICS_ENABLED=false
 export HOMEBREW_NO_ANALYTICS=1
 export NEXT_TELEMETRY_DISABLED=1
 export PLOOMBER_STATS_ENABLED=false # jupysql
