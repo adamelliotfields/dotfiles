@@ -14,6 +14,11 @@ alias ai='aichat --role=default'
 alias emoji='aichat --role=emoji --model=pplx:mixtral-8x22b-instruct'
 alias pplx='aichat --role=pplx --model=pplx:sonar-medium-online'
 
+# vscode profiles
+alias codebun='code --profile=bun'
+alias codepy='code --profile=python'
+alias codesh='code --profile=shell'
+
 # https://sgeb.io/posts/git-diff-anywhere
 alias gdiff='git diff --no-ext-diff --no-index'
 
