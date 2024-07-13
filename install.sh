@@ -11,6 +11,7 @@ declare -a linux_apt=( 'build-essential' 'curl' 'fzf' 'git' 'gnupg' 'jq' 'ripgre
 declare -a linux_apt_python=( 'libbz2-dev' 'libffi-dev' 'liblzma-dev' 'libncurses-dev' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'zlib1g-dev' )
 declare -a linux_deb=( 'cli/cli' 'lsd-rs/lsd' 'sharkdp/bat' 'sharkdp/diskus' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
 
+# linux and mac
 echo 'Symlinking dotfiles...'
 dotfiles_link
 

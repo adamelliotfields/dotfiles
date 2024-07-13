@@ -1,16 +1,17 @@
 <div align="center">
-  <!-- Illustration of an underwater haven where the sand is etched with bright, neon circuit motifs. Schools of robot-like fish with a metallic luster navigate amidst fluorescent marine plants. A radiant shell opens, standing out as a guiding light for the marine tech realm. -->
   <img src="./dotfiles.jpg" width="360" height="270" alt="A digital world with a shell and fish" />
   <h1><code>dotfiles</code></h1>
 </div>
 
-_Dotfiles_ are configuration files used to personalize Unix-like systems.
+You can think of this repo as like a mini-Ansible playbook for setting up a new machine except it is pure Bash. Works on Debian and Mac.
 
 ## Installation
 
+Linux programs I use are listed in [`install.sh`](./install.sh) while the Mac ones are in [`mac/.Brewfile`](./mac/.Brewfile).
+
 ```sh
-git clone https://gh.aef.me/dotfiles.git ~/.dotfiles
-~/.dotfiles/install.sh
+git clone https://gh.aef.me/dotfiles.git
+./dotfiles/install.sh
 ```
 
 ## Features
