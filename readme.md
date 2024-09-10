@@ -33,7 +33,7 @@ git clone https://gh.aef.me/dotfiles.git
   * [`node.sh`](./lib/node.sh): Installs Node LTS via NVM.
   * [`python.sh`](./lib/python.sh): Installs Python and Pipx via PyEnv.
   * [`rust.sh`](./lib/rust.sh): Installs Rust via Rustup for your OS and arch.
-  * [`sudoers.sh`](./lib/sudoers.sh): Adds the current user to the sudoers file.
+  * [`sudoers.sh`](./lib/sudoers.sh): Adds a user to the sudoers file.
 
 ## Usage
 
