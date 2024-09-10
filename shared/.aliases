@@ -10,21 +10,19 @@ alias t='type -a'
 alias rmf='rm -rf'
 alias rnm='find . -type d -name node_modules -maxdepth 3 | xargs -I{} rm -r {}'
 alias uuid='uuidgen | tr "[:upper:]" "[:lower:]"'
-alias ports='lsof -n -P -i | grep --color=never LISTEN'
-alias ai='aichat --role=default'
-alias emoji='aichat --role=emoji --model=pplx:mixtral-8x22b-instruct'
-alias pplx='aichat --role=pplx --model=pplx:sonar-medium-online'
+alias port='lsof -n -P -i'  # e.g. `port :8080`
 
 # vscode profiles
-alias codebun='code --profile=bun'
-alias codepy='code --profile=python'
-alias codesh='code --profile=shell'
+alias codebun='code --disable-gpu --profile=bun'
+alias codepy='code --disable-gpu --profile=python'
+alias codesh='code --disable-gpu --profile=shell'
 
 # https://sgeb.io/posts/git-diff-anywhere
 alias gdiff='git diff --no-ext-diff --no-index'
 
 # python
 alias venv='python -m venv'
+alias pip='python -m pip --require-virtualenv'
 
 # bat
 alias b='bat -n' # line numbers
@@ -103,6 +101,7 @@ alias gplnffo='git pull --no-ff origin'
 alias gr='git reset --' # use this one to reset staged files
 alias grs='git restore --' # use this one to restore a changed file
 alias grao='git remote add origin'
+alias grso='git remote set-url origin' # grso https://user:pw@hf.co/user/model.git
 alias gs='git stash'
 alias gsd='git stash drop'
 alias gsp='git stash pop'
@@ -120,8 +119,7 @@ alias gus='git reset --soft HEAD~1 ; git reset' # git-undo -s (undoes the last c
 
 # github cli
 alias ghr='gh repo'
-alias ghrc='gh repo create' # interactive create, will prompt for inputs
-alias ghrcl='gh repo clone' # can omit org if it's your own repo
+alias ghrc='gh repo clone' # can omit org if it's your own repo
 alias ghrv='gh repo view --web' # same as git browse from git-extras
 
 # npm
@@ -143,9 +141,7 @@ alias nrs='npm run start'
 alias nrt='npm run test'
 alias ndeps='cat package.json | jq .dependencies'
 alias nddeps='cat package.json | jq .devDependencies'
-alias nodeps='cat package.json | jq .optionalDependencies'
 alias nscripts='cat package.json | jq .scripts'
-alias nengines='cat package.json | jq .engines'
 
 # docker
 alias d='docker'
