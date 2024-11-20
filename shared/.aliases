@@ -13,9 +13,10 @@ alias uuid='uuidgen | tr "[:upper:]" "[:lower:]"'
 alias port='lsof -n -P -i'  # e.g. `port :8080`
 
 # vscode profiles
-alias codebun='code --disable-gpu --profile=bun'
-alias codepy='code --disable-gpu --profile=python'
-alias codesh='code --disable-gpu --profile=shell'
+alias codejs='code --disable-gpu --profile=js'
+alias codepy='code --disable-gpu --profile=py'
+alias coders='code --disable-gpu --profile=rs'
+alias codesh='code --disable-gpu --profile=sh'
 
 # https://sgeb.io/posts/git-diff-anywhere
 alias gdiff='git diff --no-ext-diff --no-index'

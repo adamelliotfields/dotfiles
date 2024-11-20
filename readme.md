@@ -18,7 +18,7 @@ git clone https://gh.aef.me/dotfiles.git
 
   * [`apt.sh`](./lib/apt.sh): Updates and installs Apt packages.
   * [`btop.sh`](./lib/btop.sh): Installs btop from source for GPU monitoring.
-  * [`bun.sh`](./lib/bun.sh): Installs Bun with completions for your OS and arch.
+  * [`bun.sh`](./lib/bun.sh): Installs Bun for your OS and arch.
   * [`chsh.sh`](./lib/chsh.sh): Sets the default shell for the current user.
   * [`clean.sh`](./lib/clean.sh): Undoes `link.sh`.
   * [`clone.sh`](./lib/clone.sh): Clones GitHub repos to `$HOME`.
