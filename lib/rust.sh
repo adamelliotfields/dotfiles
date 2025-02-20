@@ -2,7 +2,7 @@
 # installs rust via rustup
 function dotfiles_rust {
   local default_toolchain='stable'
-  local profile='minimal'
+  local profile='default'
   local arch=''
   local os=''
 
