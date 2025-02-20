@@ -18,15 +18,10 @@ if type -q replay
   end
 end
 
-# personal functions
+# my fish functions
 type -q chat && chat --completions | source
 type -q gituser && gituser --completions | source
 type -q up && up --completions | source
-
-# conda
-set -l miniforge_dir $HOME/.miniforge3/etc/fish/conf.d
-test -f $miniforge_dir/conda.fish && source $miniforge_dir/conda.fish
-test -f $miniforge_dir/mamba.fish && source $miniforge_dir/mamba.fish
 
 # pyenv
 if command -v pyenv >/dev/null

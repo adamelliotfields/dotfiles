@@ -28,7 +28,6 @@ git clone https://gh.aef.me/dotfiles.git
   * [`go.sh`](./lib/go.sh): Installs Go for your OS and arch.
   * [`homebrew.sh`](./lib/homebrew.sh): Installs Homebrew for macOS.
   * [`link.sh`](./lib/link.sh): Recursively symlinks files.
-  * [`miniforge.sh`](./lib/miniforge.sh): Installs Miniforge for your OS and arch.
   * [`nerdfont.sh`](./lib/nerdfont.sh): Installs a Nerdfont.
   * [`node.sh`](./lib/node.sh): Installs Node LTS via NVM.
   * [`python.sh`](./lib/python.sh): Installs Python and Pipx via PyEnv.
@@ -58,7 +57,7 @@ Most settings are in [`.config/git/config`](https://github.com/adamelliotfields/
 	gpgsign = true
 ```
 
-See the [`git config`](https://git-scm.com/docs/git-config#FILES) docs for details on how the files are resolved.
+See the [`git config`](https://git-scm.com/docs/git-config#FILES) docs for how the files are resolved.
 
 ### GPG
 
@@ -120,7 +119,7 @@ Put this in `~/.gitconfig`:
 	gpgsign = true
 ```
 
-Finally, you need to let GitHub know about your key. You can do it through the website or `gh` **if** you have GPG scope on your `GH_TOKEN`.
+Finally, you need to let GitHub know about your key. You can do it through the website or `gh` if you have the **GPG scope** on your `GH_TOKEN`.
 
 ```sh
 gh gpg-key add /path/to/your.pub.key
