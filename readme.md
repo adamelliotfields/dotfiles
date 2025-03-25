@@ -34,6 +34,7 @@ git clone https://gh.aef.me/dotfiles.git
   * [`python.sh`](./lib/python.sh): Installs Python and Pipx via PyEnv.
   * [`rust.sh`](./lib/rust.sh): Installs Rust via Rustup for your OS and arch.
   * [`sudoers.sh`](./lib/sudoers.sh): Adds a user to the sudoers file.
+  * [`user.sh`](./lib/user.sh): Creates a passwordless user.
 
 ## Usage
 
