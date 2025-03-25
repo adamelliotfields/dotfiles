@@ -18,13 +18,13 @@ function dotfiles_deb {
 
   for repo in "${repos[@]}" ; do
     local bin=$(echo "$repo" | awk -F '/' '{print $2}')
-    local opts='-fsSL'
+    local opts=(-fsSL)
     local arch=''
 
     # if token is available use it
     if [[ -n "$token" ]] ; then
       echo 'dotfiles_deb: Using GitHub API token...'
-      opts="$opts -H 'Authorization: token $token'"
+      opts+=(-H "Authorization: token $token")
       DELAY=0
     fi
 
@@ -47,8 +47,8 @@ function dotfiles_deb {
     fi
 
     # get the latest release
-    local assets=$(eval "curl $opts https://api.github.com/repos/$repo/releases/latest" | jq -r '.assets')
-    local asset="$(echo "$assets" | jq -r ".[] | select(.name | test(\"${bin}_(.+)_${arch}.deb\"))")"
+    local assets=$(curl "${opts[@]}" "https://api.github.com/repos/$repo/releases/latest" | jq -r '.assets')
+    local asset=$(echo "$assets" | jq -r ".[] | select(.name | test(\"${bin}_(.+)_${arch}.deb\"))")
 
     # no deb
     if [[ -z "$asset" ]] ; then
@@ -59,7 +59,7 @@ function dotfiles_deb {
     # download the deb
     local browser_download_url=$(echo "$asset" | jq -r '.browser_download_url')
     local filename=$(basename "$browser_download_url")
-    sleep $DELAY && eval "curl -fsSL $browser_download_url -o /tmp/$filename"
+    sleep $DELAY && wget -qO "/tmp/$filename" "$browser_download_url"
 
     # install and cleanup
     dotfiles_sudo dpkg -i "/tmp/$filename"
