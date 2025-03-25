@@ -18,11 +18,6 @@ if type -q replay
   end
 end
 
-# my fish functions
-type -q chat && chat --completions | source
-type -q gituser && gituser --completions | source
-type -q up && up --completions | source
-
 # pyenv
 if command -v pyenv >/dev/null
   pyenv init - | source
