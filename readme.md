@@ -20,14 +20,13 @@ git clone https://gh.aef.me/dotfiles.git
   * [`btop.sh`](./lib/btop.sh): Installs btop from source for GPU monitoring.
   * [`bun.sh`](./lib/bun.sh): Installs Bun for your OS and arch.
   * [`chsh.sh`](./lib/chsh.sh): Sets the default shell for the current user.
-  * [`clean.sh`](./lib/clean.sh): Undoes `link.sh`.
   * [`clone.sh`](./lib/clone.sh): Clones GitHub repos to `$HOME`.
   * [`deb.sh`](./lib/deb.sh): Installs Deb packages from GitHub Releases.
   * [`deno.sh`](./lib/deno.sh): Installs Deno with completions for your OS and arch.
   * [`fish.sh`](./lib/fish.sh): Installs Fish from the fish-shell PPA.
   * [`go.sh`](./lib/go.sh): Installs Go for your OS and arch.
   * [`homebrew.sh`](./lib/homebrew.sh): Installs Homebrew for macOS.
-  * [`link.sh`](./lib/link.sh): Recursively symlinks files.
+  * [`link.sh`](./lib/link.sh): Recursively symlinks files (undo with [`clean.sh`](./lib/clean.sh)).
   * [`magick.sh`](./lib/magick.sh): Installs ImageMagick from GitHub Releases.
   * [`nerdfont.sh`](./lib/nerdfont.sh): Installs a Nerdfont.
   * [`node.sh`](./lib/node.sh): Installs Node LTS via NVM.
@@ -125,6 +124,16 @@ Finally, you need to let GitHub know about your key. You can do it through the w
 
 ```sh
 gh gpg-key add /path/to/your.pub.key
+```
+
+#### Windows
+
+The steps are similar to Linux, but you need to install [Gpg4win](https://www.gpg4win.org). To get the key ID, use Cmdlets instead of `grep` and `cut`:
+
+```powershell
+$yourKey = gpg --list-keys --with-colons $YOUR_EMAIL |
+Where-Object { $_.StartsWith('pub:') } |
+ForEach-Object { ($_ -split ':')[4] }
 ```
 
 ## Inspiration
