@@ -24,6 +24,7 @@
 	rebase = false
 	ff = only
 [diff]
+	tool = code
 	color = always
 	colorMoved = default
 [difftool]
@@ -32,17 +33,13 @@
 # https://code.visualstudio.com/docs/sourcecontrol/overview#_vs-code-as-git-difftool-and-mergetool
 [difftool "code"]
 	cmd = code --wait --diff $LOCAL $REMOTE
-# https://github.com/git/git/blob/master/mergetools/smerge
-[difftool "smerge"]
-	cmd = smerge difftool $LOCAL $REMOTE
+[merge]
+	tool = code
 [mergetool]
 	prompt = false
 	keepBackup = false
 [mergetool "code"]
 	cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
-	trustExitCode = true
-[mergetool "smerge"]
-	cmd = smerge mergetool $BASE $LOCAL $REMOTE -o $MERGED
 	trustExitCode = true
 [filter "lfs"]
 	clean = git-lfs clean -- %f

@@ -47,13 +47,9 @@ Most settings are in [`.config/git/config`](https://github.com/adamelliotfields/
 
 ```properties
 [user]
-	name = <your_name> # required
-	email = <your_email> # required
+	name = <your_name>
+	email = <your_email>
 	signingkey = <your_key>
-[diff]
-	tool = <smerge|code>
-[merge]
-	tool = <smerge|code>
 [commit]
 	gpgsign = true
 ```
@@ -128,7 +124,7 @@ gh gpg-key add /path/to/your.pub.key
 
 #### Windows
 
-The steps are similar to Linux, but you need to install [Gpg4win](https://www.gpg4win.org). To get the key ID, use Cmdlets instead of `grep` and `cut`:
+The steps are similar to Linux, but you need to install [Gpg4win](https://www.gpg4win.org). Get the key ID using Cmdlets:
 
 ```powershell
 $yourKey = gpg --list-keys --with-colons $YOUR_EMAIL |

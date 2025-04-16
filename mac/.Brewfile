@@ -54,8 +54,6 @@ cask "lunar"
 cask "pixelsnap"
 cask "rectangle"
 cask "spotify"
-cask "sublime-merge"
-cask "sublime-text"
 # cask "transmit"
 cask "visual-studio-code"
 
