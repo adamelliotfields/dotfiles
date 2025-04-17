@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
 # symlinks the files in the provided folders to the user's home folder while preserving the directory structure
-# @example HOME=$(mktemp -d) dotfiles_link
 function dotfiles_link {
   local verbose=false
   local os="$(uname -s)"
@@ -67,8 +65,3 @@ function dotfiles_link {
     done
   done
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_link "$@"
-fi

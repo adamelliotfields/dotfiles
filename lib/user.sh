@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # create a passwordless user
 function dotfiles_user {
   source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
@@ -19,8 +18,3 @@ function dotfiles_user {
   # create the user
   dotfiles_sudo adduser --disabled-password --gecos "" "$user"
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_user "$@"
-fi

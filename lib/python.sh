@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # installs pyenv, python and pipx
 dotfiles_python() {
   PYENV_ROOT="${HOME:?}/.pyenv"
@@ -20,8 +19,3 @@ dotfiles_python() {
   pyenv exec pip install --user pipx
   pipx install uv
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_python "$@"
-fi

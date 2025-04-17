@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # configures apt and installs packages if specified (linux only)
 function dotfiles_apt {
   source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
@@ -35,8 +34,3 @@ function dotfiles_apt {
     dotfiles_sudo apt-get install -y --no-install-recommends "${args[@]}" | grep -v 'warning: ' # ignore update-alternatives warnings
   fi
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_apt "$@"
-fi

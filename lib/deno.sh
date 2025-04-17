@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # installs deno
 function dotfiles_deno {
   source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
@@ -46,8 +45,3 @@ function dotfiles_deno {
   # cleanup
   rm -f "/tmp/${filename}"
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_deno "$@"
-fi

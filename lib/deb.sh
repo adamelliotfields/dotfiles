@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # downloads a list of deb packages from GitHub releases and installs them with dpkg (linux only)
 function dotfiles_deb {
   source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
@@ -66,8 +65,3 @@ function dotfiles_deb {
     rm -f "/tmp/$filename"
   done
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_deb "$@"
-fi

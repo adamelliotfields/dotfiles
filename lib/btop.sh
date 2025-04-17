@@ -1,9 +1,8 @@
-#!/usr/bin/env bash
-# installs btop
+# installs btop (linux only)
 dotfiles_btop() {
   source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
 
-  # use homebrew on Mac
+  # use homebrew on mac
   if [[ "$(uname -s)" != 'Linux' ]] ; then
     echo 'dotfiles_deb: Unsupported OS'
     return 1
@@ -23,8 +22,3 @@ dotfiles_btop() {
   dotfiles_sudo make -C /tmp/btop install
   rm -rf /tmp/btop
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_btop "$@"
-fi

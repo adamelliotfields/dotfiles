@@ -1,6 +1,11 @@
-#!/usr/bin/env bash
 # installs imagemagick from GitHub instead of imagemagick.org
 dotfiles_magick() {
+  # use homebrew on mac
+  if [[ "$(uname -s)" != 'Linux' ]] ; then
+    echo 'dotfiles_deb: Unsupported OS'
+    return 1
+  fi
+
   # already installed
   if command -v magick >/dev/null ; then
     echo "dotfiles_magick: ImageMagick is already installed"
@@ -44,8 +49,3 @@ dotfiles_magick() {
   # move to path
   sudo mv "$dest_file" /usr/local/bin/magick
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_magick "$@"
-fi

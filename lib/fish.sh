@@ -1,17 +1,17 @@
-#!/usr/bin/env bash
-# installs fish
+# installs fish (linux only)
 function dotfiles_fish {
   source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
+
+  # use homebrew on mac
+  if [[ -z $(command -v apt 2>/dev/null) || $(uname -s) != 'Linux' ]] ; then
+    echo 'dotfiles_fish: Unsupported OS'
+    return 1
+  fi
 
   # if fish is already in PATH exit
   if [[ -n $(command -v fish 2>/dev/null) ]] ; then
     echo 'dotfiles_fish: fish is already installed!'
     return 0
-  fi
-
-  if [[ -z $(command -v apt 2>/dev/null) || $(uname -s) != 'Linux' ]] ; then
-    echo 'dotfiles_fish: Unsupported OS'
-    return 1
   fi
 
   # install `apt-add-repository`
@@ -33,8 +33,3 @@ function dotfiles_fish {
     fish -c "curl -fsSL $url | source && fisher install jorgebucaran/fisher@main"
   fi
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_fish "$@"
-fi

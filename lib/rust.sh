@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # installs rust via rustup
 function dotfiles_rust {
   local default_toolchain='stable'
@@ -40,8 +39,3 @@ function dotfiles_rust {
 
   curl -fsSL --proto '=https' --tlsv1.2 https://sh.rustup.rs | sh -s -- "${opts[@]}"
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_rust "$@"
-fi

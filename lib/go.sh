@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # installs go
 function dotfiles_go {
   source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
@@ -35,8 +34,3 @@ function dotfiles_go {
   dotfiles_sudo tar -C /usr/local -xzf "/tmp/${filename}"
   rm -f "/tmp/${filename}"
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_go "$@"
-fi

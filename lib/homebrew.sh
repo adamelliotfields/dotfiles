@@ -1,6 +1,10 @@
-#!/usr/bin/env bash
-# installs homebrew
+# installs homebrew (mac only)
 function dotfiles_homebrew {
+  if [[ "$(uname -s)" != 'Darwin' ]] ; then
+    echo 'dotfiles_deb: Unsupported OS'
+    return 1
+  fi
+
   # already installed
   if command -v brew >/dev/null ; then
     return 0
@@ -10,8 +14,3 @@ function dotfiles_homebrew {
   local url='https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh'
   NONINTERACTIVE=1 /usr/bin/env bash -c "$(curl -fsSL $url)"
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_homebrew "$@"
-fi

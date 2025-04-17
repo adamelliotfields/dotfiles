@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # installs bun
 dotfiles_bun() {
   source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
@@ -53,8 +52,3 @@ dotfiles_bun() {
   rm -rf "/tmp/bun-${target}"
   rm -f /tmp/bun.zip
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_bun "$@"
-fi

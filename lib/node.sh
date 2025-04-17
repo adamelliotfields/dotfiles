@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # installs nvm and node (lts if not specified)
 dotfiles_node() {
   local version=${1:-'lts/*'}
@@ -12,8 +11,3 @@ dotfiles_node() {
   nvm install "$version"
   nvm alias default "$version"
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_node "$@"
-fi

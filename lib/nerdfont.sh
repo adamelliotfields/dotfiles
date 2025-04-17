@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
 # installs nerd fonts
-# @example dotfiles_nerdfont CascadiaCode
 function dotfiles_nerdfont {
   # click here to see all available fonts
   local url='https://github.com/ryanoasis/nerd-fonts/releases/latest'
@@ -30,8 +28,3 @@ function dotfiles_nerdfont {
   unzip -qod "${HOME}/.fonts/${name}" "/tmp/$name.zip"
   fc-cache -f
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_nerdfont "$@"
-fi

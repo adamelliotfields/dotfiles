@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # undoes `link.sh`
 function dotfiles_unlink {
   local verbose=false
@@ -71,8 +70,3 @@ function dotfiles_unlink {
     done
   done
 }
-
-# if not sourced
-if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_unlink "$@"
-fi
