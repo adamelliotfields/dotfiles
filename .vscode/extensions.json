@@ -4,6 +4,6 @@
     "timonwong.shellcheck"
   ],
   "unwantedRecommendations": [
-    "ms-vscode.makefile-tools"
+    "ms-vscode-remote.remote-containers"
   ]
 }
