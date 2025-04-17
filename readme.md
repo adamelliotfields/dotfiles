@@ -26,7 +26,7 @@ git clone https://gh.aef.me/dotfiles.git
   * [`fish.sh`](./lib/fish.sh): Installs Fish from the fish-shell PPA.
   * [`go.sh`](./lib/go.sh): Installs Go for your OS and arch.
   * [`homebrew.sh`](./lib/homebrew.sh): Installs Homebrew for macOS.
-  * [`link.sh`](./lib/link.sh): Recursively symlinks files (undo with [`clean.sh`](./lib/clean.sh)).
+  * [`link.sh`](./lib/link.sh): Recursively symlinks files.
   * [`magick.sh`](./lib/magick.sh): Installs ImageMagick from GitHub Releases.
   * [`nerdfont.sh`](./lib/nerdfont.sh): Installs a Nerdfont.
   * [`node.sh`](./lib/node.sh): Installs Node LTS via NVM.

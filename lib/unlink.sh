@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # undoes `link.sh`
-function dotfiles_clean {
+function dotfiles_unlink {
   local verbose=false
   local os="$(uname -s)"
   local srcs=()
@@ -16,7 +16,7 @@ function dotfiles_clean {
   elif [[ $os == 'Linux' ]] ; then
     srcs=('shared' 'linux')
   else
-    echo "dotfiles_clean: Unsupported OS '$os'"
+    echo "dotfiles_unlink: Unsupported OS '$os'"
     return 1
   fi
 
@@ -29,7 +29,7 @@ function dotfiles_clean {
 
     # error if the source folder doesn't exist
     if [[ ! -d "${src_dir}" ]] ; then
-      echo "dotfiles_clean: Cannot find source folder '${src_dir}'"
+      echo "dotfiles_unlink: Cannot find source folder '${src_dir}'"
       return 1
     fi
 
@@ -74,5 +74,5 @@ function dotfiles_clean {
 
 # if not sourced
 if [[ ${BASH_SOURCE[0]} = "$0" ]] ; then
-  dotfiles_clean "$@"
+  dotfiles_unlink "$@"
 fi
