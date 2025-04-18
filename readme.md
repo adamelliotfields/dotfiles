@@ -3,16 +3,7 @@
   <h1><code>dotfiles</code></h1>
 </div>
 
-You can think of this repo as like a mini-Ansible playbook for setting up a new machine except it is pure Bash. Works on Debian and Mac.
-
-## Installation
-
-Linux programs I use are listed in [`install.sh`](./install.sh) while the Mac ones are in [`mac/.Brewfile`](./mac/.Brewfile).
-
-```sh
-git clone https://gh.aef.me/dotfiles.git
-./dotfiles/install.sh
-```
+See [GitHub does dotfiles](https://dotfiles.github.io).
 
 ## Features
 
@@ -22,7 +13,7 @@ git clone https://gh.aef.me/dotfiles.git
   * [`chsh.sh`](./lib/chsh.sh): Sets the default shell for the current user.
   * [`clone.sh`](./lib/clone.sh): Clones GitHub repos to `$HOME`.
   * [`deb.sh`](./lib/deb.sh): Installs Deb packages from GitHub.
-  * [`deno.sh`](./lib/deno.sh): Installs Deno with completions for your OS and arch.
+  * [`deno.sh`](./lib/deno.sh): Installs Deno for your OS and arch.
   * [`fish.sh`](./lib/fish.sh): Installs Fish from the fish-shell PPA.
   * [`fnm.sh`](./lib/fnm.sh): Installs Fast Node Manager from GitHub.
   * [`go.sh`](./lib/go.sh): Installs Go for your OS and arch.
@@ -30,16 +21,23 @@ git clone https://gh.aef.me/dotfiles.git
   * [`link.sh`](./lib/link.sh): Recursively symlinks files.
   * [`magick.sh`](./lib/magick.sh): Installs ImageMagick from GitHub.
   * [`nerdfont.sh`](./lib/nerdfont.sh): Installs a Nerdfont.
-  * [`python.sh`](./lib/python.sh): Installs Python and Pipx via PyEnv.
   * [`rust.sh`](./lib/rust.sh): Installs Rust via Rustup for your OS and arch.
   * [`sudoers.sh`](./lib/sudoers.sh): Adds a user to the sudoers file.
   * [`user.sh`](./lib/user.sh): Creates a passwordless user.
+  * [`uv.sh`](./lib/uv.sh): Installs `uv` and `uvx` from GitHub.
+
+## Installation
+
+```sh
+git clone https://gh.aef.me/dotfiles.git
+./dotfiles/install.sh
+```
 
 ## Usage
 
 ### Secrets
 
-All shell `*rc` files source `~/.secrets` if it exists. This file should be a series of `export VAR=val` statements. Git ignored.
+All shell *rc files source `~/.secrets` if it exists. This file should be a series of `export VAR=val` statements.
 
 ### Git
 
@@ -58,16 +56,15 @@ See the [`git config`](https://git-scm.com/docs/git-config#FILES) docs for how t
 
 ### GPG
 
-_GNU Privacy Guard_ is the de facto implementation of the OpenPGP (Pretty Good Privacy) standard. I use it so my Git commits are signed.
+_GNU Privacy Guard_ is the de facto implementation of the OpenPGP (Pretty Good Privacy) standard. This is how I use it to sign commits.
 
 #### Generate a key
 
 ```sh
 # install gnupg if necessary
-# it's the same package in Homebrew
 sudo apt install -y gnupg
 
-# you'll be asked a few questions:
+# you'll be asked a few questions, respond with:
 #   1. RSA and RSA
 #   2. 4096
 #   3. 0 (does not expire)
@@ -75,10 +72,9 @@ sudo apt install -y gnupg
 gpg --full-generate-key
 
 # this command prints the ID of the key associated with your email address
-# (you can also use the fingerprint, which is a hash of the public key)
+# you can also use the fingerprint, which is a hash of the public key
 gpg --list-keys --with-colons $YOUR_EMAIL | tr ' ' '\n' | grep '^pub' | cut -d':' -f5
 
-# export the keys and write them by hand on a piece of paper
 # the armor flag outputs ASCII (text) instead of binary ("ASCII armor")
 # add your email in a comment so you know what the key is for
 gpg --armor --comment $YOUR_EMAIL --export $YOUR_EMAIL > your.pub.key
@@ -116,7 +112,7 @@ Put this in `~/.gitconfig`:
 	gpgsign = true
 ```
 
-Finally, you need to let GitHub know about your key. You can do it through the website or `gh` if you have the **GPG scope** on your `GH_TOKEN`.
+Finally, you need to let GitHub know about your key. You can do it through the website or `gh` if you have the **GPG scope** on your token.
 
 ```sh
 gh gpg-key add /path/to/your.pub.key
@@ -124,7 +120,7 @@ gh gpg-key add /path/to/your.pub.key
 
 #### Windows
 
-The steps are similar to Linux, but you need to install [Gpg4win](https://www.gpg4win.org). Get the key ID using Cmdlets:
+The steps are similar to Linux, but you need to install [Gpg4win](https://www.gpg4win.org). Here's how to get the key ID:
 
 ```powershell
 $yourKey = gpg --list-keys --with-colons $YOUR_EMAIL |

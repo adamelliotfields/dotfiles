@@ -1,6 +1,5 @@
 # shellcheck shell=sh
 # shellcheck disable=SC2016,SC2120,SC2142
-# see mac/.config/fish/conf.d/abbreviations.fish for more
 [ -n "$BASH_VERSION" ] && alias refresh="source ~/.bashrc"
 [ -n "$ZSH_VERSION" ] && alias refresh="source ~/.zshrc"
 
@@ -13,17 +12,16 @@ alias uuid='uuidgen | tr "[:upper:]" "[:lower:]"'
 alias port='lsof -n -P -i'  # e.g. `port :8080`
 
 # vscode profiles
-alias codejs='code --disable-gpu --profile=js'
-alias codepy='code --disable-gpu --profile=py'
-alias coders='code --disable-gpu --profile=rs'
-alias codesh='code --disable-gpu --profile=sh'
+alias codejs='code --profile=js'
+alias codepy='code --profile=py'
+alias coders='code --profile=rs'
+alias codesh='code --profile=sh'
 
 # https://sgeb.io/posts/git-diff-anywhere
 alias gdiff='git diff --no-ext-diff --no-index'
 
 # python
-alias venv='python -m venv'
-alias pip='python -m pip --require-virtualenv'
+alias ipython='uv run --with ipython,pandas[plot,pyarrow] -- ipython'
 
 # bat
 alias b='bat -n' # line numbers
@@ -31,12 +29,10 @@ alias bp='bat -pp' # plain no paging
 alias bman='bat -pl man' # e.g., gh --help | bman
 
 # lsd
-# prefer over exa
 alias l='lsd -lA --date=relative --group-dirs=first --permission=octal --size=short'
 alias lt='lsd -a --tree --depth=1 --group-dirs=first --icon=never'
 
 # fd
-# use globs all the time
 # Examples:
 #   f '*.sh'       # find all .sh files in pwd
 #   f '*.bash' lib # find all .bash files in lib/
@@ -87,7 +83,7 @@ alias gfo='git fetch origin'
 alias gfp='git fetch --prune' # prunes deleted remote branches from local
 alias gi='git init'
 alias gl='git log'
-alias glp='git log -p' # paginated log, shows diffs colored by git-delta (the program `delta`)
+alias glp='git log -p' # paginated log
 alias glg='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ar)%Creset %an %C(bold blue)<%ae>%Creset"'
 alias glo='git log --oneline'
 alias gls='git log --show-signature'

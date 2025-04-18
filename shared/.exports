@@ -90,10 +90,6 @@ PATH="${DENO_INSTALL_ROOT}/bin:${PATH}"
 # python
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export PYDEVD_DISABLE_FILE_VALIDATION=1
-export PIPX_BIN_DIR="${HOME}/.local/bin"
-export PIPX_HOME="${HOME}/.local/pipx"
-export PYENV_ROOT="${HOME}/.pyenv"
-PATH="${PYENV_ROOT}/bin:${PATH}"
 
 # sklearn
 export SCIKIT_LEARN_DATA="${XDG_CACHE_HOME}/scikit_learn_data"

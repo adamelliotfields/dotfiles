@@ -29,9 +29,6 @@ unset completions_dir
 # fnm
 [[ -n $(command -v fnm 2>/dev/null) ]] && eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell=bash)"
 
-# pyenv
-[[ -n $(command -v pyenv 2>/dev/null) ]] && eval "$(pyenv init -)"
-
 # zoxide
 [[ -n $(command -v zoxide 2>/dev/null) ]] && eval "$(zoxide init bash)"
 
