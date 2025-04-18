@@ -8,14 +8,12 @@ set -g fish_term24bit 1
 if type -q replay
   test -s "$HOME/.exports" && replay "source $HOME/.exports"
   test -s "$HOME/.secrets" && replay "source $HOME/.secrets"
-  test -s "$HOME/.aliases" && source "$HOME/.aliases"
+  test -s "$HOME/.aliases" && replay "source $HOME/.aliases"
+end
 
-  # nvm
-  # only source if a node version is installed
-  set -gx NVM_DIR $HOME/.nvm
-  if test -n "$(ls $NVM_DIR/versions/node 2>/dev/null)"
-    replay "source $NVM_DIR/nvm.sh"
-  end
+# fnm
+if command -v fnm >/dev/null
+  fnm env --use-on-cd --version-file-strategy=recursive --shell=fish | source
 end
 
 # pyenv

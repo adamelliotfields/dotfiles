@@ -26,11 +26,8 @@ completions_dir=''
 [[ -n $completions_dir ]] && for file in "${completions_dir}"/* ; do [[ -s $file ]] && source "$file" ; done
 unset completions_dir
 
-# nvm
-unset NVM_DIR
-[[ -d /usr/local/share/nvm ]] && export NVM_DIR='/usr/local/share/nvm'
-[[ -z $NVM_DIR && -d ${HOME}/.nvm ]] && export NVM_DIR="${HOME}/.nvm"
-[[ -n $NVM_DIR && -s ${NVM_DIR}/nvm.sh ]] && source "${NVM_DIR}/nvm.sh"
+# fnm
+[[ -n $(command -v fnm 2>/dev/null) ]] && eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell=bash)"
 
 # pyenv
 [[ -n $(command -v pyenv 2>/dev/null) ]] && eval "$(pyenv init -)"

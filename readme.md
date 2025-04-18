@@ -21,15 +21,15 @@ git clone https://gh.aef.me/dotfiles.git
   * [`bun.sh`](./lib/bun.sh): Installs Bun for your OS and arch.
   * [`chsh.sh`](./lib/chsh.sh): Sets the default shell for the current user.
   * [`clone.sh`](./lib/clone.sh): Clones GitHub repos to `$HOME`.
-  * [`deb.sh`](./lib/deb.sh): Installs Deb packages from GitHub Releases.
+  * [`deb.sh`](./lib/deb.sh): Installs Deb packages from GitHub.
   * [`deno.sh`](./lib/deno.sh): Installs Deno with completions for your OS and arch.
   * [`fish.sh`](./lib/fish.sh): Installs Fish from the fish-shell PPA.
+  * [`fnm.sh`](./lib/fnm.sh): Installs Fast Node Manager from GitHub.
   * [`go.sh`](./lib/go.sh): Installs Go for your OS and arch.
   * [`homebrew.sh`](./lib/homebrew.sh): Installs Homebrew for macOS.
   * [`link.sh`](./lib/link.sh): Recursively symlinks files.
-  * [`magick.sh`](./lib/magick.sh): Installs ImageMagick from GitHub Releases.
+  * [`magick.sh`](./lib/magick.sh): Installs ImageMagick from GitHub.
   * [`nerdfont.sh`](./lib/nerdfont.sh): Installs a Nerdfont.
-  * [`node.sh`](./lib/node.sh): Installs Node LTS via NVM.
   * [`python.sh`](./lib/python.sh): Installs Python and Pipx via PyEnv.
   * [`rust.sh`](./lib/rust.sh): Installs Rust via Rustup for your OS and arch.
   * [`sudoers.sh`](./lib/sudoers.sh): Adds a user to the sudoers file.

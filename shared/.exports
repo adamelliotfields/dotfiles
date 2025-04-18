@@ -98,6 +98,9 @@ PATH="${PYENV_ROOT}/bin:${PATH}"
 # sklearn
 export SCIKIT_LEARN_DATA="${XDG_CACHE_HOME}/scikit_learn_data"
 
+# statsmodels
+export STATSMODELS_DATA="${XDG_CACHE_HOME}/statsmodels_data"
+
 # tensorflow
 # (1 ignores INFO, 2 ignores WARNING)
 export TF_CPP_MIN_LOG_LEVEL=2
@@ -112,9 +115,6 @@ export HF_HUB_ENABLE_HF_TRANSFER=1
 # npm
 export NPM_CONFIG_AUDIT=false
 export NPM_CONFIG_FUND=false
-
-# nvm
-export NVM_SYMLINK_CURRENT=true
 
 # fish prompt
 export FISH_PROMPT_K8S=0
