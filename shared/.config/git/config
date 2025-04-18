@@ -3,12 +3,7 @@
 	autocrlf = input
 	pager = less -FRSX --tabs=2
 [credential]
-  helper = store --file ~/.git-credentials
-# https://cli.github.com/manual/gh_auth_login
-[credential "https://github.com"]
-	helper = !gh auth git-credential # `!` means run as a script
-[credential "https://gist.github.com"]
-	helper = !gh auth git-credential
+	helper = store --file ~/.git-credentials
 [color]
 	ui = always
 [color "diff"]

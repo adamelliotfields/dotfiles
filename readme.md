@@ -53,6 +53,14 @@ Most settings are in [`.config/git/config`](https://github.com/adamelliotfields/
 
 See the [`git config`](https://git-scm.com/docs/git-config#FILES) docs for how the files are resolved.
 
+#### Authentication
+
+Create `~/.git-credentials` with:
+
+```
+https://<your_username>:<your_token>@github.com
+```
+
 ### GPG
 
 _GNU Privacy Guard_ is the de facto implementation of the OpenPGP (Pretty Good Privacy) standard. This is how I use it to sign commits.
@@ -122,7 +130,7 @@ gh gpg-key add /path/to/your.pub.key
 The steps are similar to Linux, but you need to install [Gpg4win](https://www.gpg4win.org). Here's how to get the key ID:
 
 ```powershell
-$yourKey = gpg --list-keys --with-colons $YOUR_EMAIL |
+$yourKey = gpg --list-keys --with-colons $yourEmail |
 Where-Object { $_.StartsWith('pub:') } |
 ForEach-Object { ($_ -split ':')[4] }
 ```
