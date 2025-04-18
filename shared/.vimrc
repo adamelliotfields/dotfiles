@@ -1,3 +1,17 @@
+" :w       Save file
+" :q       Quit
+" :wq      Save and quit
+" :q!      Quit without saving
+" i        Enter insert mode (type text)
+" <Esc>    Return to normal mode
+" dd       Delete current line
+" yy       Yank (copy) current line
+" p        Paste below
+" u        Undo
+" /text    Search for 'text' (change 'text' to your query)
+" n        Next search result
+" :help    Open Vim help
+
 filetype plugin indent on " enables indentation based on file type
 
 syntax enable " enables syntax highlighting
