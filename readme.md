@@ -11,7 +11,6 @@ See [GitHub does dotfiles](https://dotfiles.github.io).
   * [`btop.sh`](./lib/btop.sh): Installs btop from source for GPU monitoring.
   * [`bun.sh`](./lib/bun.sh): Installs Bun for your OS and arch.
   * [`chsh.sh`](./lib/chsh.sh): Sets the default shell for the current user.
-  * [`clone.sh`](./lib/clone.sh): Clones GitHub repos to `$HOME`.
   * [`deb.sh`](./lib/deb.sh): Installs Deb packages from GitHub.
   * [`deno.sh`](./lib/deno.sh): Installs Deno for your OS and arch.
   * [`fish.sh`](./lib/fish.sh): Installs Fish from the fish-shell PPA.

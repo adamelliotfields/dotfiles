@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-for func in 'apt' 'clone' 'deb' 'homebrew' 'link' ; do
+for func in 'apt' 'deb' 'homebrew' 'link' ; do
   source "$(dirname "${BASH_SOURCE[0]}")/lib/${func}.sh"
 done
 
-declare -a linux_prompts=( 'nojhan/liquidprompt' )
 declare -a linux_apt=( 'aria2' 'build-essential' 'curl' 'fzf' 'git' 'git-lfs' 'gnupg' 'jq' 'libfuse2' 'nano' 'ripgrep' 'unzip' 'wget' )
 declare -a linux_apt_python=( 'libbz2-dev' 'libffi-dev' 'liblzma-dev' 'libncurses-dev' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'zlib1g-dev' )
 declare -a linux_deb=( 'cli/cli' 'lsd-rs/lsd' 'sharkdp/bat' 'sharkdp/diskus' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
@@ -25,8 +24,10 @@ if [[ $(uname -s) == 'Linux' ]] ; then
   echo 'Installing deb packages...'
   dotfiles_deb "${linux_deb[@]}"
 
-  echo 'Installing prompts...'
-  dotfiles_clone "${linux_prompts[@]}"
+  echo 'Installing liquidprompt...'
+  rm -rf "${HOME:?}/.liquidprompt"
+  git clone --depth=1 --branch=stable https://github.com/nojhan/liquidprompt.git "${HOME:?}/.liquidprompt"
+
   unset DEBIAN_FRONTEND
 fi
 
