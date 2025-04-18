@@ -2,7 +2,7 @@
 module.exports = {
   config: {
     fontSize: 24,
-    fontFamily: '"MonoLisa Variable", "Symbols Nerd Font", "CaskaydiaCove Nerd Font", Menlo, monospace',
+    fontFamily: '"Maple Mono NF", monospace',
     fontWeight: 'normal',
     fontWeightBold: 'bold',
     lineHeight: 1,

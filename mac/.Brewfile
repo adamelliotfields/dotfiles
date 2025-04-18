@@ -48,5 +48,4 @@ cask "spotify"
 cask "visual-studio-code"
 
 # font casks
-cask "font-caskaydia-cove-nerd-font"
-cask "font-symbols-only-nerd-font" # fallback symbols font
+cask "font-maple-mono-nf"
