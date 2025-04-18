@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-for func in 'apt' 'clone' 'deb' 'homebrew' 'link' 'node' 'python' ; do
+for func in 'apt' 'clone' 'deb' 'homebrew' 'link' ; do
   source "$(dirname "${BASH_SOURCE[0]}")/lib/${func}.sh"
 done
 
-# linux config
 declare -a linux_prompts=( 'nojhan/liquidprompt' )
-declare -a linux_apt=( 'aria2' 'build-essential' 'curl' 'fzf' 'git' 'gnupg' 'jq' 'libfuse2' 'nano' 'ncdu' 'ripgrep' 'unzip' 'wget' )
+declare -a linux_apt=( 'aria2' 'build-essential' 'curl' 'fzf' 'git' 'git-lfs' 'gnupg' 'jq' 'libfuse2' 'nano' 'ripgrep' 'unzip' 'wget' )
 declare -a linux_apt_python=( 'libbz2-dev' 'libffi-dev' 'liblzma-dev' 'libncurses-dev' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'zlib1g-dev' )
 declare -a linux_deb=( 'cli/cli' 'lsd-rs/lsd' 'sharkdp/bat' 'sharkdp/diskus' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
 
-# linux and mac
 echo 'Symlinking dotfiles...'
 dotfiles_link
 
-# linux
+# For Linux, omit Python, Node, and Fish.
+# This is mostly run in dev containers which already have runtimes installed.
+# Installing Fish requires a lot of dependencies which slows down container creation.
 if [[ $(uname -s) == 'Linux' ]] ; then
   export DEBIAN_FRONTEND=noninteractive
 
@@ -25,24 +25,26 @@ if [[ $(uname -s) == 'Linux' ]] ; then
   echo 'Installing deb packages...'
   dotfiles_deb "${linux_deb[@]}"
 
-  # note: you install prompts with homebrew on mac
   echo 'Installing prompts...'
   dotfiles_clone "${linux_prompts[@]}"
   unset DEBIAN_FRONTEND
 fi
 
-# mac
-# note: run lib/sudoers.sh and relog to enable passwordless sudo
+# For Mac, run `xcode-select --install` to install developer tools.
+# Then, run `dotfiles_sudoers` and logout to grant passwordless sudo to the current user.
 if [[ $(uname -s) == 'Darwin' ]] ; then
   echo 'Installing Homebrew...'
   dotfiles_homebrew
 
-  # comment out if you're in a hurry
   echo 'Installing Homebrew packages...'
   eval "$(brew shellenv)"
   brew bundle --global --no-lock
 
-  # requires fish (installed above)
+  # requires fnm (installed by brew)
+  echo 'Installing Node.js LTS...'
+  fnm install 'lts/*'
+
+  # requires fish and fisher (installed by brew)
   echo 'Installing Fish plugins...'
   fish -c 'fisher update'
 
