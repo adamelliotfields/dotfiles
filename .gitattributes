@@ -1,0 +1,10 @@
+# https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings
+* text=auto
+
+# all shellcheck files must be LF
+*.aliases text eol=lf
+*.bash_profile text eol=lf
+*.bashrc text eol=lf
+*.exports text eol=lf
+*.profile text eol=lf
+*.sh text eol=lf
