@@ -13,6 +13,8 @@ $Env:NEXT_TELEMETRY_DISABLED = '1'
 # Aliases
 # - view one: `get-item alias:<name>`
 # - view all: `get-childitem alias:`
+Remove-Item -Force Alias:where
+Remove-Item -Force Alias:gu
 Set-Alias which where.exe
 Set-Alias touch New-Item
 Set-Alias lns New-SymLink
