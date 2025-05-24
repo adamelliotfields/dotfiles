@@ -1,19 +1,19 @@
 {
-  "[makefile]": {
+  "[makefile][properties]": {
     "editor.insertSpaces": false,
     "editor.tabSize": 2
   },
-  // gitconfig
-  "[properties]": {
-    "editor.insertSpaces": false,
-    "editor.tabSize": 2
+  "[shellscript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.shellcheck": "explicit"
+    }
   },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.shellcheck": "explicit"
-  },
-  "editor.rulers": [99],
-  "editor.unicodeHighlight.includeStrings": false, // don't highlight quoted unicode characters
+  "editor.rulers": [100],
+  "editor.unicodeHighlight.includeStrings": false, // when editing fish prompt
+  "powershell.integratedConsole.showOnStartup": false,
+  "powershell.integratedConsole.startInBackground": true,
   "shellcheck.ignorePatterns": {
-    "**/*.fish": true
+    "**/*.fish": true,
+    "**/*.zsh": true
   }
 }
