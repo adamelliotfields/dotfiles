@@ -1,4 +1,4 @@
-# Imports
+# install-module posh-git -scope currentuser
 Import-Module posh-git -ErrorAction SilentlyContinue
 
 # Secrets
@@ -6,20 +6,20 @@ if (Test-Path "$Home\.secrets.ps1") {
     . "$Home\.secrets.ps1"
 }
 
-# Exports
+# Environment variables
 $Env:ASTRO_TELEMETRY_DISABLED = '1'
 $Env:NEXT_TELEMETRY_DISABLED = '1'
 
 # Aliases
 # - view one: `get-item alias:<name>`
 # - view all: `get-childitem alias:`
-Remove-Item -Force Alias:where
-Remove-Item -Force Alias:gu
-Set-Alias which where.exe
+
+Remove-Item -Force Alias:gu -ErrorAction SilentlyContinue
 Set-Alias touch New-Item
-Set-Alias lns New-SymLink
+Set-Alias lns New-SymbolicLink
 Set-Alias rmf Remove-ItemForce
-Set-Alias gus Undo-GitCommitStaged
+Set-Alias scl Format-ScoopList
+Set-Alias wgl Format-WingetList
 Set-Alias gu Undo-GitCommit
 Set-Alias g git.exe
 Set-Alias b bat.exe
@@ -29,55 +29,101 @@ Set-Alias l Get-ChildItem
 # Functions
 # - view one: `get-content function:<name>`
 # - view all: `get-childitem function:`
-function IPython {
-    if (Get-Command uv -ErrorAction SilentlyContinue) {
-        uv run --with 'ipython,pandas[plot,pyarrow]' -- ipython @Args
+
+# Get the path of an executable
+function Which {
+    param (
+        [Parameter(Mandatory = $true)]
+        [String]$Name
+    )
+    $cmd = Get-Command -CommandType Application -Name $Name -ErrorAction SilentlyContinue @args
+    if ($cmd) {
+        $cmd | Select-Object -First 1 -ExpandProperty Source
     }
 }
 
-# Undoes the last commit and leaves files staged
-function Undo-GitCommit {
-    git reset --soft HEAD~1 @Args
+# Run jupyter console in an isolated virtual environment
+function IPython {
+    if (Get-Command uv -ErrorAction SilentlyContinue) {
+        uv run --with 'ipython,pandas[plot,pyarrow]' -- ipython @args
+    }
 }
 
-# Undoes the last commit and unstages all files
-function Undo-GitCommitStaged {
-    git reset --soft HEAD~1 @Args
-    git reset
-}
-
-function New-SymLink {
+# Create a soft link (requires admin shell)
+function New-SymbolicLink {
     param (
         [Parameter(Mandatory = $true)]
         [String]$Source,
         [Parameter(Mandatory = $true)]
         [String]$Destination
     )
-    New-Item -ItemType SymbolicLink -Target $Source -Path $Destination
+    $src = Get-Item -LiteralPath $Source -ErrorAction Stop
+    New-Item -ItemType SymbolicLink -Target $src.FullName -Path $Destination @args
 }
 
-function Remove-ItemForce {
+# Take ownership and give yourself full permission using DOS (requires admin shell)
+function Set-Owner {
     param (
-        [Alias("FullName", "PSPath")]
-        [Parameter(
-            Position = 0,
-            Mandatory = $true,
-            ValueFromPipeline = $true,
-            ValueFromPipelineByPropertyName = $true
-        )]
+        [Parameter(Mandatory = $true)]
         [String[]]$Path
     )
     foreach ($p in $Path) {
-        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path $p
+        $u = "$Env:UserDomain\$Env:UserName"
+        takeown /R /F $p /D Y
+        icacls $p /grant "${u}:(F)" /T
     }
+}
+
+# Remove files and folders using DOS
+function Remove-ItemForce {
+    param (
+        [Parameter(Mandatory = $true)]
+        [String[]]$Path
+    )
+    foreach ($p in $Path) {
+        # Skip if path does not exist
+        $item = Get-Item -LiteralPath $p -ErrorAction SilentlyContinue
+        if (-not $item) {
+            continue
+        }
+
+        # Use absolute path for command prompt
+        $fullPath = $item.FullName
+        if ($item.PSIsContainer) {
+            cmd /c rd /s /q "$fullPath"
+        } else {
+            cmd /c del /f /q "$fullPath"
+        }
+    }
+}
+
+# Undo the last commit but leave files staged
+function Undo-GitCommit {
+    git reset --soft HEAD~1 @args
+}
+
+# Filter out write-host from scoop list
+function Format-ScoopList {
+    scoop list @args 6>$null
+}
+
+# Filter out system apps from winget list
+function Format-WingetList {
+    # install-module microsoft.winget.client
+    Get-WinGetPackage @args
+    | Where-Object { $_.Id -notmatch 'ARP|MSIX|Microsoft\.(UI|VCLibs|VCRedist)' }
 }
 
 # Node
 if (Get-Command fnm -ErrorAction SilentlyContinue) {
-    fnm env --use-on-cd --version-file-strategy=recursive --shell=powershell | Out-String | Invoke-Expression
+    fnm env --use-on-cd --version-file-strategy=recursive --shell=powershell
+    | Out-String
+    | Invoke-Expression
 }
 
 # Zoxide
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
-    zoxide init powershell | Out-String | Invoke-Expression
+    zoxide init powershell
+    | Out-String
+    | Invoke-Expression
 }
