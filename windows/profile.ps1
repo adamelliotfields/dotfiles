@@ -1,14 +1,16 @@
 # install-module posh-git -scope currentuser
 Import-Module posh-git -ErrorAction SilentlyContinue
 
-# Secrets
 if (Test-Path "$Home\.secrets.ps1") {
     . "$Home\.secrets.ps1"
 }
 
-# Environment variables
 $Env:ASTRO_TELEMETRY_DISABLED = '1'
 $Env:NEXT_TELEMETRY_DISABLED = '1'
+
+$Env:NPM_CONFIG_AUDIT = 'false'
+$Env:NPM_CONFIG_FUND = 'false'
+$ENV:NPM_CONFIG_UPDATE_NOTIFIER = 'false'
 
 # Aliases
 # - view one: `get-item alias:<name>`
@@ -62,12 +64,13 @@ function New-SymbolicLink {
 }
 
 # Take ownership and give yourself full permission using DOS (requires admin shell)
-function Set-Owner {
+function Set-Ownership {
     param (
         [Parameter(Mandatory = $true)]
         [String[]]$Path
     )
     foreach ($p in $Path) {
+        $p = (Resolve-Path $p).Path
         $u = "$Env:UserDomain\$Env:UserName"
         takeown /R /F $p /D Y
         icacls $p /grant "${u}:(F)" /T
