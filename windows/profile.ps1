@@ -5,12 +5,20 @@ if (Test-Path "$Home\.secrets.ps1") {
     . "$Home\.secrets.ps1"
 }
 
-$Env:ASTRO_TELEMETRY_DISABLED = '1'
-$Env:NEXT_TELEMETRY_DISABLED = '1'
+$Env:VISUAL = 'code -w'
+$Env:EDITOR = $Env:VISUAL
+$Env:GIT_EDITOR = $Env:EDITOR
+
+$Env:PAGER = 'less -FRSX --tabs=2' # scoop install less
+$Env:BAT_PAGER = $Env:PAGER
+$Env:BAT_THEME = 'GitHub'
 
 $Env:NPM_CONFIG_AUDIT = 'false'
 $Env:NPM_CONFIG_FUND = 'false'
-$ENV:NPM_CONFIG_UPDATE_NOTIFIER = 'false'
+$Env:NPM_CONFIG_UPDATE_NOTIFIER = 'false'
+
+$Env:ASTRO_TELEMETRY_DISABLED = '1'
+$Env:NEXT_TELEMETRY_DISABLED = '1'
 
 # Aliases
 # - view one: `get-item alias:<name>`
