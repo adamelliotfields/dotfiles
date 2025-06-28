@@ -71,11 +71,10 @@ PATH="${HOME}/.local/bin:${PATH}"
 
 # brew
 PATH="${HOMEBREW_PREFIX}/bin:${HOMEBREW_PREFIX}/sbin:${PATH}"
-PATH="${HOMEBREW_PREFIX}/opt/libpq/bin:${PATH}"
 
 # rust
-export RUSTUP_HOME="${HOME}/.rustup"
-export CARGO_HOME="${HOME}/.cargo"
+export RUSTUP_HOME="${RUSTUP_HOME:-$HOME/.rustup}"
+export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
 PATH="${CARGO_HOME}/bin:${PATH}"
 
 # bun
@@ -111,6 +110,7 @@ export HF_HUB_ENABLE_HF_TRANSFER=1
 # npm
 export NPM_CONFIG_AUDIT=false
 export NPM_CONFIG_FUND=false
+export NPM_CONFIG_UPDATE_NOTIFIER=false
 
 # fish prompt
 export FISH_PROMPT_K8S=0
