@@ -92,14 +92,20 @@ function Remove-ItemForce {
         [String[]]$Path
     )
     foreach ($p in $Path) {
+        $item = Get-Item -Force -LiteralPath $p -ErrorAction SilentlyContinue
+        $fullPath = $item.FullName
+
         # Skip if path does not exist
-        $item = Get-Item -LiteralPath $p -ErrorAction SilentlyContinue
         if (-not $item) {
             continue
         }
 
-        # Use absolute path for command prompt
-        $fullPath = $item.FullName
+        # Don't use cmd if hidden
+        if ($item.Attributes.ToString() -match 'Hidden') {
+            Remove-Item -Recurse -Force -Path $fullPath
+        }
+
+        # Use absolute path for cmd
         if ($item.PSIsContainer) {
             cmd /c rd /s /q "$fullPath"
         } else {
