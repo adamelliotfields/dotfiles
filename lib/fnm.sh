@@ -1,6 +1,9 @@
 # installs fast node manager (linux only)
 function dotfiles_fnm {
-  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
+  # run as sudo if not root
+  function _sudo {
+    [[ $EUID -ne 0 ]] && sudo "$@" || "$@"
+  }
 
   # use homebrew on mac
   if [[ "$(uname -s)" != 'Linux' ]] ; then
@@ -20,13 +23,13 @@ function dotfiles_fnm {
   # install
   rm -f "/tmp/${fnm_zip}"
   wget -qO "/tmp/${fnm_zip}" "${url}/${fnm_zip}"
-  dotfiles_sudo unzip -qod /usr/local/bin "/tmp/${fnm_zip}"
-  dotfiles_sudo chmod +x /usr/local/bin/fnm
+  _sudo unzip -qod /usr/local/bin "/tmp/${fnm_zip}"
+  _sudo chmod +x /usr/local/bin/fnm
 
   # completions
   local bash_completions='/etc/bash_completion.d/fnm'
-  dotfiles_sudo rm -f $bash_completions
-  fnm completions --shell=bash | dotfiles_sudo tee $bash_completions >/dev/null
+  _sudo rm -f $bash_completions
+  fnm completions --shell=bash | _sudo tee $bash_completions >/dev/null
 
   # cleanup
   rm -f "/tmp/${fnm_zip}"

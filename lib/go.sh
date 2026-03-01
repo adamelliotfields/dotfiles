@@ -1,6 +1,9 @@
 # installs go
 function dotfiles_go {
-  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
+  # run as sudo if not root
+  function _sudo {
+    [[ $EUID -ne 0 ]] && sudo "$@" || "$@"
+  }
 
   local version=$(curl -fsSL https://go.dev/VERSION?m=text)
   local arch=''
@@ -31,6 +34,6 @@ function dotfiles_go {
   local filename="${version}.${os}-${arch}.tar.gz"
 
   wget -nv -O "/tmp/${filename}" "https://golang.org/dl/${filename}"
-  dotfiles_sudo tar -C /usr/local -xzf "/tmp/${filename}"
+  _sudo tar -C /usr/local -xzf "/tmp/${filename}"
   rm -f "/tmp/${filename}"
 }

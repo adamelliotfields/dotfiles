@@ -1,6 +1,10 @@
+# TODO: should take a password argument, otherwise use --disabled-password
 # create a passwordless user
 function dotfiles_user {
-  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
+  # run as sudo if not root
+  function _sudo {
+    [[ $EUID -ne 0 ]] && sudo "$@" || "$@"
+  }
 
   # validate arguments
   if [[ $# -ne 1 ]] ; then
@@ -16,5 +20,5 @@ function dotfiles_user {
   fi
 
   # create the user
-  dotfiles_sudo adduser --disabled-password --gecos "" "$user"
+  _sudo adduser --disabled-password --gecos "" "$user"
 }

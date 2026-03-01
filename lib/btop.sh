@@ -1,6 +1,9 @@
 # installs btop (linux only)
 dotfiles_btop() {
-  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
+  # run as sudo if not root
+  function _sudo {
+    [[ $EUID -ne 0 ]] && sudo "$@" || "$@"
+  }
 
   # use homebrew on mac
   if [[ "$(uname -s)" != 'Linux' ]] ; then
@@ -19,6 +22,6 @@ dotfiles_btop() {
 
   # on amd64, gpu support is handled automatically
   make -C /tmp/btop
-  dotfiles_sudo make -C /tmp/btop install
+  _sudo make -C /tmp/btop install
   rm -rf /tmp/btop
 }

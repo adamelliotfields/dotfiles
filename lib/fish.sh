@@ -1,6 +1,9 @@
 # installs fish (linux only)
 function dotfiles_fish {
-  source "$(dirname "${BASH_SOURCE[0]}")/sudo.sh"
+  # run as sudo if not root
+  function _sudo {
+    [[ $EUID -ne 0 ]] && sudo "$@" || "$@"
+  }
 
   # use homebrew on mac
   if [[ -z $(command -v apt 2>/dev/null) || $(uname -s) != 'Linux' ]] ; then
@@ -9,21 +12,21 @@ function dotfiles_fish {
   fi
 
   # if fish is already in PATH exit
-  if [[ -n $(command -v fish 2>/dev/null) ]] ; then
+  if command -v fish >/dev/null 2>&1 ; then
     echo 'dotfiles_fish: fish is already installed!'
     return 0
   fi
 
   # install `apt-add-repository`
-  if [[ -z $(command -v apt-add-repository 2>/dev/null) ]] ; then
-    dotfiles_sudo apt-get update
-    dotfiles_sudo apt-get install -y software-properties-common
+  if ! command -v apt-add-repository >/dev/null 2>&1 ; then
+    _sudo apt-get update
+    _sudo apt-get install -y software-properties-common
   fi
 
   # install fish
-  dotfiles_sudo apt-add-repository -y ppa:fish-shell/release-3
-  dotfiles_sudo apt-get update
-  dotfiles_sudo apt-get install -y fish | grep -v 'warning: ' # ignore update-alternatives warnings
+  _sudo apt-add-repository -y ppa:fish-shell/release-3
+  _sudo apt-get update
+  _sudo apt-get install -y fish | grep -v 'warning: ' # ignore update-alternatives warnings
 
   # install fisher if ~/.config/fish/fish_plugins exists
   local url='https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish'
