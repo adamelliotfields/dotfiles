@@ -1,0 +1,13 @@
+cmd open $micro "$f"
+
+# disable preview cleaning
+set cleaner
+set preview true
+set mouse true
+
+# ensure this is executable
+set previewer ~/.config/lf/preview
+
+map . set hidden!
+map <enter> open
+map <c-q> quit

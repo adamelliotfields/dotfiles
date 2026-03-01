@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+file="$1"
+width="${2:-80}"
+height="${3:-40}"
+
+# requires file and img2sixel
+if [[ -z $(command -v file 2>/dev/null) || -z $(command -v img2sixel 2>/dev/null) ]] ; then
+  cat -- "$file"
+  exit
+fi
+
+mime="$(file --mime-type -Lb -- "$file")"
+case "$mime" in
+  image/*)
+    # lf passes pane size in character cells; convert to rough pixels
+    cell_w="${LF_PREVIEW_CELL_WIDTH:-8}"
+    cell_h="${LF_PREVIEW_CELL_HEIGHT:-16}"
+    width_px=$(( width * cell_w ))
+    height_px=$(( height * cell_h ))
+    img2sixel -w "${width_px}" -h "${height_px}" -- "$file"
+    ;;
+  *)
+    cat -- "$file"
+    ;;
+esac
