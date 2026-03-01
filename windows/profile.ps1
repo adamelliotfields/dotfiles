@@ -19,6 +19,7 @@ $Env:LLAMA_ARG_MMAP = 0
 $Env:LLAMA_ARG_BATCH = 4096
 $Env:LLAMA_ARG_UBATCH = 2048
 $Env:LLAMA_ARG_MODELS_MAX = 1
+$Env:LLAMA_ARG_HOST = '0.0.0.0'
 $Env:LLAMA_ARG_N_GPU_LAYERS = 'all'
 $Env:LLAMA_HOME = "$HOME\.llama.cpp"  # clone llama.cpp here
 $Env:LLAMA_ARG_MODELS_DIR = "$HOME\.cache\llama.cpp"  # download gguf here
@@ -143,8 +144,8 @@ function Undo-GitCommit {
 # Download a file fast
 function Download {
     param (
-        [Parameter(Mandatory = $true, Position = 0, ValueFromRemainingArguments = $true)]
-        [String[]]$Urls,
+        [Parameter(Mandatory = $true, Position = 0)]
+        [String]$Url,
         [Parameter()]
         [Alias('o')]
         [String]$OutFile
@@ -159,30 +160,22 @@ function Download {
         '--min-split-size=1M'
     )
 
-    # If any URL is Hugging Face, add authorization header
-    foreach ($u in $Urls) {
-        $uri = [System.Uri]::new($u)
-        if ($uri.Host -match '(^|\.)hf\.co$' -or $uri.Host -match '(^|\.)huggingface\.co$') {
-            if ($env:HF_TOKEN) {
-                $options += "--header=Authorization: Bearer ${env:HF_TOKEN}"
-            }
-            break
+    $uri = [System.Uri]::new($Url)
+    if ($uri.Host -match '(^|\.)hf\.co$' -or $uri.Host -match '(^|\.)huggingface\.co$') {
+        if ($env:HF_TOKEN) {
+            $options += "--header=Authorization: Bearer ${env:HF_TOKEN}"
         }
     }
 
-    if ($Urls.Length -gt 1) {
-        aria2c @options -Z @Urls
-    } else {
-        $url = $Urls[0]
-        if (-not $OutFile) {
-            $uri = [System.Uri]::new($url)
-            $OutFile = [System.Uri]::UnescapeDataString($uri.Segments[-1])
-        }
-        if (Test-Path "$OutFile.aria2") {
-            $options += '--continue'
-        }
-        aria2c @options -o $OutFile $url
+    if (-not $OutFile) {
+        $OutFile = [System.Uri]::UnescapeDataString($uri.Segments[-1])
     }
+
+    if (Test-Path "$OutFile.aria2") {
+        $options += '--continue'
+    }
+
+    aria2c @options -o $OutFile $Url
 }
 
 # Get the path of an executable
