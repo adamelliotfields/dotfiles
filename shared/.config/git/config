@@ -1,4 +1,3 @@
-# `core.editor` isn't read when $GIT_EDITOR is set in ~/.exports
 [core]
 	autocrlf = input
 	pager = less -FRSX --tabs=2
@@ -36,6 +35,8 @@
 [mergetool "code"]
 	cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
 	trustExitCode = true
+[safe]
+	directory = *
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
