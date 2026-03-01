@@ -1,7 +1,9 @@
-# installs homebrew (mac only)
+# installs homebrew (mac and linux)
 function dotfiles_homebrew {
-  if [[ "$(uname -s)" != 'Darwin' ]] ; then
-    echo 'dotfiles_deb: Unsupported OS'
+  local os
+  os="$(uname -s)"
+  if [[ "$os" != 'Darwin' && "$os" != 'Linux' ]] ; then
+    echo 'dotfiles_homebrew: Unsupported OS'
     return 1
   fi
 
