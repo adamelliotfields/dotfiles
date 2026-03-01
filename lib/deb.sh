@@ -24,17 +24,17 @@ function dotfiles_deb {
     return 1
   fi
 
+  # if token is available use it
+  if [[ -n "$token" ]] ; then
+    echo 'dotfiles_deb: Using GitHub API token...'
+    opts+=(-H "Authorization: token $token")
+    DELAY=0
+  fi
+
   for repo in "${repos[@]}" ; do
     local bin=$(echo "$repo" | awk -F '/' '{print $2}')
     local opts=(-fsSL)
     local arch=''
-
-    # if token is available use it
-    if [[ -n "$token" ]] ; then
-      echo 'dotfiles_deb: Using GitHub API token...'
-      opts+=(-H "Authorization: token $token")
-      DELAY=0
-    fi
 
     # set arch
     case "$(uname -m)" in
