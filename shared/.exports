@@ -1,15 +1,10 @@
 # shellcheck shell=sh
+
 # linux
 if [ "$(uname -s)" = 'Linux' ] ; then
   # games
   if ! echo ":${PATH}:" | grep -q ':/usr/games:' ; then PATH="/usr/games:${PATH}" ; fi
   if ! echo ":${PATH}:" | grep -q ':/usr/games/bin:' ; then PATH="/usr/games/bin:${PATH}" ; fi
-
-  # editor
-  # use vscode as the default editor in codespaces
-  export VISUAL="code -w"
-  export EDITOR="$VISUAL"
-  export GIT_EDITOR="$EDITOR"
 
   # cuda
   export CUDA_HOME='/usr/local/cuda'
@@ -23,40 +18,31 @@ if [ "$(uname -s)" = 'Linux' ] ; then
     LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}"
   fi
   export LD_LIBRARY_PATH="${LD_LIBRARY_PATH%:}"  # strip trailing colon
+
+  # linux brew
+  if [ -x '/home/linuxbrew/.linuxbrew/bin/brew' ] ; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
+  fi
 fi
 
-# mac
+# apple
 if [ "$(uname -s)" = 'Darwin' ] ; then
   # https://support.apple.com/en-us/HT208050
   export BASH_SILENCE_DEPRECATION_WARNING=1
 
-  # icloud
-  # ex: cp $ICLOUD/file.txt ~/Desktop
-  # note: fish handles the space; bash requires double quotes
-  export ICLOUD="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
-
-  # brew (intel)
-  export HOMEBREW_PREFIX='/usr/local'
-
-  # brew (apple)
-  # https://docs.brew.sh/FAQ#why-is-the-default-installation-prefix-opthomebrew-on-apple-silicon
-  case "$(uname -m)" in
-    arm64|aarch64)
-      export HOMEBREW_PREFIX='/opt/homebrew' ;;
-  esac
-
-  # brew (common)
-  export HOMEBREW_BUNDLE_NO_LOCK=1
-  export HOMEBREW_CELLAR="${HOMEBREW_PREFIX}/Cellar"
-  export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
-  export MANPATH="${HOMEBREW_PREFIX}/share/man${MANPATH+:$MANPATH}:"
-  export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH:-}"
-
-  # editor
-  export VISUAL='subl -w'
-  export EDITOR='nano'
-  export GIT_EDITOR="$EDITOR"
+  if [ -x '/opt/homebrew/bin/brew' ] ; then
+    eval "$(/opt/homebrew/bin/brew shellenv bash)"
+  fi
 fi
+
+# editor
+export VISUAL="code -w"
+if [ "${CODESPACES}" = 'true' ] ; then
+  export EDITOR="$VISUAL"
+else
+  export EDITOR='micro'
+fi
+export GIT_EDITOR="$EDITOR"
 
 # XDG Base Directory Specification
 # https://wiki.archlinux.org/title/XDG_Base_Directory
@@ -70,21 +56,24 @@ if [ ! -d "${HOME}/.local/bin" ] ; then mkdir -p "${HOME}/.local/bin" ; fi
 PATH="${HOME}/.local/bin:${PATH}"
 
 # brew
-PATH="${HOMEBREW_PREFIX}/bin:${HOMEBREW_PREFIX}/sbin:${PATH}"
+export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+
+# node
+export NODE_NO_WARNINGS=1
+export NODE_OPTIONS='--no-deprecation'
+
+# npm
+export NPM_CONFIG_FUND=false
+export NPM_CONFIG_AUDIT=false
+export NPM_CONFIG_LOGLEVEL=error
+export NPM_CONFIG_PROGRESS=false
+export NPM_CONFIG_UPDATE_NOTIFIER=false
 
 # rust
 export RUSTUP_HOME="${RUSTUP_HOME:-$HOME/.rustup}"
 export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
 PATH="${CARGO_HOME}/bin:${PATH}"
-
-# bun
-export BUN_HOME="${HOME}/.bun"
-PATH="${BUN_HOME}/bin:${PATH}"
-
-# deno
-export DENO_DIR="${XDG_CACHE_HOME}/deno"
-export DENO_INSTALL_ROOT="${HOME}/.deno"
-PATH="${DENO_INSTALL_ROOT}/bin:${PATH}"
 
 # python
 export VIRTUAL_ENV_DISABLE_PROMPT=1
@@ -101,37 +90,24 @@ export STATSMODELS_DATA="${XDG_CACHE_HOME}/statsmodels_data"
 export TF_CPP_MIN_LOG_LEVEL=2
 export TFDS_DATA_DIR="${XDG_CACHE_HOME}/tensorflow_datasets"
 
-# 🤗
+# huggingface
 export HF_HOME="${XDG_CACHE_HOME}/huggingface"
 export HF_DATASETS_CACHE="${XDG_CACHE_HOME}/huggingface/datasets"
 export HF_HUB_CACHE="${XDG_CACHE_HOME}/huggingface/hub"
 export HF_HUB_ENABLE_HF_TRANSFER=1
 
-# npm
-export NPM_CONFIG_AUDIT=false
-export NPM_CONFIG_FUND=false
-export NPM_CONFIG_UPDATE_NOTIFIER=false
-
-# fish prompt
-export FISH_PROMPT_K8S=0
-export FISH_PROMPT_GIT=1
-export FISH_PROMPT_GIT_USER=0
-export FISH_PROMPT_DOCKER=0
-
 # telemetry
+export DISABLE_TELEMETRY=1
+export DISABLE_ERROR_REPORTING=1
+export HOMEBREW_NO_ANALYTICS=1
 export ASTRO_TELEMETRY_DISABLED=1
 export HF_HUB_DISABLE_TELEMETRY=1
-export GRADIO_ANALYTICS_ENABLED=false
-export HOMEBREW_NO_ANALYTICS=1
-export NEXT_TELEMETRY_DISABLED=1
-export PLOOMBER_STATS_ENABLED=false  # jupysql
-export STORYBOOK_DISABLE_TELEMETRY=1
+export WRANGLER_SEND_METRICS=false
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 
 # misc
 export PAGER='less -FRSX --tabs=2'
-export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain --paging=always'"
-export BAT_PAGER="$PAGER"
-export BAT_THEME='GitHub'
+export LESSHISTSIZE=0
 
 # path
 # https://blog.ronin.cloud/linux-directories-paths
