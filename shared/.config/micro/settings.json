@@ -1,0 +1,12 @@
+{
+    "colorscheme": "light",
+    "truecolor": "on",
+    "showchars": "itab=»,ispace=·",
+    "scrollbar": true,
+    "scrollbarchar": " ",
+    "tabstospaces": true,
+    "tabmovement": true,
+    "tabsize": 2,
+    "*.py": { "tabsize": 4 },
+    "*.md": { "softwrap": true, "wordwrap": true }
+}

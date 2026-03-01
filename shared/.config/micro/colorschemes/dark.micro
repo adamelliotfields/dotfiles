@@ -1,0 +1,4 @@
+include "dukedark-tc"
+
+# statusline color with half saturation and double lightness
+color-link scrollbar "#abcde3,#abcde3"
