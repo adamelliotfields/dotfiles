@@ -29,9 +29,6 @@ PROMPT_EOL_MARK=''
   [ $+functions[compdef] -eq 0 ] && autoload -Uz compinit ; compinit
   [ $+functions[complete] -eq 0 ] && autoload -Uz bashcompinit ; bashcompinit
 
-  # fnm
-  [[ -n $(command -v fnm 2>/dev/null) ]] && eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell=zsh)"
-
   # zoxide
   [[ -n $(command -v zoxide 2>/dev/null) ]] && eval "$(zoxide init zsh)"
 }

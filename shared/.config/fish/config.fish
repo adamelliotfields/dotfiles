@@ -11,11 +11,6 @@ if type -q replay
   test -s "$HOME/.aliases" && replay "source $HOME/.aliases"
 end
 
-# fnm
-if command -v fnm >/dev/null
-  fnm env --use-on-cd --version-file-strategy=recursive --shell=fish | source
-end
-
 # zoxide
 if command -v zoxide >/dev/null
   zoxide init fish | source

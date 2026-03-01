@@ -26,9 +26,6 @@ completions_dir=''
 [[ -n $completions_dir ]] && for file in "${completions_dir}"/* ; do [[ -s $file ]] && source "$file" ; done
 unset completions_dir
 
-# fnm
-[[ -n $(command -v fnm 2>/dev/null) ]] && eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell=bash)"
-
 # zoxide
 [[ -n $(command -v zoxide 2>/dev/null) ]] && eval "$(zoxide init bash)"
 
