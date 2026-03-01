@@ -3,15 +3,8 @@
 function fish_prompt -d 'Write out the prompt'
   # colors
   # https://fishshell.com/docs/current/cmds/set_color.html
-  set -l color_k8s blue
-  set -l color_k8s_context brblack
-  set -l color_docker $color_k8s
   set -l color_duration black
   set -l color_git green
-  set -l color_git_key yellow
-  set -l color_git_email brblack
-  set -l color_python blue
-  set -l color_python_conda yellow
 
   # prompt chars from https://github.com/IlanCosman/tide
   set -l char_prompt_top '╭─'
@@ -19,16 +12,9 @@ function fish_prompt -d 'Write out the prompt'
 
   # icons
   set -l icon_git '󰊢' # nf-md-git
-  set -l icon_key '󰌆' # nf-md-key
-  set -l icon_k8s '󱃾' # nf-md-kubernetes
-  set -l icon_docker '󰡨' # nf-md-docker
-  set -l icon_python '󰌠' # nf-md-language_python
 
   # features
-  set -l show_git false # toggled by FISH_PROMPT_GIT=<0|1>
-  set -l show_git_user false # toggled by FISH_PROMPT_GIT_USER=<0|1>
-  set -l show_k8s false # toggled by FISH_PROMPT_K8S=<0|1>
-  set -l show_docker false # toggled by FISH_PROMPT_DOCKER=<0|1>
+  set -l show_git true
 
   # $status is the exit code of the last command (i.e., $? in bash)
   # $pipestatus is an array of exit codes for each command in a pipe
@@ -57,12 +43,6 @@ function fish_prompt -d 'Write out the prompt'
     end
   end
 
-  # set these after reading $status as they do return an exit code
-  set -q FISH_PROMPT_GIT ; and contains -- $FISH_PROMPT_GIT 1 true ; and set show_git true
-  set -q FISH_PROMPT_GIT_USER ; and contains -- $FISH_PROMPT_GIT_USER 1 true ; and set show_git_user true
-  set -q FISH_PROMPT_K8S ; and contains -- $FISH_PROMPT_K8S 1 true ; and set show_k8s true
-  set -q FISH_PROMPT_DOCKER ; and contains -- $FISH_PROMPT_DOCKER 1 true ; and set show_docker true
-
   # prefix
   echo -ns (set_color $color_prompt) $char_prompt_top ' '
 
@@ -84,49 +64,9 @@ function fish_prompt -d 'Write out the prompt'
     # which calls `git rev-parse` to check if we're in a repo
     set -l template ''
 
-    # git user
-    if test "$show_git_user" = true
-      # signing key
-      set -l signingkey (git config --global user.signingkey 2>/dev/null)
-      if test -n "$signingkey"
-        set template $template$(set_color $color_git_key)$icon_key' '
-      end
-
-      # email
-      set -l email (git config --global user.email 2>/dev/null)
-      if test -n "$email"
-        set template $template$(set_color $color_git_email)$email' '
-      end
-    end
-
     # git status
     set template $template$(set_color $color_git)$icon_git' '
     fish_git_prompt $template'%s '
-  end
-
-  # python
-  set -q VIRTUAL_ENV ; and begin
-    echo -ns (set_color $color_python)$icon_python' '
-  end
-
-  # conda/mamba
-  set -q CONDA_DEFAULT_ENV ; and begin
-    echo -ns (set_color $color_python)$icon_python(set_color normal)' ['(set_color $color_python)$CONDA_DEFAULT_ENV(set_color normal)'] '
-  end
-
-  # kubernetes
-  if test "$show_k8s" = true ; and command -v kubectl >/dev/null
-    set -l k8s_context (kubectl config view --minify --output 'jsonpath={.current-context}:{..namespace}' | string trim -r -c ':' 2>/dev/null)
-
-    if test -n "$k8s_context"
-      echo -ns (set_color $color_k8s) $icon_k8s ' ' (set_color $color_k8s_context) $k8s_context ' '
-    end
-  end
-
-  # docker
-  # https://gist.github.com/nuxlli/7553996
-  if test "$show_docker" = true ; and echo -n 'GET /info HTTP/1.0\r\n\r\n' | nc -U ~/.docker/run/docker.sock &>/dev/null # /var/run/docker.sock is a symlink on mac
-    echo -ns (set_color $color_docker) $icon_docker ' '
   end
 
   # command duration and exit status
