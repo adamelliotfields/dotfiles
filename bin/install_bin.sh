@@ -144,6 +144,7 @@ main() {
     fi
 
     rm -f "/tmp/$filename"
+    echo "install_bin: Installed $name"
   done
 }
 
