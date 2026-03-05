@@ -70,6 +70,10 @@ export NPM_CONFIG_LOGLEVEL=error
 export NPM_CONFIG_PROGRESS=false
 export NPM_CONFIG_UPDATE_NOTIFIER=false
 
+# pnpm
+export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
+PATH="${PNPM_HOME}:${PATH}"
+
 # rust
 export RUSTUP_HOME="${RUSTUP_HOME:-$HOME/.rustup}"
 export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
