@@ -5,6 +5,7 @@ function fish_prompt -d 'Write out the prompt'
   # https://fishshell.com/docs/current/cmds/set_color.html
   set -l color_duration black
   set -l color_git green
+  set -l color_python blue
 
   # prompt chars from https://github.com/IlanCosman/tide
   set -l char_prompt_top '╭─'
@@ -12,9 +13,7 @@ function fish_prompt -d 'Write out the prompt'
 
   # icons
   set -l icon_git '󰊢' # nf-md-git
-
-  # features
-  set -l show_git true
+  set -l icon_python '󰌠' # nf-md-language_python
 
   # $status is the exit code of the last command (i.e., $? in bash)
   # $pipestatus is an array of exit codes for each command in a pipe
@@ -59,14 +58,13 @@ function fish_prompt -d 'Write out the prompt'
   # git
   # variables are set in ../conf.d/fish_git_prompt.fish
   # https://fishshell.com/docs/current/cmds/fish_git_prompt.html
-  if test "$show_git" = true
-    # build a template to pass to `fish_git_prompt`
-    # which calls `git rev-parse` to check if we're in a repo
-    set -l template ''
+  set -l template ''
+  set template $template$(set_color $color_git)$icon_git' '
+  fish_git_prompt $template'%s '
 
-    # git status
-    set template $template$(set_color $color_git)$icon_git' '
-    fish_git_prompt $template'%s '
+  # python
+  set -q VIRTUAL_ENV ; and begin
+    echo -ns (set_color $color_python)$icon_python' '
   end
 
   # command duration and exit status
