@@ -22,7 +22,7 @@ $Env:LLAMA_ARG_MODELS_MAX = 1
 $Env:LLAMA_ARG_HOST = '0.0.0.0'
 $Env:LLAMA_ARG_N_GPU_LAYERS = 'all'
 $Env:LLAMA_HOME = "$HOME\.llama.cpp"  # clone llama.cpp here
-$Env:LLAMA_ARG_MODELS_DIR = "$HOME\.cache\llama.cpp"  # download gguf here
+$Env:LLAMA_ARG_MODELS_DIR = "$HOME\.llama.cpp\models"  # download gguf here
 $Env:LLAMA_ARG_MODELS_PRESET = "$Env:LLAMA_ARG_MODELS_DIR\models.ini"
 
 # node
