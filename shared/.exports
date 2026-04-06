@@ -6,6 +6,11 @@ if [ "$(uname -s)" = 'Linux' ] ; then
   if ! echo ":${PATH}:" | grep -q ':/usr/games:' ; then PATH="/usr/games:${PATH}" ; fi
   if ! echo ":${PATH}:" | grep -q ':/usr/games/bin:' ; then PATH="/usr/games/bin:${PATH}" ; fi
 
+  # wsl rocm
+  if grep -qEi wsl /proc/version ; then
+    export HSA_ENABLE_DXG_DETECTION=1
+  fi
+
   # cuda
   export CUDA_HOME='/usr/local/cuda'
   PATH="${CUDA_HOME}/bin:${PATH}"
