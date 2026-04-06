@@ -36,6 +36,8 @@ Host your-server
 
 ## Server settings
 
+Edit `/etc/ssh/sshd_config` with:
+
 ```
 AddressFamily inet
 PermitRootLogin no
@@ -51,4 +53,48 @@ Then reload SSH:
 
 ```sh
 sudo systemctl reload ssh
+```
+
+And add your public key to `~/.ssh/authorized_keys`:
+
+```sh
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+```
+
+## Windows
+
+Check if the server is running:
+
+```pwsh
+Get-Service -name sshd
+```
+
+Stop the server and disable the service:
+
+```pwsh
+Stop-Service -name sshd
+Set-Service -name sshd -StartupType Disabled
+```
+
+Disable the existing Defender firewall rule:
+
+> NB: Firewall cmdlets require an Administrator shell.
+
+```pwsh
+Disable-NetFirewallRule -Name "OpenSSH-Server-In-TCP"
+```
+
+Install SSH server in WSL:
+
+```sh
+sudo apt install ssh
+sudo systemctl enable --now ssh
+```
+
+Add new Defender and Hyper-V firewall rules:
+
+```pwsh
+New-NetFirewallRule -DisplayName "OpenSSH SSH Server (wsl)" -Direction Inbound -Protocol TCP -LocalPort 22 -Action Allow
+New-NetFirewallHyperVRule -DisplayName "WSL Inbound IPv4 SSH Allow" -Direction Inbound -Protocol ICMPv4 -LocalPorts 22 -Action Allow
 ```
