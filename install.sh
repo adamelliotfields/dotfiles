@@ -3,7 +3,7 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-declare -a linux_apt=( 'aria2' 'build-essential' 'curl' 'file' 'git' 'git-lfs' 'gnupg' 'jq' 'sqlite3' 'wget' 'xsel' )
+declare -a linux_apt=( 'aria2' 'build-essential' 'cmake' 'curl' 'file' 'git' 'git-lfs' 'gnupg' 'jq' 'ninja-build' 'sqlite3' 'wget' 'xsel' )
 declare -a linux_apt_lib=( 'libbz2-dev' 'libffi-dev' 'libfuse2' 'liblzma-dev' 'libncurses-dev' 'libnss3' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'zlib1g-dev' )
 
 declare -a linux_deb=( 'burntsushi/ripgrep' 'lsd-rs/lsd' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
