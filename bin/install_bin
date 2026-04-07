@@ -36,21 +36,21 @@ main() {
     return 1
   fi
 
-  local arch_gnu='' arch_simple='' arch_htmlq='' arch_micro='' arch_node=''
+  local arch_gnu='' arch_micro='' arch_node='' arch_misc='' arch_kernel=''
   case "$arch" in
     aarch64|arm64)
       arch_gnu='aarch64-unknown-linux-gnu'
-      arch_simple='arm64'
-      arch_node='arm64'
-      arch_htmlq='aarch64-linux'
       arch_micro='linux-arm64'
+      arch_node='arm64'
+      arch_misc='arm64'
+      arch_kernel='aarch64'
       ;;
     x86_64|amd64)
       arch_gnu='x86_64-unknown-linux-gnu'
-      arch_simple='amd64'
-      arch_node='x64'
-      arch_htmlq='x86_64-linux'
       arch_micro='linux64'
+      arch_node='x64'
+      arch_misc='amd64'
+      arch_kernel='x86_64'
       ;;
     *)
       echo 'install_bin: Unsupported architecture'
@@ -60,7 +60,6 @@ main() {
 
   local opts=(-fsSL)
   if [[ -n "$token" ]] ; then
-    echo 'install_bin: Using GitHub API token...'
     opts+=(-H "Authorization: token $token")
     DELAY=0
   fi
@@ -70,23 +69,24 @@ main() {
       continue
     fi
 
-    local browser_download_url='' filename=''
-
     local repo='' pattern=''
     case "$name" in
-      codex)      repo='openai/codex'            ; pattern="codex-${arch_gnu}\.tar\.gz" ;;
-      copilot)    repo='github/copilot-cli'      ; pattern="copilot-linux-${arch_node}\.tar\.gz" ;;
-      duckdb)     repo='duckdb/duckdb'           ; pattern="duckdb_cli-linux-${arch_simple}\.zip$" ;;
-      fastfetch)  repo='fastfetch-cli/fastfetch' ; pattern="fastfetch-linux-${arch_simple}\.tar\.gz" ;;
-      fzf)        repo='junegunn/fzf'            ; pattern="fzf-.+-linux_${arch_simple}\.tar\.gz$" ;;
-      gh)         repo='cli/cli'                 ; pattern="gh_.+_linux_${arch_simple}\.tar\.gz" ;;
-      hcloud)     repo='hetznercloud/cli'        ; pattern="hcloud-linux-${arch_simple}\.tar\.gz" ;;
-      htmlq)      repo='mgdm/htmlq'              ; pattern="htmlq-${arch_htmlq}\.tar\.gz" ;;
-      lf)         repo='gokcehan/lf'             ; pattern="lf-linux-${arch_simple}\.tar\.gz" ;;
-      magick)     repo='imagemagick/imagemagick' ; pattern='clang-x86_64\.AppImage$' ;;
-      micro)      repo='micro-editor/micro'      ; pattern="micro-.+-${arch_micro}\.tar\.gz$" ;;
-      opencode)   repo='anomalyco/opencode'      ; pattern="opencode-linux-${arch_node}\.tar\.gz" ;;
-      shellcheck) repo='koalaman/shellcheck'     ; pattern="shellcheck-.+\.linux\.${arch}\.tar\.gz" ;;
+      agent-browser) repo='vercel-labs/agent-browser' ; pattern="agent-browser-linux-${arch_node}$" ;;
+      codex)         repo='openai/codex'              ; pattern="codex-${arch_gnu}\.tar\.gz" ;;
+      copilot)       repo='github/copilot-cli'        ; pattern="copilot-linux-${arch_node}\.tar\.gz" ;;
+      duckdb)        repo='duckdb/duckdb'             ; pattern="duckdb_cli-linux-${arch_misc}\.zip$" ;;
+      fastfetch)     repo='fastfetch-cli/fastfetch'   ; pattern="fastfetch-linux-${arch_misc}\.tar\.gz" ;;
+      fzf)           repo='junegunn/fzf'              ; pattern="fzf-.+-linux_${arch_misc}\.tar\.gz$" ;;
+      gh)            repo='cli/cli'                   ; pattern="gh_.+_linux_${arch_misc}\.tar\.gz" ;;
+      gws)           repo='googleworkspace/cli'       ; pattern="gws-${arch_gnu}\.tar\.gz$" ;;
+      hcloud)        repo='hetznercloud/cli'          ; pattern="hcloud-linux-${arch_misc}\.tar\.gz" ;;
+      lf)            repo='gokcehan/lf'               ; pattern="lf-linux-${arch_misc}\.tar\.gz" ;;
+      magick)        repo='imagemagick/imagemagick'   ; pattern='clang-x86_64\.AppImage$' ;;
+      micro)         repo='micro-editor/micro'        ; pattern="micro-.+-${arch_micro}\.tar\.gz$" ;;
+      opencode)      repo='anomalyco/opencode'        ; pattern="opencode-linux-${arch_node}\.tar\.gz" ;;
+      polymarket)    repo='polymarket/polymarket-cli' ; pattern="polymarket-.+-${arch_gnu}\.tar\.gz" ;;
+      shellcheck)    repo='koalaman/shellcheck'       ; pattern="shellcheck-v.+\.linux\.${arch_kernel}\.tar\.gz$" ;;
+      ttyd)          repo='tsl0922/ttyd'              ; pattern="ttyd\\.${arch_kernel}$" ;;
       *)
         echo "install_bin: Unsupported binary '$name'"
         return 1
@@ -104,6 +104,7 @@ main() {
       return 1
     fi
 
+    local browser_download_url='' filename=''
     browser_download_url=$(echo "$asset" | jq -r '.browser_download_url')
     filename=$(basename "$browser_download_url")
 
@@ -144,7 +145,7 @@ main() {
     fi
 
     rm -f "/tmp/$filename"
-    echo "install_bin: Installed $name"
+    echo "install_bin: Successfully installed $name"
   done
 }
 
