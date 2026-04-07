@@ -112,7 +112,7 @@ New-NetFirewallRule -DisplayName "OpenSSH SSH Server (wsl)" -Direction Inbound -
 New-NetFirewallHyperVRule -DisplayName "WSL Inbound IPv4 SSH Allow" -Direction Inbound -Protocol ICMPv4 -LocalPorts 22 -Action Allow
 ```
 
-### Keeping WSL alive
+### Keeping WSL Awake
 
 Windows will immediately suspend WSL when there are no active sessions. To work around this, run a VBScript at login which keeps WSL awake without launching a terminal.
 
@@ -129,7 +129,7 @@ Then create a scheduled task to run the script:
 ```pwsh
 # Scheduling tasks requires an administrator shell
 $taskName = "WSL"
-$trigger = New-ScheduledTaskTrigger -AtLogOn
+$trigger = New-ScheduledTaskTrigger -AtLogOn -User $(whoami)
 $action = New-ScheduledTaskAction -Execute "wscript.exe" -Argument "$env:USERPROFILE\wsl.vbs"
 $settings = New-ScheduledTaskSettingsSet -Hidden -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -ExecutionTimeLimit 0
 Register-ScheduledTask -TaskName $taskName -Trigger $trigger -Action $action -Settings $settings
