@@ -1,7 +1,5 @@
 # shellcheck shell=sh
 # shellcheck disable=SC2016,SC2120,SC2142
-[ -n "$BASH_VERSION" ] && alias refresh="source ~/.bashrc"
-[ -n "$ZSH_VERSION" ] && alias refresh="source ~/.zshrc"
 
 # misc
 alias c='clear'
@@ -13,6 +11,9 @@ alias gdiff='git diff --no-ext-diff --no-index'
 
 # lsd
 alias l='lsd -lA --date=relative --group-dirs=first --permission=octal --size=short'
+
+# aria2
+alias dl='aria2c --disable-ipv6 --console-log-level=warn --file-allocation=none --summary-interval=0 --max-connection-per-server=4 --min-split-size=1M'
 
 # git
 alias g='git'
