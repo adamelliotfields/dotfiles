@@ -64,6 +64,20 @@ chmod 600 ~/.ssh/authorized_keys
 
 ## Windows
 
+Enable mirrored networking in `~/.wslconfig` on Windows:
+
+```ini
+[wsl2]
+networkingMode=Mirrored
+```
+
+Enable systemd in `/etc/wsl.conf` on Linux:
+
+```ini
+[boot]
+systemd=true
+```
+
 Check if the server is running:
 
 ```pwsh
@@ -79,9 +93,8 @@ Set-Service -name sshd -StartupType Disabled
 
 Disable the existing Defender firewall rule:
 
-> NB: Firewall cmdlets require an Administrator shell.
-
 ```pwsh
+# Firewall cmdlets require an administrator shell
 Disable-NetFirewallRule -Name "OpenSSH-Server-In-TCP"
 ```
 
@@ -97,4 +110,27 @@ Add new Defender and Hyper-V firewall rules:
 ```pwsh
 New-NetFirewallRule -DisplayName "OpenSSH SSH Server (wsl)" -Direction Inbound -Protocol TCP -LocalPort 22 -Action Allow
 New-NetFirewallHyperVRule -DisplayName "WSL Inbound IPv4 SSH Allow" -Direction Inbound -Protocol ICMPv4 -LocalPorts 22 -Action Allow
+```
+
+### Keeping WSL alive
+
+Windows will immediately suspend WSL when there are no active sessions. To work around this, run a VBScript at login which keeps WSL awake without launching a terminal.
+
+Create `~/wsl.vbs` with:
+
+```vbs
+Set WshShell = CreateObject("WScript.Shell")
+WshShell.Run "wsl.exe --exec sleep infinity", 0
+Set WshShell = Nothing
+```
+
+Then create a scheduled task to run the script:
+
+```pwsh
+# Scheduling tasks requires an administrator shell
+$taskName = "WSL"
+$trigger = New-ScheduledTaskTrigger -AtLogOn
+$action = New-ScheduledTaskAction -Execute "wscript.exe" -Argument "$env:USERPROFILE\wsl.vbs"
+$settings = New-ScheduledTaskSettingsSet -Hidden -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility Win8 -ExecutionTimeLimit 0
+Register-ScheduledTask -TaskName $taskName -Trigger $trigger -Action $action -Settings $settings
 ```
