@@ -9,8 +9,7 @@ declare -a linux_apt_lib=( 'libbz2-dev' 'libffi-dev' 'libfuse2' 'liblzma-dev' 'l
 declare -a linux_deb=( 'burntsushi/ripgrep' 'lsd-rs/lsd' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
 declare -a linux_bin=( 'fzf' 'gh' 'lf' 'micro' )
 
-echo 'Symlinking dotfiles...'
-"$script_dir/bin/install_symlinks.sh"
+export DEBIAN_FRONTEND=noninteractive
 
 function _sudo {
   if [[ $EUID -ne 0 ]] ; then
@@ -20,49 +19,33 @@ function _sudo {
   fi
 }
 
-# Omit Python, Node, and Fish.
-# This is mostly run in dev containers which already have runtimes installed.
-# Installing Fish requires a lot of dependencies which slows down container creation.
-if [[ $(uname -s) == 'Linux' ]] ; then
-  export DEBIAN_FRONTEND=noninteractive
-
-  # remove yarn if present
-  if command -v yarn >/dev/null 2>&1 ; then
-    echo 'Removing yarn...'
-    _sudo apt remove -y --purge yarn
-    _sudo rm -f /etc/apt/sources.list.d/yarn.list
-  fi
-
-  echo 'Installing apt packages...'
-  "$script_dir/bin/setup_apt.sh"
-  _sudo apt-get install -y --no-install-recommends "${linux_apt[@]}" "${linux_apt_lib[@]}" | sed '/warning: /d'
-
-  echo 'Installing deb packages...'
-  "$script_dir/bin/install_deb.sh" "${linux_deb[@]}"
-
-  echo 'Installing binaries...'
-  "$script_dir/bin/install_bin.sh" "${linux_bin[@]}"
-
-  unset DEBIAN_FRONTEND
+# Install Python if not present
+if ! command -v python3 >/dev/null 2>&1 ; then
+  _sudo apt-get update
+  _sudo apt-get install -y python3
 fi
 
-# Run `xcode-select --install` to install developer tools.
-if [[ $(uname -s) == 'Darwin' ]] ; then
-  echo 'Installing Homebrew...'
-  "$script_dir/bin/install_brew.sh"
-
-  echo 'Installing Homebrew packages...'
-  eval "$(brew shellenv)"
-  brew install fish fisher node python
-
-  # requires fish and fisher (installed above)
-  echo 'Installing Fish plugins...'
-  fish -c 'fisher update'
-
-  # command + shift + .
-  echo 'Showing hidden files in Finder...'
-  defaults write com.apple.finder AppleShowAllFiles true
-  killall Finder
+# Remove yarn if present
+if command -v yarn >/dev/null 2>&1 ; then
+  _sudo apt remove -y --purge yarn
+  _sudo rm -f /etc/apt/sources.list.d/yarn.list
 fi
 
-echo 'Done!'
+# Install apt packages
+"$script_dir/bin/dotfiles" setup apt
+_sudo apt-get install -y --no-install-recommends "${linux_apt[@]}" "${linux_apt_lib[@]}" | sed '/warning: /d'
+
+# Install deb packages
+for repo in "${linux_deb[@]}" ; do
+  "$script_dir/bin/dotfiles" install deb "$repo"
+done
+
+# Install binaries
+for name in "${linux_bin[@]}" ; do
+  "$script_dir/bin/dotfiles" install bin "$name"
+done
+
+# Symlink dotfiles
+"$script_dir/bin/dotfiles" install symlinks
+
+unset DEBIAN_FRONTEND

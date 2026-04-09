@@ -1,7 +1,12 @@
 {
-  "[makefile][properties]": {
-    "editor.insertSpaces": false,
-    "editor.tabSize": 2
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "never"
+    }
   },
   "[shellscript]": {
     "editor.codeActionsOnSave": {
@@ -10,6 +15,12 @@
   },
   "editor.rulers": [100],
   "editor.unicodeHighlight.includeStrings": false, // when editing fish prompt
+   "files.exclude": {
+    ".venv/**": true
+  },
+  "files.watcherExclude": {
+    ".venv/**": true
+  },
   "powershell.integratedConsole.showOnStartup": false,
   "powershell.integratedConsole.startInBackground": true,
   "shellcheck.ignorePatterns": {

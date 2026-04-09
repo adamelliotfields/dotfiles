@@ -1,0 +1,657 @@
+#!/usr/bin/env python3
+"""Dotfiles CLI — manages system setup, binary installation, and symlinks."""
+
+import argparse
+import json
+import os
+import platform
+import re
+import shutil
+import subprocess
+import sys
+import tarfile
+import tempfile
+import zipfile
+from pathlib import Path
+from urllib.request import Request, urlopen
+
+REPO_DIR = Path(__file__).resolve().parent.parent
+
+DEB_OVERRIDES = {
+    "ripgrep": "rg",
+}
+
+BIN_REGISTRY = {
+    "agent-browser": ("vercel-labs/agent-browser", lambda a: f"agent-browser-linux-{a['node']}$"),
+    "codex": ("openai/codex", lambda a: f"codex-{a['gnu']}\\.tar\\.gz"),
+    "copilot": ("github/copilot-cli", lambda a: f"copilot-linux-{a['node']}\\.tar\\.gz"),
+    "duckdb": ("duckdb/duckdb", lambda a: f"duckdb_cli-linux-{a['misc']}\\.zip$"),
+    "fastfetch": ("fastfetch-cli/fastfetch", lambda a: f"fastfetch-linux-{a['misc']}\\.tar\\.gz"),
+    "fzf": ("junegunn/fzf", lambda a: f"fzf-.+-linux_{a['misc']}\\.tar\\.gz$"),
+    "gh": ("cli/cli", lambda a: f"gh_.+_linux_{a['misc']}\\.tar\\.gz"),
+    "gws": ("googleworkspace/cli", lambda a: f"gws-{a['gnu']}\\.tar\\.gz$"),
+    "hcloud": ("hetznercloud/cli", lambda a: f"hcloud-linux-{a['misc']}\\.tar\\.gz"),
+    "lf": ("gokcehan/lf", lambda a: f"lf-linux-{a['misc']}\\.tar\\.gz"),
+    "magick": ("imagemagick/imagemagick", lambda _: r"clang-x86_64\.AppImage$"),
+    "micro": ("micro-editor/micro", lambda a: f"micro-.+-{a['micro']}\\.tar\\.gz$"),
+    "opencode": ("anomalyco/opencode", lambda a: f"opencode-linux-{a['node']}\\.tar\\.gz"),
+    "polymarket": ("polymarket/polymarket-cli", lambda a: f"polymarket-.+-{a['gnu']}\\.tar\\.gz"),
+    "shellcheck": (
+        "koalaman/shellcheck",
+        lambda a: f"shellcheck-v.+\\.linux\\.{a['kernel']}\\.tar\\.gz$",
+    ),
+    "ttyd": ("tsl0922/ttyd", lambda a: f"ttyd\\.{a['kernel']}$"),
+}
+
+MOTD_SCRIPT = """\
+#!/bin/sh
+fastfetch \\
+--pipe false \\
+--logo linux \\
+--structure Logo
+printf '\\n'
+fastfetch \\
+--pipe false \\
+--logo none \\
+--color-keys yellow \\
+--structure-disabled Title:Separator:Host:Shell:Terminal:Display:Theme:Icons:Cursor:Swap:Locale:Break:Colors
+"""
+
+
+def _detect_os():
+    s = platform.system()
+    if s not in ("Linux", "Darwin"):
+        sys.exit(f"Unsupported OS: {s}")
+    return s
+
+
+def _detect_arch():
+    m = platform.machine()
+    if m in ("aarch64", "arm64"):
+        return {
+            "gnu": "aarch64-unknown-linux-gnu",
+            "micro": "linux-arm64",
+            "node": "arm64",
+            "misc": "arm64",
+            "kernel": "aarch64",
+            "go": "arm64",
+            "deb": "arm64",
+            "rust": "aarch64",
+        }
+    if m in ("x86_64", "amd64"):
+        return {
+            "gnu": "x86_64-unknown-linux-gnu",
+            "micro": "linux64",
+            "node": "x64",
+            "misc": "amd64",
+            "kernel": "x86_64",
+            "go": "amd64",
+            "deb": "amd64",
+            "rust": "x86_64",
+        }
+    sys.exit(f"Unsupported architecture: {m}")
+
+
+def _require_linux():
+    if platform.system() != "Linux":
+        sys.exit("This command is Linux only")
+
+
+def _require_cmd(name):
+    if shutil.which(name) is None:
+        sys.exit(f"Required command not found: {name}")
+
+
+def _has_cmd(name):
+    return shutil.which(name) is not None
+
+
+def _sudo(*args):
+    if os.geteuid() == 0:
+        subprocess.run(args, check=True)
+    else:
+        subprocess.run(["sudo", *args], check=True)
+
+
+def _github_token():
+    return os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or ""
+
+
+def _github_latest(repo):
+    url = f"https://api.github.com/repos/{repo}/releases/latest"
+    req = Request(url)
+    token = _github_token()
+    if token:
+        req.add_header("Authorization", f"token {token}")
+    with urlopen(req) as resp:
+        return json.loads(resp.read())
+
+
+def _download(url, dest):
+    req = Request(url)
+    token = _github_token()
+    if token:
+        req.add_header("Authorization", f"token {token}")
+    with urlopen(req) as resp, open(dest, "wb") as f:
+        while chunk := resp.read(1 << 16):
+            f.write(chunk)
+
+
+def _extract(archive, dest_dir):
+    archive = str(archive)
+    if archive.endswith(".tar.gz") or archive.endswith(".tgz"):
+        with tarfile.open(archive, "r:gz") as tf:
+            tf.extractall(dest_dir)
+    elif archive.endswith(".zip"):
+        with zipfile.ZipFile(archive) as zf:
+            zf.extractall(dest_dir)
+    else:
+        raise ValueError(f"Unknown archive format: {archive}")
+
+
+def _find_binary(directory, name):
+    for root, _dirs, files in os.walk(directory):
+        for file in files:
+            if file == name:
+                return Path(root) / file
+    return None
+
+
+def _write_file(path, content, mode=0o644):
+    if os.geteuid() == 0:
+        Path(path).write_text(content)
+        os.chmod(path, mode)
+    else:
+        subprocess.run(
+            ["sudo", "tee", path],
+            input=content.encode(),
+            stdout=subprocess.DEVNULL,
+            check=True,
+        )
+        subprocess.run(["sudo", "chmod", f"{mode:o}", path], check=True)
+
+
+def _append_file(path, content):
+    if os.geteuid() == 0:
+        with open(path, "a") as f:
+            f.write(content)
+    else:
+        subprocess.run(
+            ["sudo", "tee", "-a", path],
+            input=content.encode(),
+            stdout=subprocess.DEVNULL,
+            check=True,
+        )
+
+
+# INSTALL BIN
+def cmd_install_bin(args):
+    _require_linux()
+    arch = _detect_arch()
+    name = args.name
+
+    if name not in BIN_REGISTRY:
+        sys.exit(f"Unsupported binary: {name}")
+
+    if name == "magick" and arch["kernel"] != "x86_64":
+        sys.exit("magick AppImage is amd64 only")
+
+    if not args.force and _has_cmd(name):
+        return
+
+    repo, pattern_fn = BIN_REGISTRY[name]
+    pattern = pattern_fn(arch)
+    release = _github_latest(repo)
+    assets = release.get("assets", [])
+    match = [a for a in assets if re.search(pattern, a["name"])]
+    if not match:
+        sys.exit(f"Asset not found for {name}")
+
+    url = match[0]["browser_download_url"]
+    filename = url.rsplit("/", 1)[-1]
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        archive_path = Path(tmpdir) / filename
+        _download(url, archive_path)
+
+        if filename.endswith(".zip") or filename.endswith(".tar.gz") or filename.endswith(".tgz"):
+            extract_dir = Path(tmpdir)
+            _extract(archive_path, extract_dir)
+            bin_path = _find_binary(extract_dir, name)
+            if bin_path is None:
+                sys.exit(f"Could not find {name} in archive")
+            bin_path.chmod(0o755)
+            _sudo("mv", str(bin_path), f"/usr/local/bin/{name}")
+        else:
+            archive_path.chmod(0o755)
+            _sudo("mv", str(archive_path), f"/usr/local/bin/{name}")
+
+
+# INSTALL DEB
+def cmd_install_deb(args):
+    _require_linux()
+    _require_cmd("dpkg")
+    arch = _detect_arch()
+    repo = args.repo
+
+    package = repo.rsplit("/", 1)[-1]
+    cmd_name = DEB_OVERRIDES.get(package, package)
+
+    if not args.force and _has_cmd(cmd_name):
+        return
+
+    arch_deb = arch["deb"]
+    pattern = rf"^{re.escape(package)}_.+_{arch_deb}\.deb$"
+    release = _github_latest(repo)
+    assets = release.get("assets", [])
+    match = [a for a in assets if re.search(pattern, a["name"])]
+    if not match:
+        sys.exit(f"Deb not found for {repo}")
+
+    url = match[0]["browser_download_url"]
+    filename = url.rsplit("/", 1)[-1]
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        deb_path = Path(tmpdir) / filename
+        _download(url, deb_path)
+        _sudo("dpkg", "-i", str(deb_path))
+
+
+# INSTALL UV
+def cmd_install_uv(args):
+    _require_linux()
+    arch = _detect_arch()
+
+    if not args.force and _has_cmd("uv") and _has_cmd("uvx"):
+        return
+
+    pattern = rf"^uv-{re.escape(arch['gnu'])}\.tar\.gz$"
+    release = _github_latest("astral-sh/uv")
+    assets = release.get("assets", [])
+    asset = next((a for a in assets if re.search(pattern, a["name"])), None)
+    if asset is None:
+        sys.exit("Asset not found for uv")
+
+    url = asset["browser_download_url"]
+    filename = url.rsplit("/", 1)[-1]
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        extract_dir = Path(tmpdir)
+        archive_path = extract_dir / filename
+        _download(url, archive_path)
+        _extract(archive_path, extract_dir)
+
+        uv_path = _find_binary(extract_dir, "uv")
+        uvx_path = _find_binary(extract_dir, "uvx")
+        if uv_path is None:
+            sys.exit("Could not find uv in archive")
+        if uvx_path is None:
+            sys.exit("Could not find uvx in archive")
+
+        for bin_name, bin_path in (("uv", uv_path), ("uvx", uvx_path)):
+            bin_path.chmod(0o755)
+            _sudo("mv", str(bin_path), f"/usr/local/bin/{bin_name}")
+
+
+# INSTALL BTOP
+def cmd_install_btop(args):
+    _require_linux()
+    _require_cmd("g++-14")
+
+    if not args.force and _has_cmd("btop"):
+        return
+
+    release = _github_latest("aristocratos/btop")
+    tag = release.get("tag_name", "")
+    if not tag or not re.match(r"^v\d+(\.\d+)*$", tag):
+        sys.exit("Failed to resolve latest btop tag")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        repo_dir = Path(tmpdir)
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "--depth",
+                "1",
+                "--branch",
+                tag,
+                "--no-checkout",
+                "https://github.com/aristocratos/btop.git",
+                str(repo_dir),
+            ],
+            check=True,
+        )
+        subprocess.run(
+            ["git", "-C", str(repo_dir), "switch", "--no-track", "-c", tag, tag],
+            check=True,
+        )
+        subprocess.run(["make", "-C", str(repo_dir), "CXX=g++-14"], check=True)
+        _sudo("make", "-C", str(repo_dir), "install")
+
+
+# INSTALL FISH
+def cmd_install_fish(args):
+    _require_linux()
+    _require_cmd("apt-get")
+
+    if _has_cmd("fish"):
+        return
+
+    if not _has_cmd("apt-add-repository"):
+        _sudo("apt-get", "update")
+        _sudo(
+            "env",
+            "DEBIAN_FRONTEND=noninteractive",
+            "apt-get",
+            "install",
+            "-y",
+            "software-properties-common",
+        )
+
+    _sudo("apt-add-repository", "-y", "ppa:fish-shell/release-3")
+    _sudo("apt-get", "update")
+    _sudo("env", "DEBIAN_FRONTEND=noninteractive", "apt-get", "install", "-y", "fish")
+
+    fish_plugins = Path.home() / ".config/fish/fish_plugins"
+    if fish_plugins.exists():
+        fisher_url = (
+            "https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish"
+        )
+        subprocess.run(
+            ["fish", "-c", f"curl -fsSL {fisher_url} | source && fisher update"],
+            check=True,
+        )
+
+
+# INSTALL GO
+def cmd_install_go(args):
+    osname = _detect_os()
+    arch = _detect_arch()
+    go_arch = arch["go"]
+    go_os = osname.lower()
+
+    req = Request("https://go.dev/VERSION?m=text")
+    with urlopen(req) as resp:
+        version = resp.read().decode().split("\n")[0].strip()
+    if not version:
+        sys.exit("Failed to resolve latest Go version")
+
+    filename = f"{version}.{go_os}-{go_arch}.tar.gz"
+    url = f"https://go.dev/dl/{filename}"
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        dest = Path(tmpdir) / filename
+        _download(url, dest)
+        _sudo("tar", "-C", "/usr/local", "-xzf", str(dest))
+
+
+# INSTALL RUST
+def cmd_install_rust(args):
+    osname = _detect_os()
+    arch = _detect_arch()
+    rust_arch = arch["rust"]
+    if osname == "Darwin":
+        rust_os = "apple-darwin"
+    else:
+        rust_os = "unknown-linux-gnu"
+
+    host = f"{rust_arch}-{rust_os}"
+    req = Request("https://sh.rustup.rs")
+    with urlopen(req) as resp:
+        installer = resp.read()
+
+    subprocess.run(
+        [
+            "sh",
+            "-s",
+            "--",
+            "-y",
+            "-q",
+            "--no-modify-path",
+            f"--default-host={host}",
+            "--default-toolchain=stable",
+            "--profile=default",
+        ],
+        input=installer,
+        check=True,
+    )
+
+
+# INSTALL NERDFONT
+def cmd_install_nerdfont(args):
+    _require_linux()
+    _require_cmd("fc-cache")
+
+    name = args.name
+    url = f"https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{name}.zip"
+    font_dir = Path.home() / ".fonts" / name
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        dest = Path(tmpdir) / f"{name}.zip"
+        _download(url, dest)
+        font_dir.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(dest) as zf:
+            zf.extractall(font_dir)
+
+    subprocess.run(["fc-cache", "-f"], check=True)
+
+
+# INSTALL SYMLINKS
+def cmd_install_symlinks(args):
+    osname = _detect_os()
+    if osname == "Darwin":
+        folders = ["shared", "mac"]
+    else:
+        folders = ["shared", "linux"]
+
+    for folder in folders:
+        src_dir = REPO_DIR / folder
+        if not src_dir.is_dir():
+            sys.exit(f"Cannot find source folder: {src_dir}")
+
+        for src_file in src_dir.rglob("*"):
+            if not src_file.is_file():
+                continue
+            rel = src_file.relative_to(src_dir)
+            dest = Path.home() / rel
+
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            if dest.is_dir() and not dest.is_symlink():
+                shutil.rmtree(dest)
+            dest.unlink(missing_ok=True)
+            dest.symlink_to(src_file.resolve())
+
+
+# SETUP APT
+def cmd_setup_apt(args):
+    _require_linux()
+    _require_cmd("apt-get")
+
+    excludes = Path("/etc/dpkg/dpkg.cfg.d/excludes")
+    if excludes.exists():
+        _sudo("rm", "-f", str(excludes))
+
+    unminimize = Path("/etc/update-motd.d/60-unminimize")
+    if unminimize.exists():
+        _sudo("rm", "-f", str(unminimize))
+
+    if _has_cmd("dpkg-divert"):
+        r = subprocess.run(
+            ["dpkg-divert", "--truename", "/usr/bin/man"],
+            capture_output=True,
+            text=True,
+        )
+        if r.stdout.strip() == "/usr/bin/man.REAL":
+            _sudo("rm", "-f", "/usr/bin/man")
+            _sudo("dpkg-divert", "--quiet", "--remove", "--rename", "/usr/bin/man")
+
+    translations = Path("/etc/apt/apt.conf.d/99translations")
+    if not translations.exists():
+        _sudo("mkdir", "-p", "/etc/apt/apt.conf.d")
+        _write_file(str(translations), 'Acquire::Languages "none";\n')
+
+    _sudo("apt-get", "update")
+
+
+# SETUP SSH
+def cmd_setup_ssh(args):
+    _require_linux()
+
+    conf_dir = "/etc/ssh/sshd_config.d"
+    _sudo("mkdir", "-p", conf_dir)
+    _sudo("sh", "-c", f"rm -f {conf_dir}/*.conf")
+
+    _write_file(f"{conf_dir}/99-no-ipv6.conf", "AddressFamily inet\n")
+    _write_file(f"{conf_dir}/99-no-lastlog.conf", "PrintLastLog no\n")
+    _write_file(
+        f"{conf_dir}/99-no-password.conf",
+        "PermitRootLogin no\n"
+        "PubkeyAuthentication yes\n"
+        "PasswordAuthentication no\n"
+        "AuthorizedKeysFile .ssh/authorized_keys\n"
+        "KbdInteractiveAuthentication no\n"
+        "UsePAM yes\n",
+    )
+
+
+# SETUP MOTD
+def cmd_setup_motd(args):
+    _require_linux()
+    _sudo("mkdir", "-p", "/etc/update-motd.d")
+    _sudo("sh", "-c", "rm -f /etc/update-motd.d/*")
+    _write_file("/etc/update-motd.d/99-fastfetch", MOTD_SCRIPT, mode=0o755)
+
+
+# SETUP USER
+def cmd_setup_user(args):
+    _require_linux()
+
+    user = args.user
+
+    r = subprocess.run(["id", user], capture_output=True)
+    if r.returncode == 0:
+        sys.exit(f"User {user} already exists")
+
+    _sudo("adduser", "--disabled-password", "--gecos", "", user)
+
+
+# SETUP SUDO
+def cmd_setup_sudo(args):
+    _require_linux()
+
+    user = args.user or os.environ.get("USER", "")
+    if not user:
+        sys.exit("Cannot determine user")
+
+    r = subprocess.run(["id", user], capture_output=True)
+    if r.returncode != 0:
+        sys.exit(f"User {user} does not exist")
+
+    sudoers = Path(f"/etc/sudoers.d/{user}")
+    if not sudoers.exists():
+        _sudo("mkdir", "-p", "/etc/sudoers.d")
+        _write_file(str(sudoers), f"{user} ALL=(ALL:ALL) NOPASSWD:ALL\n", mode=0o440)
+
+
+# SETUP SHELL
+def cmd_setup_shell(args):
+    _require_linux()
+
+    shell = args.shell
+    user = args.user or os.environ.get("USER", "")
+    if not user:
+        sys.exit("Cannot determine user")
+
+    if not os.access(shell, os.X_OK):
+        sys.exit(f"Shell not found: {shell}")
+
+    shells = Path("/etc/shells").read_text()
+    if shell not in shells.splitlines():
+        _append_file("/etc/shells", f"{shell}\n")
+
+    _sudo("chsh", "-s", shell, user)
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(prog="dotfiles", description="Dotfiles CLI")
+    sub = parser.add_subparsers(dest="command")
+
+    # INSTALL
+    install = sub.add_parser("install", help="Install tools and configs")
+    install_sub = install.add_subparsers(dest="target")
+
+    p = install_sub.add_parser("bin", help="Install binary from GitHub releases")
+    p.add_argument("name", choices=sorted(BIN_REGISTRY.keys()), metavar="NAME")
+    p.add_argument("-f", "--force", action="store_true")
+    p.set_defaults(func=cmd_install_bin)
+
+    p = install_sub.add_parser("deb", help="Install Debian package from GitHub releases")
+    p.add_argument("repo", metavar="ORG/REPO")
+    p.add_argument("-f", "--force", action="store_true")
+    p.set_defaults(func=cmd_install_deb)
+
+    p = install_sub.add_parser("uv", help="Install uv and uvx from GitHub releases")
+    p.add_argument("-f", "--force", action="store_true")
+    p.set_defaults(func=cmd_install_uv)
+
+    p = install_sub.add_parser("btop", help="Install btop from source")
+    p.add_argument("-f", "--force", action="store_true")
+    p.set_defaults(func=cmd_install_btop)
+
+    p = install_sub.add_parser("fish", help="Install Fish shell via apt")
+    p.set_defaults(func=cmd_install_fish)
+
+    p = install_sub.add_parser("go", help="Install Go via go.dev")
+    p.set_defaults(func=cmd_install_go)
+
+    p = install_sub.add_parser("rust", help="Install Rust via rustup")
+    p.set_defaults(func=cmd_install_rust)
+
+    p = install_sub.add_parser("nerdfont", help="Install a Nerd Font")
+    p.add_argument("name", metavar="FONT")
+    p.set_defaults(func=cmd_install_nerdfont)
+
+    p = install_sub.add_parser("symlinks", help="Symlink dotfiles into $HOME")
+    p.set_defaults(func=cmd_install_symlinks)
+
+    # SETUP
+    setup = sub.add_parser("setup", help="System configuration")
+    setup_sub = setup.add_subparsers(dest="target")
+
+    p = setup_sub.add_parser("apt", help="Setup apt on Ubuntu")
+    p.set_defaults(func=cmd_setup_apt)
+
+    p = setup_sub.add_parser("ssh", help="Setup sshd for passwordless authentication")
+    p.set_defaults(func=cmd_setup_ssh)
+
+    p = setup_sub.add_parser("motd", help="Setup fastfetch message of the day")
+    p.set_defaults(func=cmd_setup_motd)
+
+    p = setup_sub.add_parser("user", help="Setup a new user")
+    p.add_argument("user", metavar="USER")
+    p.set_defaults(func=cmd_setup_user)
+
+    p = setup_sub.add_parser("sudo", help="Setup passwordless sudo for a user")
+    p.add_argument("-u", "--user", default=None, help="Target user (default: current)")
+    p.set_defaults(func=cmd_setup_sudo)
+
+    p = setup_sub.add_parser("shell", help="Setup login shell for a user")
+    p.add_argument("shell", metavar="SHELL")
+    p.add_argument("-u", "--user", default=None, help="Target user (default: current)")
+    p.set_defaults(func=cmd_setup_shell)
+
+    return parser
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+    if not hasattr(args, "func"):
+        parser.print_help()
+        sys.exit(1)
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()
