@@ -21,6 +21,10 @@ DEB_OVERRIDES = {
     "ripgrep": "rg",
 }
 
+BIN_OVERRIDES = {
+    "codex": lambda arch: f"codex-{arch['gnu']}",
+}
+
 BIN_REGISTRY = {
     "agent-browser": ("vercel-labs/agent-browser", lambda a: f"agent-browser-linux-{a['node']}$"),
     "codex": ("openai/codex", lambda a: f"codex-{a['gnu']}\\.tar\\.gz"),
@@ -217,7 +221,8 @@ def cmd_install_bin(args):
         if filename.endswith(".zip") or filename.endswith(".tar.gz") or filename.endswith(".tgz"):
             extract_dir = Path(tmpdir)
             _extract(archive_path, extract_dir)
-            bin_path = _find_binary(extract_dir, name)
+            bin_name = BIN_OVERRIDES[name](arch) if name in BIN_OVERRIDES else name
+            bin_path = _find_binary(extract_dir, bin_name)
             if bin_path is None:
                 sys.exit(f"Could not find {name} in archive")
             bin_path.chmod(0o755)
