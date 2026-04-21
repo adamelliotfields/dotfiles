@@ -2,7 +2,7 @@
 
 ## Bootstrap
 
-Get the latest deb from the [install Radeon](https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/docs/install/installrad/wsl/install-radeon.html) page.
+Get the latest deb from the [`amdgpu-install`](https://repo.radeon.com/amdgpu-install/) index.
 
 ```sh
 wget https://repo.radeon.com/amdgpu-install/7.2/ubuntu/noble/amdgpu-install_7.2.70200-1_all.deb
@@ -32,7 +32,7 @@ rocminfo  # verify
 
 Get the latest wheels from the [install PyTorch](https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/docs/install/installrad/native_linux/install-pytorch.html) page.
 
-Put your base dependencies in `requirements.txt` and create separate `requirements-cpu.txt` and `requirements-rocm.txt` files.
+Put your base dependencies in `requirements.txt` and create a separate `requirements-rocm.txt` file.
 
 ```
 # requirements.txt
@@ -40,24 +40,19 @@ accelerate
 diffusers
 hf-transfer
 transformers
-```
-
-```
-# requirements-cpu.txt
--r requirements.txt
-torch==2.9.1
-torchaudio==2.9.1
-torchvision==0.24.0
-triton==3.5.1
+torch==2.10.0
+torchaudio==2.10.0
+torchvision==0.25.0
+triton==3.6.0
 ```
 
 ```
 # requirements-rocm.txt
 -r requirements.txt
-torch @ https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2/torch-2.9.1%2Brocm7.2.0.lw.git7e1940d4-cp312-cp312-linux_x86_64.whl
-torchvision @ https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2/torchvision-0.24.0%2Brocm7.2.0.gitb919bd0c-cp312-cp312-linux_x86_64.whl
-torchaudio @ https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2/torchaudio-2.9.0%2Brocm7.2.0.gite3c6ee2b-cp312-cp312-linux_x86_64.whl
-triton @ https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2/triton-3.5.1%2Brocm7.2.0.gita272dfa8-cp312-cp312-linux_x86_64.whl
+torch @ https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2/torch-2.10.0%2Brocm7.2.0.lw.gitb6ee5fde-cp312-cp312-linux_x86_64.whl
+torchvision @ https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2/torchvision-0.25.0%2Brocm7.2.0.git82df5f59-cp312-cp312-linux_x86_64.whl
+torchaudio @ https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2/torchaudio-2.10.0%2Brocm7.2.0.git5047768f-cp312-cp312-linux_x86_64.whl
+triton @ https://repo.radeon.com/rocm/manylinux/rocm-rel-7.2/triton-3.6.0%2Brocm7.2.0.gitba5c1517-cp312-cp312-linux_x86_64.whl
 ```
 
 ## Smoke test
@@ -72,8 +67,10 @@ from pathlib import Path
 import torch
 from diffusers import DiffusionPipeline
 
+os.environ["TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL"] = "1"
+
 PROMPT = "Colorful noise"
-MODEL_ID = "hf-internal-testing/tiny-stable-diffusion-pipe"
+MODEL_ID = "diffusers/tiny-stable-diffusion-torch"
 OUTPUT_PATH = Path(__file__).with_name("output.png")
 
 
