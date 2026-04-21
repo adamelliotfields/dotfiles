@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 
 declare -a linux_apt=( 'aria2' 'build-essential' 'cmake' 'curl' 'file' 'git' 'git-lfs' 'gnupg' 'jq' 'ninja-build' 'sqlite3' 'wget' 'xsel' )
 declare -a linux_apt_lib=( 'libbz2-dev' 'libffi-dev' 'libfuse2' 'liblzma-dev' 'libncurses-dev' 'libnss3' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'zlib1g-dev' )
 
-declare -a linux_deb=( 'burntsushi/ripgrep' 'lsd-rs/lsd' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
 declare -a linux_bin=( 'fzf' 'gh' 'lf' 'micro' )
+declare -a linux_deb=( 'burntsushi/ripgrep' 'lsd-rs/lsd' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -23,12 +23,6 @@ function _sudo {
 if ! command -v python3 >/dev/null 2>&1 ; then
   _sudo apt-get update
   _sudo apt-get install -y python3
-fi
-
-# Remove yarn if present
-if command -v yarn >/dev/null 2>&1 ; then
-  _sudo apt remove -y --purge yarn
-  _sudo rm -f /etc/apt/sources.list.d/yarn.list
 fi
 
 # Install apt packages
