@@ -28,7 +28,6 @@ BIN_OVERRIDES = {
 BIN_REGISTRY = {
     "agent-browser": ("vercel-labs/agent-browser", lambda a: f"agent-browser-linux-{a['node']}$"),
     "codex": ("openai/codex", lambda a: f"codex-{a['gnu']}\\.tar\\.gz"),
-    "copilot": ("github/copilot-cli", lambda a: f"copilot-linux-{a['node']}\\.tar\\.gz"),
     "duckdb": ("duckdb/duckdb", lambda a: f"duckdb_cli-linux-{a['misc']}\\.zip$"),
     "fastfetch": ("fastfetch-cli/fastfetch", lambda a: f"fastfetch-linux-{a['misc']}\\.tar\\.gz"),
     "fzf": ("junegunn/fzf", lambda a: f"fzf-.+-linux_{a['misc']}\\.tar\\.gz$"),
