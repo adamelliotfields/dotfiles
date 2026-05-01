@@ -11,3 +11,4 @@ set previewer ~/.config/lf/preview
 map . set hidden!
 map <enter> open
 map <c-q> quit
+map <esc> quit
