@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Dotfiles CLI — manages system setup, binary installation, and symlinks."""
 
 import argparse
 import json
@@ -578,7 +577,7 @@ def cmd_setup_shell(args):
 
 
 def build_parser():
-    parser = argparse.ArgumentParser(prog="dotfiles", description="Dotfiles CLI")
+    parser = argparse.ArgumentParser(prog="dotfiles")
     sub = parser.add_subparsers(dest="command")
 
     # INSTALL
