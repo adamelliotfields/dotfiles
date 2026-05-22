@@ -21,13 +21,14 @@ DEB_OVERRIDES = {
     "ripgrep": "rg",
 }
 
+# Map expected binary name to actual filename inside the archive.
 BIN_OVERRIDES = {
-    "codex": lambda arch: f"codex-{arch['gnu']}",
+    "codex": lambda arch: f"codex-{arch['musl']}",
 }
 
 BIN_REGISTRY = {
     "agent-browser": ("vercel-labs/agent-browser", lambda a: f"agent-browser-linux-{a['node']}$"),
-    "codex": ("openai/codex", lambda a: f"codex-{a['gnu']}\\.tar\\.gz"),
+    "codex": ("openai/codex", lambda a: f"codex-{a['musl']}\\.tar\\.gz"),
     "duckdb": ("duckdb/duckdb", lambda a: f"duckdb_cli-linux-{a['misc']}\\.zip$"),
     "fastfetch": ("fastfetch-cli/fastfetch", lambda a: f"fastfetch-linux-{a['misc']}\\.tar\\.gz"),
     "fzf": ("junegunn/fzf", lambda a: f"fzf-.+-linux_{a['misc']}\\.tar\\.gz$"),
@@ -73,6 +74,7 @@ def _detect_arch():
     if m in ("aarch64", "arm64"):
         return {
             "gnu": "aarch64-unknown-linux-gnu",
+            "musl": "aarch64-unknown-linux-musl",
             "micro": "linux-arm64",
             "node": "arm64",
             "misc": "arm64",
@@ -84,6 +86,7 @@ def _detect_arch():
     if m in ("x86_64", "amd64"):
         return {
             "gnu": "x86_64-unknown-linux-gnu",
+            "musl": "x86_64-unknown-linux-musl",
             "micro": "linux64",
             "node": "x64",
             "misc": "amd64",
