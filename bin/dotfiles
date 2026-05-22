@@ -353,7 +353,7 @@ def cmd_install_fish(args):
             "software-properties-common",
         )
 
-    _sudo("apt-add-repository", "-y", "ppa:fish-shell/release-3")
+    _sudo("apt-add-repository", "-y", "ppa:fish-shell/release-4")
     _sudo("apt-get", "update")
     _sudo("env", "DEBIAN_FRONTEND=noninteractive", "apt-get", "install", "-y", "fish")
 
