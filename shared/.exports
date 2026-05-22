@@ -119,6 +119,9 @@ export LLAMA_HOME="${HOME}/.llama-cpp"  # clone llama.cpp here
 export LLAMA_ARG_MODELS_DIR="${HOME}/.gguf"  # download gguf here
 export LLAMA_ARG_MODELS_PRESET="${LLAMA_ARG_MODELS_DIR}/models.ini"
 
+# opencode
+export OPENCODE_EXPERIMENTAL_DISABLE_COPY_ON_SELECT=1
+
 # telemetry
 export DISABLE_TELEMETRY=1
 export DISABLE_ERROR_REPORTING=1
