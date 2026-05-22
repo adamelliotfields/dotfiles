@@ -59,25 +59,3 @@ Finally, you need to let GitHub know about your key. You can do it through the w
 ```sh
 gh gpg-key add /path/to/your.pub.key
 ```
-
-## Windows
-
-The steps are similar to Linux, but you need to install GnuPG with WinGet:
-
-```pwsh
-winget install -s winget --id gnupg.gnupg
-```
-
-And get the key ID with PowerShell:
-
-```pwsh
-$yourKey = gpg --list-keys --with-colons $yourEmail |
-Where-Object { $_.StartsWith('pub:') } |
-ForEach-Object { ($_ -split ':')[4] }
-```
-
-Then add a Task Scheduler program that runs at login to start the GPG agent:
-
-```pwsh
-powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $env:Path=(Join-Path $env:ProgramFiles 'GnuPG\bin') + ';' + $env:Path; gpgconf --launch keyboxd; gpg-connect-agent /bye;"
-```
