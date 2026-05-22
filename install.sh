@@ -3,10 +3,12 @@ set -euo pipefail
 
 script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 
-declare -a linux_apt=( 'aria2' 'build-essential' 'cmake' 'curl' 'file' 'git' 'git-lfs' 'gnupg' 'jq' 'ninja-build' 'sqlite3' 'wget' 'xsel' )
-declare -a linux_apt_lib=( 'libbz2-dev' 'libffi-dev' 'libfuse2' 'liblzma-dev' 'libncurses-dev' 'libnss3' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'zlib1g-dev' )
+declare -a linux_apt=( 'aria2' 'build-essential' 'cmake' 'curl' 'file' 'git' 'git-lfs' 'gnupg' 'jq' 'ninja-build' 'software-properties-common' 'sqlite3' 'wget' 'xsel' )
+declare -a linux_apt_python=( 'libbz2-dev' 'libffi-dev' 'liblzma-dev' 'libncurses-dev' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'zlib1g-dev' )
+declare -a linux_apt_appimage=( 'libfuse2' )
+declare -a linux_apt_chromium=( 'libnss3' )
 
-declare -a linux_bin=( 'fzf' 'gh' 'lf' 'micro' )
+declare -a linux_bin=( 'fzf' 'lf' 'micro' )
 declare -a linux_deb=( 'burntsushi/ripgrep' 'lsd-rs/lsd' 'sharkdp/fd' 'ajeetdsouza/zoxide' )
 
 export DEBIAN_FRONTEND=noninteractive
@@ -27,7 +29,7 @@ fi
 
 # Install apt packages
 "$script_dir/bin/dotfiles" setup apt
-_sudo apt-get install -y --no-install-recommends "${linux_apt[@]}" "${linux_apt_lib[@]}" | sed '/warning: /d'
+_sudo apt-get install -y --no-install-recommends "${linux_apt[@]}" "${linux_apt_python[@]}" "${linux_apt_appimage[@]}" "${linux_apt_chromium[@]}" | sed '/warning: /d'
 
 # Install deb packages
 for repo in "${linux_deb[@]}" ; do
