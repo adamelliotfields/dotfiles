@@ -6,14 +6,18 @@ alias c='clear'
 alias rmf='rm -rf'
 alias uuid='uuidgen | tr "[:upper:]" "[:lower:]"'
 
-# https://sgeb.io/posts/git-diff-anywhere
-alias gdiff='git diff --no-ext-diff --no-index'
+# clipboard
+alias xcopy='xsel --clipboard --input'
+alias xpaste='xsel --clipboard --output'
 
 # lsd
 alias l='lsd -lA --date=relative --group-dirs=first --permission=octal --size=short'
 
 # aria2
 alias dl='aria2c --disable-ipv6 --console-log-level=warn --file-allocation=none --summary-interval=0 --max-connection-per-server=4 --min-split-size=1M'
+
+# https://sgeb.io/posts/git-diff-anywhere
+alias gdiff='git diff --no-ext-diff --no-index'
 
 # git
 alias g='git'
