@@ -20,15 +20,15 @@ HISTFILESIZE=1000
 [ -s "${HOME}/.aliases" ] && source "${HOME}/.aliases"
 
 # completions
-completions_dir=''
-[[ -d "${HOMEBREW_PREFIX:-/usr/local}/etc/bash_completion.d" ]] && completions_dir="${HOMEBREW_PREFIX:-/usr/local}/etc/bash_completion.d"
-[[ -z $completions_dir && -d /etc/bash_completion.d ]] && completions_dir='/etc/bash_completion.d'
-[[ -n $completions_dir ]] && for file in "${completions_dir}"/* ; do [[ -s $file ]] && source "$file" ; done
-unset completions_dir
+if [[ -r "${HOMEBREW_PREFIX:-/usr/local}/etc/profile.d/bash_completion.sh" ]]; then
+  source "${HOMEBREW_PREFIX:-/usr/local}/etc/profile.d/bash_completion.sh"
+elif [[ -r "${HOMEBREW_PREFIX:-/usr/local}/etc/bash_completion" ]]; then
+  source "${HOMEBREW_PREFIX:-/usr/local}/etc/bash_completion"
+elif [[ -r /usr/share/bash-completion/bash_completion ]]; then
+  source /usr/share/bash-completion/bash_completion
+elif [[ -r /etc/bash_completion ]]; then
+  source /etc/bash_completion
+fi
 
 # zoxide
 [[ -n $(command -v zoxide 2>/dev/null) ]] && eval "$(zoxide init bash)"
-
-# prompt last
-[[ -n $HOMEBREW_PREFIX && -s "${HOMEBREW_PREFIX}/share/liquidprompt" ]] && source "${HOMEBREW_PREFIX}/share/liquidprompt"
-[[ -z $HOMEBREW_PREFIX && -s "${HOME}/.liquidprompt/liquidprompt" ]] && source "${HOME}/.liquidprompt/liquidprompt"
