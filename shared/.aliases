@@ -16,13 +16,20 @@ alias l='lsd -lA --date=relative --group-dirs=first --permission=octal --size=sh
 # aria2
 alias dl='aria2c --disable-ipv6 --console-log-level=warn --file-allocation=none --summary-interval=0 --max-connection-per-server=4 --min-split-size=1M'
 
+# stable-diffusion.cpp
+alias sd35="sd-cli --eager-load --diffusion-fa -m ~/.safetensors/sd35-large-turbo.safetensors --clip_l ~/.safetensors/sd35-clip_l.safetensors --clip_g ~/.safetensors/sd35-clip_g.safetensors --t5xxl ~/.safetensors/t5xxl.safetensors --sampling-method euler --scheduler simple --cfg-scale 1 --flow-shift 5 --steps 4 --seed -1 -H 1024 -W 1024"
+alias krea2="sd-cli --eager-load --diffusion-fa --diffusion-model ~/.safetensors/krea2-turbo.safetensors --vae ~/.safetensors/krea2-vae.safetensors --llm ~/.safetensors/qwen3-vl-4b.safetensors --sampling-method er_sde --scheduler simple --cfg-scale 1 --steps 8 --seed -1 -H 1024 -W 1024"
+alias flux1="sd-cli --eager-load --diffusion-fa --diffusion-model ~/.safetensors/flux1-schnell.safetensors --vae ~/.safetensors/flux1-vae.safetensors --clip_l ~/.safetensors/flux1-clip_l.safetensors --t5xxl ~/.safetensors/t5xxl.safetensors --sampling-method euler --scheduler simple --cfg-scale 1 --steps 4 --seed -1 -H 1024 -W 1024"
+alias flux2="sd-cli --eager-load --diffusion-fa --diffusion-model ~/.safetensors/flux2-klein-9b.safetensors --vae ~/.safetensors/flux2-vae.safetensors --llm ~/.safetensors/qwen3-8b.safetensors --sampling-method euler --scheduler simple --cfg-scale 1 --steps 4 --seed -1 -H 1024 -W 1024"
+alias zimage="sd-cli --eager-load --diffusion-fa --diffusion-model ~/.safetensors/z-image-turbo.safetensors --vae ~/.safetensors/flux1-vae.safetensors --llm ~/.safetensors/qwen3-4b.safetensors --sampling-method res_multistep --scheduler simple --cfg-scale 1 --steps 8 --seed -1 -H 1024 -W 1024"
+
 # https://sgeb.io/posts/git-diff-anywhere
 alias gdiff='git diff --no-ext-diff --no-index'
 
 # git
 alias g='git'
 alias ga='git add'
-alias gaa='git add --update' # add ALL tracked files (ignores new files) (99% of the time you want this)
+alias gaa='git add --update' # add ALL tracked files (ignores new files)
 alias gb='git branch'
 alias gba='git branch --all' # list ALL local and remote branches
 alias gbd='git branch --delete' # delete a branch

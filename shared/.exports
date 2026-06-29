@@ -115,9 +115,13 @@ export LLAMA_ARG_MMAP=0
 export LLAMA_ARG_MODELS_MAX=1
 export LLAMA_ARG_HOST='0.0.0.0'
 export LLAMA_ARG_N_GPU_LAYERS='all'
-export LLAMA_HOME="${HOME}/.llama-cpp"  # clone llama.cpp here
+export LLAMA_HOME="/opt/llama-cpp"  # extract llama.cpp here
 export LLAMA_ARG_MODELS_DIR="${HOME}/.gguf"  # download gguf here
 export LLAMA_ARG_MODELS_PRESET="${LLAMA_ARG_MODELS_DIR}/models.ini"
+PATH="${LLAMA_HOME}:${PATH}"
+
+# stable-diffusion.cpp
+PATH="/opt/stable-diffusion-cpp:${PATH}"
 
 # opencode
 export OPENCODE_EXPERIMENTAL_DISABLE_COPY_ON_SELECT=1

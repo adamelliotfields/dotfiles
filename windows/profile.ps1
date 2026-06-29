@@ -12,19 +12,6 @@ $Env:GIT_EDITOR = $Env:EDITOR
 $Env:PAGER = 'less -FRSX --tabs=2' # scoop install less
 $Env:LESSHISTSIZE = 0
 
-# llama.cpp
-$Env:LLAMA_ARG_FIT = 0
-$ENv:LLAMA_ARG_DIO = 1
-$Env:LLAMA_ARG_MMAP = 0
-$Env:LLAMA_ARG_BATCH = 4096
-$Env:LLAMA_ARG_UBATCH = 2048
-$Env:LLAMA_ARG_MODELS_MAX = 1
-$Env:LLAMA_ARG_HOST = '0.0.0.0'
-$Env:LLAMA_ARG_N_GPU_LAYERS = 'all'
-$Env:LLAMA_HOME = "$HOME\.llama.cpp"  # clone llama.cpp here
-$Env:LLAMA_ARG_MODELS_DIR = "$HOME\.llama.cpp\models"  # download gguf here
-$Env:LLAMA_ARG_MODELS_PRESET = "$Env:LLAMA_ARG_MODELS_DIR\models.ini"
-
 # node
 $Env:NODE_NO_WARNINGS = '1'
 $Env:NODE_OPTIONS='--no-deprecation'
@@ -62,7 +49,6 @@ Remove-Item -Force Alias:cp -ErrorAction SilentlyContinue
 Remove-Item -Force Alias:ls -ErrorAction SilentlyContinue
 Remove-Item -Force Alias:mv -ErrorAction SilentlyContinue
 Remove-Item -Force Alias:rm -ErrorAction SilentlyContinue
-
 Remove-Item -Force Alias:gu -ErrorAction SilentlyContinue
 Remove-Item -Force Alias:sl -ErrorAction SilentlyContinue
 
