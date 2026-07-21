@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 import zipfile
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -241,6 +242,9 @@ def cmd_install_bin(args):
             _sudo("mv", str(bin_path), f"/usr/local/bin/{name}")
 
             if name == "codex":
+                # Prevent rate limit
+                if not _github_token():
+                    time.sleep(1)
                 code_mode_host_dir = Path(tmpdir) / "codex-code-mode-host"
                 code_mode_host_dir.mkdir()
                 code_mode_host_archive = code_mode_host_dir / code_mode_host_filename
@@ -382,7 +386,7 @@ def cmd_install_claude(args):
         # Apt DEB822 sources format
         content = (
             "Types: deb\n"
-            "URIs: https://downloads.claude.ai/linux/deb\n"
+            "URIs: https://downloads.claude.ai/claude-code/apt/stable\n"
             "Suites: stable\n"
             "Components: main\n"
             "Signed-By:\n"
