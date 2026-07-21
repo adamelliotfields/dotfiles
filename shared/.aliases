@@ -22,6 +22,7 @@ alias krea2="sd-cli --eager-load --diffusion-fa --diffusion-model ~/.safetensors
 alias flux1="sd-cli --eager-load --diffusion-fa --diffusion-model ~/.safetensors/flux1-schnell.safetensors --vae ~/.safetensors/flux1-vae.safetensors --clip_l ~/.safetensors/flux1-clip_l.safetensors --t5xxl ~/.safetensors/t5xxl.safetensors --sampling-method euler --scheduler simple --cfg-scale 1 --steps 4 --seed -1 -H 1024 -W 1024"
 alias flux2="sd-cli --eager-load --diffusion-fa --diffusion-model ~/.safetensors/flux2-klein-9b.safetensors --vae ~/.safetensors/flux2-vae.safetensors --llm ~/.safetensors/qwen3-8b.safetensors --sampling-method euler --scheduler simple --cfg-scale 1 --steps 4 --seed -1 -H 1024 -W 1024"
 alias zimage="sd-cli --eager-load --diffusion-fa --diffusion-model ~/.safetensors/z-image-turbo.safetensors --vae ~/.safetensors/flux1-vae.safetensors --llm ~/.safetensors/qwen3-4b.safetensors --sampling-method res_multistep --scheduler simple --cfg-scale 1 --steps 8 --seed -1 -H 1024 -W 1024"
+alias upscale="sd-cli -M upscale --upscale-model ~/.safetensors/upscale/realesrgan-x4plus.safetensors"
 
 # https://sgeb.io/posts/git-diff-anywhere
 alias gdiff='git diff --no-ext-diff --no-index'
