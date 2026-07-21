@@ -12,6 +12,9 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -C "$USER@$(hostname)"
 
 ## Set permissions
 
+> [!NOTE]
+> Known hosts and public keys can be `644`.
+
 ```sh
 # directory: rwx
 chmod 700 ~/.ssh
@@ -22,16 +25,21 @@ chmod 600 ~/.ssh/*
 
 ## Client settings
 
+> [!NOTE]
+> The config is read top-to-bottom. Put the wildcard host last if you want specific hosts to override individual settings.
+
 Put this in `~/.ssh/config`:
 
 ```
 Host *
   HashKnownHosts no
+  UpdateHostKeys no
+  IdentitiesOnly yes
 
 Host your-server
-  User your-user
-  HostName your-server-ip-or-dns
+  HostName <server>
   IdentityFile ~/.ssh/id_rsa
+  User <user>
 ```
 
 ## Server settings
