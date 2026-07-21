@@ -146,7 +146,10 @@ def _extract(archive, dest_dir):
     archive = str(archive)
     if archive.endswith(".tar.gz") or archive.endswith(".tgz"):
         with tarfile.open(archive, "r:gz") as tf:
-            tf.extractall(dest_dir)
+            try:
+                tf.extractall(dest_dir, filter="data")
+            except TypeError:
+                tf.extractall(dest_dir)
     elif archive.endswith(".zip"):
         with zipfile.ZipFile(archive) as zf:
             zf.extractall(dest_dir)
@@ -212,6 +215,14 @@ def cmd_install_bin(args):
     if not match:
         sys.exit(f"Asset not found for {name}")
 
+    # Codex additionally requires code mode host
+    code_mode_host_asset = None
+    if name == "codex":
+        code_mode_host_filename = f"codex-code-mode-host-{arch['musl']}.tar.gz"
+        code_mode_host_asset = next((a for a in assets if a["name"] == code_mode_host_filename), None)
+        if code_mode_host_asset is None:
+            sys.exit(f"Asset not found for codex-code-mode-host: {code_mode_host_filename}")
+
     url = match[0]["browser_download_url"]
     filename = url.rsplit("/", 1)[-1]
 
@@ -222,12 +233,25 @@ def cmd_install_bin(args):
         if filename.endswith(".zip") or filename.endswith(".tar.gz") or filename.endswith(".tgz"):
             extract_dir = Path(tmpdir)
             _extract(archive_path, extract_dir)
-            bin_name = BIN_OVERRIDES[name](arch) if name in BIN_OVERRIDES else name
-            bin_path = _find_binary(extract_dir, bin_name)
+            archive_name = BIN_OVERRIDES[name](arch) if name in BIN_OVERRIDES else name
+            bin_path = _find_binary(extract_dir, archive_name)
             if bin_path is None:
                 sys.exit(f"Could not find {name} in archive")
             bin_path.chmod(0o755)
             _sudo("mv", str(bin_path), f"/usr/local/bin/{name}")
+
+            if name == "codex":
+                code_mode_host_dir = Path(tmpdir) / "codex-code-mode-host"
+                code_mode_host_dir.mkdir()
+                code_mode_host_archive = code_mode_host_dir / code_mode_host_filename
+                _download(code_mode_host_asset["browser_download_url"], code_mode_host_archive)
+                _extract(code_mode_host_archive, code_mode_host_dir)
+                code_mode_host_binary = f"codex-code-mode-host-{arch['musl']}"
+                code_mode_host_path = _find_binary(code_mode_host_dir, code_mode_host_binary)
+                if code_mode_host_path is None:
+                    sys.exit(f"Could not find {code_mode_host_binary} in archive")
+                code_mode_host_path.chmod(0o755)
+                _sudo("mv", str(code_mode_host_path), "/usr/local/bin/codex-code-mode-host")
         else:
             archive_path.chmod(0o755)
             _sudo("mv", str(archive_path), f"/usr/local/bin/{name}")
@@ -334,6 +358,40 @@ def cmd_install_btop(args):
         )
         subprocess.run(["make", "-C", str(repo_dir), "CXX=g++-14"], check=True)
         _sudo("make", "-C", str(repo_dir), "install")
+
+
+# INSTALL CLAUDE CODE
+def cmd_install_claude(args):
+    _require_linux()
+    _require_cmd("apt-get")
+    _require_cmd("awk")
+
+    sources = Path("/etc/apt/sources.list.d/claude-code.sources")
+    if not sources.exists():
+        req = Request("https://downloads.claude.ai/keys/claude-code.asc")
+        with urlopen(req) as resp:
+            key = resp.read()
+
+        indented_key = subprocess.run(
+            ["awk", '{ print ($0 == "" ? " ." : " " $0) }'],
+            input=key,
+            capture_output=True,
+            check=True,
+        ).stdout.decode()
+
+        # Apt DEB822 sources format
+        content = (
+            "Types: deb\n"
+            "URIs: https://downloads.claude.ai/linux/deb\n"
+            "Suites: stable\n"
+            "Components: main\n"
+            "Signed-By:\n"
+            f"{indented_key}"
+        )
+        _write_file(str(sources), content)
+
+    _sudo("apt-get", "update")
+    _sudo("apt-get", "install", "claude-code")
 
 
 # INSTALL FISH
@@ -500,8 +558,8 @@ def cmd_setup_apt(args):
     _sudo("apt-get", "update")
 
 
-# SETUP SSH
-def cmd_setup_ssh(args):
+# SETUP SSHD
+def cmd_setup_sshd(args):
     _require_linux()
 
     conf_dir = "/etc/ssh/sshd_config.d"
@@ -588,22 +646,21 @@ def build_parser():
     install_sub = install.add_subparsers(dest="target")
 
     p = install_sub.add_parser("bin", help="Install binary from GitHub releases")
-    p.add_argument("name", choices=sorted(BIN_REGISTRY.keys()), metavar="NAME")
+    p.add_argument("name", choices=sorted(BIN_REGISTRY.keys()))
     p.add_argument("-f", "--force", action="store_true")
     p.set_defaults(func=cmd_install_bin)
+
+    p = install_sub.add_parser("btop", help="Install btop from source")
+    p.add_argument("-f", "--force", action="store_true")
+    p.set_defaults(func=cmd_install_btop)
+
+    p = install_sub.add_parser("claude", help="Install Claude Code via apt")
+    p.set_defaults(func=cmd_install_claude)
 
     p = install_sub.add_parser("deb", help="Install Debian package from GitHub releases")
     p.add_argument("repo", metavar="ORG/REPO")
     p.add_argument("-f", "--force", action="store_true")
     p.set_defaults(func=cmd_install_deb)
-
-    p = install_sub.add_parser("uv", help="Install uv and uvx from GitHub releases")
-    p.add_argument("-f", "--force", action="store_true")
-    p.set_defaults(func=cmd_install_uv)
-
-    p = install_sub.add_parser("btop", help="Install btop from source")
-    p.add_argument("-f", "--force", action="store_true")
-    p.set_defaults(func=cmd_install_btop)
 
     p = install_sub.add_parser("fish", help="Install Fish shell via apt")
     p.set_defaults(func=cmd_install_fish)
@@ -611,15 +668,19 @@ def build_parser():
     p = install_sub.add_parser("go", help="Install Go via go.dev")
     p.set_defaults(func=cmd_install_go)
 
-    p = install_sub.add_parser("rust", help="Install Rust via rustup")
-    p.set_defaults(func=cmd_install_rust)
-
     p = install_sub.add_parser("nerdfont", help="Install a Nerd Font")
     p.add_argument("name", metavar="FONT")
     p.set_defaults(func=cmd_install_nerdfont)
 
+    p = install_sub.add_parser("rust", help="Install Rust via rustup")
+    p.set_defaults(func=cmd_install_rust)
+
     p = install_sub.add_parser("symlinks", help="Symlink dotfiles into $HOME")
     p.set_defaults(func=cmd_install_symlinks)
+
+    p = install_sub.add_parser("uv", help="Install uv and uvx from GitHub releases")
+    p.add_argument("-f", "--force", action="store_true")
+    p.set_defaults(func=cmd_install_uv)
 
     # SETUP
     setup = sub.add_parser("setup", help="System configuration")
@@ -628,24 +689,24 @@ def build_parser():
     p = setup_sub.add_parser("apt", help="Setup apt on Ubuntu")
     p.set_defaults(func=cmd_setup_apt)
 
-    p = setup_sub.add_parser("ssh", help="Setup sshd for passwordless authentication")
-    p.set_defaults(func=cmd_setup_ssh)
-
     p = setup_sub.add_parser("motd", help="Setup fastfetch message of the day")
     p.set_defaults(func=cmd_setup_motd)
-
-    p = setup_sub.add_parser("user", help="Setup a new user")
-    p.add_argument("user", metavar="USER")
-    p.set_defaults(func=cmd_setup_user)
-
-    p = setup_sub.add_parser("sudo", help="Setup passwordless sudo for a user")
-    p.add_argument("-u", "--user", default=None, help="Target user (default: current)")
-    p.set_defaults(func=cmd_setup_sudo)
 
     p = setup_sub.add_parser("shell", help="Setup login shell for a user")
     p.add_argument("shell", metavar="SHELL")
     p.add_argument("-u", "--user", default=None, help="Target user (default: current)")
     p.set_defaults(func=cmd_setup_shell)
+
+    p = setup_sub.add_parser("sshd", help="Setup sshd for passwordless authentication")
+    p.set_defaults(func=cmd_setup_sshd)
+
+    p = setup_sub.add_parser("sudo", help="Setup passwordless sudo for a user")
+    p.add_argument("-u", "--user", default=None, help="Target user (default: current)")
+    p.set_defaults(func=cmd_setup_sudo)
+
+    p = setup_sub.add_parser("user", help="Setup a new user")
+    p.add_argument("user", metavar="USER")
+    p.set_defaults(func=cmd_setup_user)
 
     return parser
 
