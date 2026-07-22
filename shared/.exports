@@ -80,9 +80,11 @@ export NODE_OPTIONS='--no-deprecation'
 # npm
 export NPM_CONFIG_FUND=false
 export NPM_CONFIG_AUDIT=false
-export NPM_CONFIG_LOGLEVEL=error
 export NPM_CONFIG_PROGRESS=false
+export NPM_CONFIG_LOGLEVEL=error
+export NPM_CONFIG_MIN_RELEASE_AGE=1
 export NPM_CONFIG_UPDATE_NOTIFIER=false
+export NPM_CONFIG_PREFIX="${HOME}/.local"
 
 # pnpm
 export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
