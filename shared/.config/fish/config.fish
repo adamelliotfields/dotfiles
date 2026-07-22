@@ -1,3 +1,8 @@
+# handle non-interactive login shells with POSIX
+if status is-login ; and not status is-interactive
+  exec /bin/sh
+end
+
 # disable the default greeting
 set -g fish_greeting ''
 
